@@ -3,6 +3,9 @@
 # Tech and me 2015 - www.en0ch.se
 
 letsencryptpath=/opt/letsencrypt
+DIRECTORY=$letsencryptpath
+DIRECTORY2=$letsencryptpath/live
+ssl_conf="/etc/apache2/sites-available/owncloud_ssl_domain.conf"
 
 clear
 
@@ -37,8 +40,7 @@ function ask_yes_or_no() {
     esac
 }
 
-if [[ "no" == $(ask_yes_or_no "Are you sure you want to continue?") || \
-      "no" == $(ask_yes_or_no "Do you know how to configure a Virtual Host in Apache?") ]]
+if [[ "no" == $(ask_yes_or_no "Are you sure you want to continue?") ]]
 then
 echo
     echo "OK, but if you want to run this script later, just type: bash /var/scripts/activate-ssl.sh"
@@ -109,13 +111,10 @@ fi
 sed -i "s|ServerName owncloud|ServerName $domain|g" /etc/apache2/apache2.conf
 
 # Generate owncloud_ssl_domain.conf
-
-FILE="/etc/apache2/sites-available/owncloud_ssl_domain.conf"
-if [ -f $FILE ];
+if [ -f $ssl_conf ];
 then
         echo "Virtual Host exists"
 else
-ssl_conf="/etc/apache2/sites-available/owncloud_ssl_domain.conf"
 set -x
 touch $ssl_conf
 cat << SSL_CREATE > "$ssl_conf"
@@ -164,7 +163,6 @@ else
 # Stop Apache to aviod port conflicts
         a2dissite 000-default.conf
         sudo service apache2 stop
-        DIRECTORY=$letsencryptpath
 	rm -R $DIRECTORY
         cd /opt
         git clone https://github.com/letsencrypt/letsencrypt
@@ -177,7 +175,6 @@ fi
         service apache2 reload
 
 # Check if $letsencryptpath exist, and if, then delete.
-DIRECTORY=$letsencryptpath
 if [ -d "$DIRECTORY" ]; then
   rm -R $DIRECTORY
 fi
@@ -192,7 +189,6 @@ cd $letsencryptpath
 #./letsencrypt-auto --apache --server https://acme-staging.api.letsencrypt.org/directory -d EXAMPLE.COM
 
 # Check if $letsencrypt/live exists
-DIRECTORY2=$letsencryptpath/live
 if [ -d "$DIRECTORY2" ]; then
 
 # Activate new config
