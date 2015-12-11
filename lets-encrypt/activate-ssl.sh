@@ -1,6 +1,8 @@
 #!bin/bash
 
-Tech and me 2015 - www.en0ch.se
+# Tech and me 2015 - www.en0ch.se
+
+letsencryptpath=/opt/letsencrypt
 
 clear
 
@@ -36,15 +38,34 @@ function ask_yes_or_no() {
 }
 
 if [[ "no" == $(ask_yes_or_no "Are you sure you want to continue?") || \
-      "no" == $(ask_yes_or_no "Do you know how to configure a Virtual Host in Apache?") || \
-      "no" == $(ask_yes_or_no "Do you have a domian that you will use?") ]]
+      "no" == $(ask_yes_or_no "Do you know how to configure a Virtual Host in Apache?") ]]
 then
+echo
+    echo "OK, but if you want to run this script later, just type: bash /var/scripts/activate-ssl.sh"
+    echo -e "\e[32m"
+    read -p "Press any key to continue... " -n1 -s
+    echo -e "\e[0m"
+    exit
+fi
+
+
+    function ask_yes_or_no() {
+    read -p "$1 ([y]es or [N]o): "
+    case $(echo $REPLY | tr '[A-Z]' '[a-z]') in
+        y|yes) echo "yes" ;;
+        *)     echo "no" ;;
+    esac
+}
+if [[ "yes" == $(ask_yes_or_no "Do you have a domian that you will use?") ]]
+then
+        echo "GO"
+else
     echo
     echo "OK, but if you want to run this script later, just type: bash /var/scripts/activate-ssl.sh"
     echo -e "\e[32m"
     read -p "Press any key to continue... " -n1 -s
     echo -e "\e[0m"
-    exit 0
+    exit
 fi
 
 # Install git
@@ -52,7 +73,7 @@ git --version 2>&1 >/dev/null
 GIT_IS_AVAILABLE=$?
 # ...
 if [ $GIT_IS_AVAILABLE -eq 0 ]; then
-apt-get install git -y
+apt-get install git -y -q
 fi
 
 # Ask for domain name
@@ -76,10 +97,16 @@ then
     echo
     echo "OK, try again: (2/2, last try)"
     echo "Please enter the domain name you will use for ownCloud:"
+    echo "Like this: example.com, or owncloud.example.com"
+    echo "It's important that it's correct, the script is based on what you enter"
     echo -e
     read domain
     echo
 fi
+
+# Change ServerName in apache.conf
+
+sed -i "s|ServerName owncloud|ServerName $domain|g" /etc/apache2/apache2.conf
 
 # Generate owncloud_ssl_domain.conf
 
@@ -123,6 +150,32 @@ cat << SSL_CREATE > "$ssl_conf"
 SSL_CREATE
 fi
 
+# Check if $letsencryptpath/live exists
+if [ -d "$DIRECTORY2" ]; then
+
+# Activate new config
+        bash /var/scripts/test-new-config.sh
+else
+        echo -e "\e[96m"
+        echo -e "It seems like no certs were generated, we do two more tries."
+        echo -e "\e[32m"
+        read -p "Press any key to continue... " -n1 -s
+        echo -e "\e[0m"
+# Stop Apache to aviod port conflicts
+        a2dissite 000-default.conf
+        sudo service apache2 stop
+        DIRECTORY=$letsencryptpath
+	rm -R $DIRECTORY
+        cd /opt
+        git clone https://github.com/letsencrypt/letsencrypt
+        cd $letsencryptpath
+        ./letsencrypt-auto certonly --standalone -d $domain
+fi
+# Activate Apache again (Disabled during standalone)
+        service apache2 start
+        a2ensite 000-default.conf
+        service apache2 reload
+
 # Check if $letsencryptpath exist, and if, then delete.
 DIRECTORY=$letsencryptpath
 if [ -d "$DIRECTORY" ]; then
@@ -161,31 +214,6 @@ fi
 if [ -d "$DIRECTORY2" ]; then
 
 # Activate new config
-	bash /var/scripts/test-new-config.sh
-else
-        echo -e "\e[96m"
-        echo -e "It seems like no certs were generated, we do two more tries."
-        echo -e "\e[32m"
-        read -p "Press any key to continue... " -n1 -s
-        echo -e "\e[0m"
-# Stop Apache to aviod port conflicts
-	a2dissite 000-default.conf
-	sudo service apache2 stop
-	rm -R $DIRECTORY
-        cd /opt
-        git clone https://github.com/letsencrypt/letsencrypt
-        cd $letsencryptpath
-        ./letsencrypt-auto certonly --standalone -d $domain
-fi
-# Activate Apache again (Disabled during standalone)
-	service apache2 start
-        a2ensite 000-default.conf
-        service apache2 reload
-
-# Check if $letsencryptpath/live exists
-if [ -d "$DIRECTORY2" ]; then
-
-# Activate new config
         bash /var/scripts/test-new-config.sh
 else
         echo -e "\e[96m"
@@ -217,6 +245,8 @@ else
 # Cleanup
 rm -R $DIRECTORY
 rm /etc/apache2/sites-available/owncloud_ssl_domain.conf
+# Change ServerName in apache.conf
+sed -i "s|ServerName $domain|ServerName owncloud|g" /etc/apache2/apache2.conf
 fi
-
+clear
 exit 0
