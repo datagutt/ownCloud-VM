@@ -51,7 +51,7 @@ function ask_yes_or_no() {
 if [[ "no" == $(ask_yes_or_no "Are you sure you want to continue?") ]]
 then
 echo
-    echo "OK, but if you want to run this script later, just type: bash /var/scripts/activate-ssl.sh"
+    echo "OK, but if you want to run this script later, just type: sudo bash /var/scripts/activate-ssl.sh"
     echo -e "\e[32m"
     read -p "Press any key to continue... " -n1 -s
     echo -e "\e[0m"
@@ -71,7 +71,7 @@ then
         echo "GO"
 else
     echo
-    echo "OK, but if you want to run this script later, just type: bash /var/scripts/activate-ssl.sh"
+    echo "OK, but if you want to run this script later, just type: sudo bash /var/scripts/activate-ssl.sh"
     echo -e "\e[32m"
     read -p "Press any key to continue... " -n1 -s
     echo -e "\e[0m"
