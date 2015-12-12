@@ -242,7 +242,7 @@ else
 	echo -e "There are different configs you can try in Let's Encrypts user guide."
 	echo -e "Visit https://letsencrypt.readthedocs.org/en/latest/index.html for more detailed info"
 	echo -e "\e[32m"
-        read -p "Press any key to continue... " -n1 -s
+        read -p "Press any key to revert settings and exit... " -n1 -s
         echo -e "\e[0m"
 
 # Cleanup
