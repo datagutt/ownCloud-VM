@@ -252,4 +252,3 @@ rm /etc/apache2/sites-available/owncloud_ssl_domain.conf
 sed -i "s|ServerName $domain|ServerName owncloud|g" /etc/apache2/apache2.conf
 fi
 clear
-exit 0
