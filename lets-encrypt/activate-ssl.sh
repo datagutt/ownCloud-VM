@@ -12,7 +12,9 @@ if [ "$(whoami)" != "root" ]; then
         echo
         echo -e "\e[31mSorry, you are not root.\n\e[0mYou need to type: \e[36msudo \e[0mbash /var/scripts/activate-ssl.sh"
         echo
-        exit 1
+exit 1
+fi
+
 clear
 
 cat << EOMSTART
