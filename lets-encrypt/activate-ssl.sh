@@ -148,9 +148,9 @@ cat << SSL_CREATE > "$ssl_conf"
 
 ### LOCATION OF CERT FILES ###
 
-    SSLCertificateChainFile $letsencryptpath/live/$domain/chain.pem
-    SSLCertificateFile $letsencryptpath/live/$domain/cert.pem
-    SSLCertificateKeyFile $letsencryptpath/live/$domain/privkey.pem
+    SSLCertificateChainFile $DIRECTORY2/$domain/chain.pem
+    SSLCertificateFile $DIRECTORY2/$domain/cert.pem
+    SSLCertificateKeyFile $DIRECTORY2/$domain/privkey.pem
 
 </VirtualHost>
 SSL_CREATE
