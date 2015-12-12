@@ -7,6 +7,12 @@ DIRECTORY=$letsencryptpath
 DIRECTORY2=$letsencryptpath/live
 ssl_conf="/etc/apache2/sites-available/owncloud_ssl_domain.conf"
 
+# Check if root
+if [ "$(whoami)" != "root" ]; then
+        echo
+        echo -e "\e[31mSorry, you are not root.\n\e[0mYou need to type: \e[36msudo \e[0mbash /var/scripts/activate-ssl.sh"
+        echo
+        exit 1
 clear
 
 cat << EOMSTART
@@ -115,7 +121,6 @@ if [ -f $ssl_conf ];
 then
         echo "Virtual Host exists"
 else
-set -x
 touch $ssl_conf
 cat << SSL_CREATE > "$ssl_conf"
 <VirtualHost *:443>
@@ -156,7 +161,7 @@ if [ -d "$DIRECTORY2" ]; then
         bash /var/scripts/test-new-config.sh
 else
         echo -e "\e[96m"
-        echo -e "It seems like no certs were generated, we do two more tries."
+        echo -e "It seems like no certs were generated, we do three more tries."
         echo -e "\e[32m"
         read -p "Press any key to continue... " -n1 -s
         echo -e "\e[0m"
@@ -195,7 +200,7 @@ if [ -d "$DIRECTORY2" ]; then
 	bash /var/scripts/test-new-config.sh
 else
 	echo -e "\e[96m"
-	echo -e "It seems like no certs were generated, we do three more tries."
+	echo -e "It seems like no certs were generated, we do two more tries."
 	echo -e "\e[32m"
 	read -p "Press any key to continue... " -n1 -s
 	echo -e "\e[0m"
