@@ -14,31 +14,31 @@ if [ "$(whoami)" != "root" ]; then
         exit 1
 fi
 
-## Get all the scripts from GitHub (untested code)
-#      
-#      # Create dir
-#      mkdir $SCRIPTS
-#      
-#      # Sets trusted domain in when owncloud-startup-script.sh is finished
-#      wget -O- https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/trusted.sh -P $SCRIPTS
-#      # Sets static IP to UNIX
-#      wget -O- https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/ip.sh -P $SCRIPTS
-#      # Tests connection after static IP is set
-#      wget -O- https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/test_connection.sh -P $SCRIPTS
-#      # Sets secure permissions after upgrade
-#      wget -O- https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
-#      # Welcome message after login (change in /home/ocadmin/.profile
-#      wget -O- https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/instruction.sh -P $SCRIPTS
-#      # Clears command history on every login
-#      wget -O- https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/history.sh -P $SCRIPTS
-#      # Change roots .bash_profile
-#      wget -O- https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-root-profile.sh -P $SCRIPTS
-#      # Change ocadmin .bash_profile
-#      wget -O- https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-ocadmin-profile.sh -P $SCRIPTS
-#      
-#      # Make $SCRIPTS excutable 
-#      chmod +x -R $SCRIPTS
-##
+# Get all the scripts from GitHub (untested code)
+      
+      # Create dir
+      mkdir $SCRIPTS
+      
+      # Sets trusted domain in when owncloud-startup-script.sh is finished
+      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/trusted.sh -P $SCRIPTS
+      # Sets static IP to UNIX
+      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/ip.sh -P $SCRIPTS
+      # Tests connection after static IP is set
+      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/test_connection.sh -P $SCRIPTS
+      # Sets secure permissions after upgrade
+      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+      # Welcome message after login (change in /home/ocadmin/.profile
+      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/instruction.sh -P $SCRIPTS
+      # Clears command history on every login
+      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/history.sh -P $SCRIPTS
+      # Change roots .bash_profile
+      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-root-profile.sh -P $SCRIPTS
+      # Change ocadmin .bash_profile
+      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-ocadmin-profile.sh -P $SCRIPTS
+      
+      # Make $SCRIPTS excutable 
+      chmod +x -R $SCRIPTS
+
 
 clear
 echo "+--------------------------------------------------------------------+"
