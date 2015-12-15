@@ -251,7 +251,7 @@ cat /dev/null > /var/spool/mail/ocadmin
 cat /dev/null > /var/log/apache2/access.log
 cat /dev/null > /var/log/apache2/error.log
 cat /dev/null > /var/log/cronjobs_success.log
-sed -i 's/sudo -i//g' /home/ocadmin/.profile
+sed -i 's/sudo -i//g' /home/ocadmin/.bash_profile
 
 ## Reboot
 reboot
