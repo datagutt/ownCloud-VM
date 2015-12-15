@@ -188,11 +188,6 @@ echo -e "\e[0m"
 sudo -u www-data php /var/www/html/owncloud/occ user:resetpassword ocadmin
 echo
 sleep 2
-# Get the latest active-ssl script
-        cd $SCRIPTS
-        rm $SCRIPTS/activate-ssl.sh
-        wget -O- https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh
-        chmod 755 $SCRIPTS/activate-ssl.sh
 clear
 # Let's Encrypt
 function ask_yes_or_no() {
