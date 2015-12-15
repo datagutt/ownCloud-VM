@@ -2,6 +2,8 @@
 
 ROOT_PROFILE="/root/.bash_profile"
 
+rm /root/.profile
+
 cat <<-ROOT-PROFILE > "$ROOT_PROFILE"
 
 # ~/.profile: executed by Bourne-compatible login shells.
