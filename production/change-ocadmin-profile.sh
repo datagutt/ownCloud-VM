@@ -28,7 +28,8 @@ if [ -d "$HOME/bin" ] ; then
 fi
 bash /var/scripts/instruction.sh
 bash /var/scripts/history.sh
-bash /var/scripts/change-root.sh
 sudo -i
 
 OCADMIN-PROFILE
+
+exit 0
