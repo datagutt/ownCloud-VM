@@ -24,7 +24,6 @@ fi
                 else
         wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh -P $SCRIPTS
 fi
-        
         # The update script
         if [ -f $SCRIPTS/owncloud_update.sh ];
                 then
@@ -133,6 +132,7 @@ echo -e "\e[32m"
 read -p "Press any key to start the script..." -n1 -s
 clear
 echo -e "\e[0m"
+
 # Activate self-signed SSL
 a2enmod ssl
 a2enmod headers
@@ -158,6 +158,7 @@ ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 echo
 echo "Webmin is installed, access it from your browser: https://$ADDRESS:10000"
 sleep 2
+
 # Install SMB-client
 apt-get install smbclient --force-yes -y
 apt-get install cifs-utils --force-yes -y
@@ -244,7 +245,7 @@ clear
 # Install Redis
 #
 #
-Change Trusted Domain and CLI
+# Change Trusted Domain and CLI
 bash $SCRIPTS/trusted.sh
 
 # Change password
@@ -331,7 +332,7 @@ cat /dev/null > /var/log/apache2/access.log
 cat /dev/null > /var/log/apache2/error.log
 cat /dev/null > /var/log/cronjobs_success.log
 sed -i 's|sudo -i||g' /home/ocadmin/.bash_profile
-cat << RCLOCAL
+cat << RCLOCAL > "/etc/rc.local"
 #!/bin/sh -e
 #
 # rc.local
