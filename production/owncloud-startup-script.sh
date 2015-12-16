@@ -5,7 +5,6 @@
 
 SCRIPTS=/var/scripts
 
-
 # Check if root
 if [ "$(whoami)" != "root" ]; then
         echo
@@ -13,39 +12,96 @@ if [ "$(whoami)" != "root" ]; then
         echo
         exit 1
 fi
+      	# Create dir
+      	mkdir $SCRIPTS
 
-# Get all the scripts from GitHub (untested code)
-      
-      # Create dir
-      mkdir $SCRIPTS
-      
-      # The update script
-      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/owncloud_update.sh -P $SCRIPTS
-      # Sets trusted domain in when owncloud-startup-script.sh is finished
-      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/trusted.sh -P $SCRIPTS
-      # Sets static IP to UNIX
-      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/ip.sh -P $SCRIPTS
-      # Tests connection after static IP is set
-      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/test_connection.sh -P $SCRIPTS
-      # Sets secure permissions after upgrade
-      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
-      # Welcome message after login (change in /home/ocadmin/.profile
-      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/instruction.sh -P $SCRIPTS
-      # Clears command history on every login
-      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/history.sh -P $SCRIPTS
-      # Change roots .bash_profile
-      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-root-profile.sh -P $SCRIPTS
-      # Change ocadmin .bash_profile
-      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-ocadmin-profile.sh -P $SCRIPTS
-      
-      # Make $SCRIPTS excutable 
-      chmod +x -R $SCRIPTS
-      
-      # Get the Welcome Screen when http://$address
-      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/index.php -P $SCRIPTS
-      mv /var/scripts/index.php /var/www/html/index.php && rm -f /var/www/html/index.html
-      chmod 750 /var/www/html/index.php && chown www-data:www-data /var/www/html/index.php
+         # The update script
+        if [ -f $SCRIPTS/owncloud_update.sh ]
+		then
+		echo "owncloud_update.sh exists"
+		else
+		wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/owncloud_update.sh -P $SCRIPTS
 
+        # Sets trusted domain in when owncloud-startup-script.sh is finished
+       	if [ -f $SCRIPTS/trusted.sh ]
+		then
+		echo "trusted.sh exists"
+		else		
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/trusted.sh -P $SCRIPTS
+        
+		# Sets static IP to UNIX
+       	if [ -f $SCRIPTS/ip.sh ]
+		then
+		echo "ip.sh exists"
+		else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/ip.sh -P $SCRIPTS
+        
+		# Tests connection after static IP is set
+       	if [ -f $SCRIPTS/test_connection.sh ]
+		then
+		echo "test_connection.sh exists"
+		else        
+		wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/test_connection.sh -P $SCRIPTS
+        
+		# Sets secure permissions after upgrade
+       	if [ -f $SCRIPTS/setup_secure_permissions_owncloud.sh ]
+		then
+		echo "setup_secure_permissions_owncloud.sh exists"
+		else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+        
+		# Welcome message after login (change in /home/ocadmin/.profile
+       	if [ -f $SCRIPTS/instruction.sh ]
+		then
+		echo "instruction.sh exists"
+		else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/instruction.sh -P $SCRIPTS
+        
+		# Clears command history on every login
+       	if [ -f $SCRIPTS/history.sh ]
+		then
+		echo "history.sh exists"
+		else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/history.sh -P $SCRIPTS
+        
+		# Change roots .bash_profile
+       	if [ -f $SCRIPTS/change-root-profile.sh ]
+		then
+		echo "change-root-profile.sh exists"
+		else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-root-profile.sh -P $SCRIPTS
+        
+		# Change ocadmin .bash_profile
+       	if [ -f $SCRIPTS/change-ocadmin-profile.sh ]
+		then
+		echo "change-ocadmin-profile.sh  exists"
+		else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-ocadmin-profile.sh -P $SCRIPTS
+        
+		# Get startup-script for root
+       	if [ -f $SCRIPTS/owncloud-startup-script.sh ]
+		then
+		echo "owncloud-startup-script.sh exists"
+		else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/owncloud-startup-script.sh -P $SCRIPTS
+
+        # Make $SCRIPTS excutable 
+        chmod +x -R $SCRIPTS
+        chown root:root -R $SCRIPTS
+
+        # Allow ocadmin to run theese scripts
+        chown ocadmin:ocadmin $SCRIPTS/instruction.sh
+        chown ocadmin:ocadmin $SCRIPTS/history.sh
+
+        # Get the Welcome Screen when http://$address
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/index.php -P $SCRIPTS
+        mv /var/scripts/index.php /var/www/html/index.php && rm -f /var/www/html/index.html
+        chmod 750 /var/www/html/index.php && chown www-data:www-data /var/www/html/index.php
+
+        # Change .profile
+        sudo bash $SCRIPTS/change-root-profile.sh
+        sudo bash $SCRIPTS/change-ocadmin-profile.sh
+        
 clear
 echo "+--------------------------------------------------------------------+"
 echo "| This script will configure your ownCloud and activate SSL.         |"
@@ -202,7 +258,7 @@ echo "The current password is [owncloud]"
 echo -e "\e[32m"
 read -p "Press any key to change password for ownCloud... " -n1 -s
 echo -e "\e[0m"
-sudo -u www-data php /var/www/html/owncloud/occ user:resetpassword ocadmin
+sudo -u www-data php /var/www/owncloud/occ user:resetpassword ocadmin
 echo
 sleep 2
 clear
@@ -256,20 +312,22 @@ echo -e "\e[0m"
 echo
 
 # Cleanup 2
-sudo -u www-data php /var/www/html/owncloud/occ maintenance:repair
+sudo -u www-data php /var/www/owncloud/occ maintenance:repair
 rm $SCRIPTS/owncloud-startup-script.sh
 rm $SCRIPTS/ip.sh
 rm $SCRIPTS/trusted.sh
 rm $SCRIPTS/test_connection.sh
-rm /var/www/html/owncloud/data/owncloud.log
+rm /var/www/owncloud/data/owncloud.log
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root
 cat /dev/null > /var/spool/mail/ocadmin
 cat /dev/null > /var/log/apache2/access.log
 cat /dev/null > /var/log/apache2/error.log
 cat /dev/null > /var/log/cronjobs_success.log
-sed -i 's/sudo -i//g' /home/ocadmin/.bash_profile
+sed -i 's|sudo -i||g' /home/ocadmin/.bash_profile
+sed -i 's|bash chown ocadmin:ocadmin $SCRIPTS/change-ocadmin-profile.sh||g' /etc/rc.local
 
 ## Reboot
 reboot
+
 exit 0
