@@ -145,7 +145,7 @@ echo -e "\e[0m"
 a2enmod ssl
 a2enmod headers
 a2dissite default-ssl.conf
-a2ensite owncloud_www_en0ch_se.conf
+a2ensite owncloud-self-signed-ssl.conf 
 clear
 echo "owncloud_www_en0ch_se.conf is enabled, this is your pre-configured virtual host"
 sleep 4
