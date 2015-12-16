@@ -19,6 +19,8 @@ fi
       # Create dir
       mkdir $SCRIPTS
       
+      # The update script
+      wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/owncloud_update.sh -P $SCRIPTS
       # Sets trusted domain in when owncloud-startup-script.sh is finished
       wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/trusted.sh -P $SCRIPTS
       # Sets static IP to UNIX
