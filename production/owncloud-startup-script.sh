@@ -172,8 +172,19 @@ bash $SCRIPTS/test_connection.sh
 sleep 2
 clear
 
-# Change Trusted Domain and CLI
+# Install owncloud
+# bash $SCRIPTS/install-owncloud.sh ELLER via repo. Ändra till /var/www i installl-owncloud om det ska göras här
+#
+#
+# Ändra för att kunna lägga till redis och trusted, Trusted måste komma sist 
+# sed -e s|);||g /var/www/owncloud/config/config.php
+#
+# Install Redis
+#
+#
+Change Trusted Domain and CLI
 bash $SCRIPTS/trusted.sh
+
 
 # Change password
 echo -e "\e[0m"
