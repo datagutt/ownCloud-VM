@@ -108,6 +108,7 @@ fi
                 rm $SCRIPTS/index.php
                 else
         wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/index.php -P $SCRIPTS
+fi
         mv /var/scripts/index.php /var/www/html/index.php && rm -f /var/www/html/index.html
         chmod 750 /var/www/html/index.php && chown www-data:www-data /var/www/html/index.php
         
