@@ -103,9 +103,17 @@ fi
         chown ocadmin:ocadmin $SCRIPTS/history.sh
 
         # Get the Welcome Screen when http://$address
+        if [ -f $SCRIPTS/index.php ];
+                then
+                rm $SCRIPTS/index.php
+                else
         wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/index.php -P $SCRIPTS
         mv /var/scripts/index.php /var/www/html/index.php && rm -f /var/www/html/index.html
         chmod 750 /var/www/html/index.php && chown www-data:www-data /var/www/html/index.php
+        
+        # Change .profile
+        bash $SCRIPTS/change-root-profile.sh
+        bash $SCRIPTS/change-ocadmin-profile.sh
 
 clear
 echo "+--------------------------------------------------------------------+"
@@ -332,6 +340,7 @@ cat /dev/null > /var/log/apache2/access.log
 cat /dev/null > /var/log/apache2/error.log
 cat /dev/null > /var/log/cronjobs_success.log
 sed -i 's|sudo -i||g' /home/ocadmin/.bash_profile
+cat /dev/null > /etc/rc.local
 cat << RCLOCAL > "/etc/rc.local"
 #!/bin/sh -e
 #
@@ -347,6 +356,7 @@ cat << RCLOCAL > "/etc/rc.local"
 # By default this script does nothing.
 
 exit 0
+
 RCLOCAL
 
 ## Reboot
