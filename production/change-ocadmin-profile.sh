@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# In this script is everything that has to be configured before login of both user and root
-
 OCADMIN_PROFILE="/home/ocadmin/.bash_profile"
 
 rm /home/ocadmin/.profile
