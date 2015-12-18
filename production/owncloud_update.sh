@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-## Tech and Me ## - 2015, https://www.en0ch.se/
+## Tech and Me ## - 2015, https://www.techandme.se/
 #
 # Tested on Ubuntu Server 14.04.
 #
@@ -33,7 +33,7 @@ sudo -u www-data php /var/www/owncloud/occ app:enable mail
 sudo -u www-data php /var/www/owncloud/occ maintenance:mode --off
 
 # Increase max filesize (expects that changes are made in /etc/php5/apache2/php.ini)
-# Here is a guide: https://www.en0ch.se/increase-max-file-size/
+# Here is a guide: https://www.techandme.se/increase-max-file-size/
 VALUE="# php_value upload_max_filesize 513M"
 if grep -Fxq "$VALUE" /var/www/owncloud/.htaccess
 then
