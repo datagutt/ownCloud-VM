@@ -78,18 +78,18 @@ a:active {
 <div class="logo">
 </div>
 <div class="logotext">
-<h2>ownCloud VM - <a href="https://www.en0ch.se/pre-configured-owncloud-installaton/" target="_blank">Tech and Me</a></h2>
+<h2>ownCloud VM - <a href="https://www.techandme.se/pre-configured-owncloud-installaton/" target="_blank">Tech and Me</a></h2>
 </div>
 <br>
 <div class="information">
 <p>Thank you for downloading the pre-configured ownCloud VM! If you see this page, you have successfully mounted the  ownCloud VM on the computer that will act as host for ownCloud.</p>
 <p>To complete the installation, please run the setup script. You can find login details in the middle of this page.
-<p>Don't hesitate to ask if you have any questions. My email is: <a href="mailto:daniel@en0ch.se?Subject=Before%20login%20-%20ownCloud%20VM" target="_top">daniel@en0ch.se</a> You can also check the <a href="https://www.en0ch.se/complete-install-instructions-owncloud/" target="_blank">complete install instructions</a>.</p>
-<p>Please <a href="https://www.en0ch.se/thank_you">donate</a> if you like it. All the donations will go to server costs and developing, making this VM even better.</p>
+<p>Don't hesitate to ask if you have any questions. My email is: <a href="mailto:daniel@techandme.se?Subject=Before%20login%20-%20ownCloud%20VM" target="_top">daniel@techandme.se</a> You can also check the <a href="https://www.techandme.se/complete-install-instructions-owncloud/" target="_blank">complete install instructions</a>.</p>
+<p>Please <a href="https://www.techandme.se/thank_you">donate</a> if you like it. All the donations will go to server costs and developing, making this VM even better.</p>
 
 </div>
 
-<h2><a href="https://www.en0ch.se/user-and-password/" target="_blank">Login</a> to ownCloud</h2>
+<h2><a href="https://www.techandme.se/user-and-password/" target="_blank">Login</a> to ownCloud</h2>
 
 <div class="information">
 <p>Default User:</p>
@@ -120,7 +120,7 @@ a:active {
  </ul>
 </h3>
 <p>Note: Please accept the warning in the browser if you connect via HTTPS. It is recomended
-<br> to <a href="https://www.en0ch.se/publish-your-server-online" target="_blank">buy your own certificate and replace the self-signed certificate to your own.</a>
+<br> to <a href="https://www.techandme.se/publish-your-server-online" target="_blank">buy your own certificate and replace the self-signed certificate to your own.</a>
 <br>
 <p>Note: Before you can login you have to run the setup script, as descirbed in the video above.
 </div>
@@ -138,7 +138,7 @@ a:active {
 </h3>
 <p>Note Please accept the warning in the browser if you connect via HTTPS.</p>
 <h3>
-<a href="https://www.en0ch.se/user-and-password/" target="_blank">Login details</a>
+<a href="https://www.techandme.se/user-and-password/" target="_blank">Login details</a>
 </h3>
 <p> Note: Webmin is installed when you run the setup script. To access Webmin externally you have to open port 10000 in your router.</p>
 </div>
@@ -156,7 +156,7 @@ a:active {
 </h3>
 <p>Note Please accept the warning in the browser if you connect via HTTPS.</p>
 <h3>
-<a href="https://www.en0ch.se/user-and-password/" target="_blank">Login details</a>
+<a href="https://www.techandme.se/user-and-password/" target="_blank">Login details</a>
 </h3>
 <p>Note: Access to phpmyadmin is forbidden, and you have to change the settings in /etc/apache2/conf-available/phpmyadmin.conf to allow your external IP<p/>
 </div>
