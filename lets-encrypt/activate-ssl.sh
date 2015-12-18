@@ -1,6 +1,6 @@
 #!bin/bash
 
-# Tech and me 2015 - www.en0ch.se
+# Tech and me 2015 - www.techandme.se
 
 dir_before_letsencrypt=/opt
 letsencryptpath=/opt/letsencrypt
