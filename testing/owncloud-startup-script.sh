@@ -10,7 +10,7 @@ if [ "$(whoami)" != "root" ]; then
         echo
         exit 1
 fi
-clear &&
+clear
 echo "+--------------------------------------------------------------------+"
 echo "| This script will configure your ownCloud and activate SSL.         |"
 echo "| It will also do the following:                                     |"
@@ -98,7 +98,7 @@ echo "Your internal IP is: $ADDRESS"
 echo -e "\e[0m"
 echo -e "Write this down, you will need it to set static IP"
 echo -e "in your router later. It's included in this guide:"
-echo -e "https://www.en0ch.se/open-port-80-443/ (step 1 - 5)"
+echo -e "https://www.techandme.se/open-port-80-443/ (step 1 - 5)"
 echo -e "\e[32m"
 read -p "Press any key to set static IP..." -n1 -s
 clear
