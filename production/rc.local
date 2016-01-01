@@ -12,6 +12,7 @@
 # By default this script does nothing.
 
 SCRIPTS=/var/scripts
+HTML=/var/www/html
 
       	# Create dir
       	if [ -d $SCRIPTS ]; then
@@ -106,15 +107,20 @@ fi
         chown ocadmin:ocadmin $SCRIPTS/history.sh
 
         # Get the Welcome Screen when http://$address
-		if [ -f $SCRIPTS/index.php ];
+		if [ -f $HTML/index.php ];
                 then
-                rm $SCRIPTS/index.php
+                rm $HTML/index.php
+                wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/index.php -P $HTML
+		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
                 else        
-		wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/index.php -P $SCRIPTS
-fi        
-		mv /var/scripts/index.php /var/www/html/index.php && rm -f /var/www/html/index.html
-        chmod 750 /var/www/html/index.php && chown www-data:www-data /var/www/html/index.php
-
+		wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/index.php -P $HTML
+		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
+fi	
+	# Remove the regular index.html if it exists
+		if [ -f $HTML/index.html ];
+                then
+                rm -f $HTML/index.html
+fi
 
         # Change .profile
         bash $SCRIPTS/change-root-profile.sh
