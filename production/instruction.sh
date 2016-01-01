@@ -18,7 +18,7 @@ cat << INST2
 | updates ownCloud, set secure permissions, and then                    |
 | logs the successful update in /var/log/cronjobs_success.log           |
 | Here is a guide on how to set it up:                                  |
-| https://www.techandme.se/set-automatic-owncloud-updates/                  |
+| https://www.techandme.se/set-automatic-owncloud-updates/              |
 |                                                                       |
 |  ####################### Tech and Me - 2015 #######################   |
 +-----------------------------------------------------------------------+
