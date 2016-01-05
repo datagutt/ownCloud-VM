@@ -20,7 +20,7 @@ cat << INST2
 | Here is a guide on how to set it up:                                  |
 | https://www.techandme.se/set-automatic-owncloud-updates/              |
 |                                                                       |
-|  ####################### Tech and Me - 2015 #######################   |
+|  #################### Tech and Me - 2015-2016 #####################   |
 +-----------------------------------------------------------------------+
 INST2
 
