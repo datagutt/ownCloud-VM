@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-## Tech and Me ## - 2015, https://www.techandme.se/
+## Tech and Me ## - 2015-2016, https://www.techandme.se/
 #
 # Tested on Ubuntu Server 14.04.
 #
