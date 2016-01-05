@@ -135,7 +135,7 @@ echo "|                                                                    |"
 echo "|   The script will take about 10 minutes to finish,                 |"
 echo "|   depending on your internet connection.                           |"
 echo "|                                                                    |"
-echo "| ####################### Tech and Me - 2015 ####################### |"
+echo "| #################### Tech and Me - 2015-2016 ##################### |"
 echo "+--------------------------------------------------------------------+"
 echo -e "\e[32m"
 read -p "Press any key to start the script..." -n1 -s
