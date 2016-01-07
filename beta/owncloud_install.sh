@@ -52,6 +52,7 @@ a2enmod rewrite \
         env \
         dir \
         mime \
+        ssl \
         setenvif
 
 # Generate $ssl_conf
