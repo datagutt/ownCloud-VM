@@ -169,7 +169,7 @@ echo "Webmin is installed, access it from your browser: https://$ADDRESS:10000"
 sleep 2
 
 # Install SMB-client
-apt-get install smbclient --force-yes -y
+apt-get install php5-libsmbclient --force-yes -y
 apt-get install cifs-utils --force-yes -y
 clear
 
