@@ -20,6 +20,21 @@ ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
         exit 1
 fi
 
+# Change DNS
+echo "nameserver 8.26.56.26" > /etc/resolvconf/resolv.conf.d/base
+echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
+
+# Check network
+sudo ifdown eth0 && sudo ifup eth0
+nslookup google.com
+if [[ $? > 0 ]]
+then
+    echo "Network NOT OK. You must have a working Network connection to run this script."
+    exit
+else
+    echo "Network OK."
+fi
+
 # Update system
 apt-get update
 
@@ -39,7 +54,7 @@ a2enmod rewrite \
         mime \
         setenvif
 
-# Generate owncloud_ssl_domain.conf
+# Generate $ssl_conf
 if [ -f $ssl_conf ];
         then
         echo "Virtual Host exists"
@@ -119,22 +134,6 @@ unzip $HTML/$OCVERSION.zip
 # Secure permissions
 wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/testing/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
-
-# Change DNS
-echo "nameserver 8.26.56.26" > /etc/resolvconf/resolv.conf.d/base
-echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
-
-
-# Check network
-sudo ifdown eth0 && sudo ifup eth0
-nslookup google.com
-if [[ $? > 0 ]]
-then
-    echo "Network NOT OK."
-    exit
-else
-    echo "Network OK."
-fi
 
 # Install Libreoffice Writer
 sudo apt-get install --no-install-recommends libreoffice-writer -y
