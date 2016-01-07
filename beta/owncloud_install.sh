@@ -31,13 +31,13 @@ debconf-set-selections <<< 'mysql-server-5.6 mysql-server-5.6/root_password pass
 debconf-set-selections <<< 'mysql-server-5.6 mysql-server-5.6/root_password_again password $mysql_pass'
 
 # Install Apache
-apt-get install apache2 -y \
-        a2enmod rewrite
-        a2enmod headers
-        a2enmod env
-        a2enmod dir
-        a2enmod mime
-        a2enmod setenvif
+apt-get install apache2 -y
+a2enmod rewrite \
+        headers \
+        env \
+        dir \
+        mime \
+        setenvif
 
 # Generate owncloud_ssl_domain.conf
 if [ -f $ssl_conf ];
@@ -81,11 +81,11 @@ SSL_CREATE
 fi
 
 # Enable new config
-a2ensite $ssl_conf
+a2ensite owncloud_ssl_domain_self_signed.conf
 service apache2 restart
 
 # Install PHP 7
-apt-get install python-software-properties -y && sudo add-apt-repository ppa:ondrej/php-7.0
+apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php-7.0
 apt-get install -y \
         php7.0 \
         php7.0-common \
@@ -112,10 +112,9 @@ sudo service apache2 restart
 sudo locale-gen "sv_SE.UTF-8" && sudo dpkg-reconfigure locales
 
 # Download $OCVERSION
-cd $HTML
-wget https://download.owncloud.org/community/$OCVERSION
+wget https://download.owncloud.org/community/$OCVERSION -P $HTML
 apt-get install unzip -y
-unzip $OCVERSION.zip
+unzip $HTML/$OCVERSION.zip
 
 # Secure permissions
 wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/testing/setup_secure_permissions_owncloud.sh -P $SCRIPTS
@@ -131,10 +130,10 @@ sudo ifdown eth0 && sudo ifup eth0
 nslookup google.com
 if [[ $? > 0 ]]
 then
-    echo "Network OK."
+    echo "Network NOT OK."
     exit
 else
-    echo "Network NOT OK."
+    echo "Network OK."
 fi
 
 # Install Libreoffice Writer
@@ -143,8 +142,8 @@ echo -ne '\n' | sudo apt-add-repository ppa:libreoffice/libreoffice-4-4
 # php $SCRIPTS/update-config.php $OCPATH/config/config.php preview_libreoffice_path' => '/usr/bin/libreoffice
 
 # Install ownCloud
-cd $HTML/owncloud/
-sudo -u www-data php occ maintenance:install --database "owncloud_db" --database-name "owncloud"  --database-user "root" --database-pass "owncloud" --admin-user "ocadmin" --admin-pass "owncloud"
+# Only works in OC 9
+sudo -u www-data php $OCPATH/occ maintenance:install --database "owncloud_db" --database-name "owncloud" --database-user "root" --database-pass "owncloud" --admin-user "ocadmin" --admin-pass "owncloud"
 
-manual:
+# manual:
 # sudo mysql_secure_installation  
