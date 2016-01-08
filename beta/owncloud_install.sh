@@ -118,7 +118,7 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
 # Only works in OC 9
-sudo -u www-data php $OCPATH/occ maintenance:install --database "localhost" --database-name "owncloud_db" --database-user "root" --database-pass "$mysql_pass" --admin-user "ocadmin" --admin-pass "owncloud"
+sudo -u www-data php $OCPATH/occ maintenance:install --database-name "owncloud_db" --database-user "root" --database-pass "$mysql_pass" --admin-user "ocadmin" --admin-pass "owncloud"
 echo
 echo ownCloud version:
 sudo -u www-data php /var/www/owncloud/occ status
