@@ -119,7 +119,8 @@ wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/testing/setup_
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
-sudo -u www-data php $OCPATH/occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$mysql_pass" --admin-user "ocadmin" --admin-pass "owncloud"
+cd $HTML/owncloud
+sudo -u www-data php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$mysql_pass" --admin-user "ocadmin" --admin-pass "owncloud"
 echo
 echo ownCloud version:
 sudo -u www-data php /var/www/owncloud/occ status
