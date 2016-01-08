@@ -109,7 +109,8 @@ sudo service apache2 restart
 # Download $OCVERSION
 wget https://download.owncloud.org/community/$OCVERSION -P $HTML
 apt-get install unzip -y
-unzip $HTML/$OCVERSION
+unzip $HTML/$OCVERSION -d $HTML 
+rm $HTML/$OCVERSION
 
 # Secure permissions
 wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/testing/setup_secure_permissions_owncloud.sh -P $SCRIPTS
