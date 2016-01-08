@@ -81,10 +81,6 @@ a2enmod rewrite \
         setenvif
 service apache2 restart
 
-# Enable new config
-a2ensite owncloud_ssl_domain_self_signed.conf
-service apache2 restart
-
 # Install PHP 7
 apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php-7.0
 apt-get update
@@ -168,6 +164,10 @@ SSL_CREATE
 echo "$ssl_conf was successfully created"
 sleep 3
 fi
+
+# Enable new config
+a2ensite owncloud_ssl_domain_self_signed.conf
+service apache2 restart
 
 ## Set config values
 # Experimental apps
