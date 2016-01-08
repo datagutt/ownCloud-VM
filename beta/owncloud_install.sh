@@ -185,7 +185,7 @@ sudo -u www-data php $OCPATH/occ config:system:set mail_from_address --value="ww
 sudo -u www-data php $OCPATH/occ config:system:set mail_domain --value="gmail.com"
 sudo -u www-data php $OCPATH/occ config:system:set mail_smtpsecure --value="ssl"
 sudo -u www-data php $OCPATH/occ config:system:set mail_smtpname --value="www.en0ch.se@gmail.com"
-sudo -u www-data php $OCPATH/occ config:system:set mail_from_address --value="hejasverige"
+sudo -u www-data php $OCPATH/occ config:system:set mail_smtppassword --value="hejasverige"
 
 # Install Libreoffice Writer
 echo -ne '\n' | sudo apt-add-repository ppa:libreoffice/libreoffice-4-4
