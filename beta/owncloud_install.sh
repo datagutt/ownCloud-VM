@@ -44,8 +44,8 @@ sudo locale-gen "sv_SE.UTF-8" && sudo dpkg-reconfigure locales
 # Install MYSQL 5.6
 apt-get install software-properties-common -y
 add-apt-repository -y ppa:ondrej/mysql-5.6
-debconf-set-selections <<< 'mysql-server-5.6 mysql-server-5.6/root_password password $mysql_pass'
-debconf-set-selections <<< 'mysql-server-5.6 mysql-server-5.6/root_password_again password $mysql_pass'
+echo "mysql-server-5.6 mysql-server/root_password password $mysql_pass" | debconf-set-selections
+echo "mysql-server-5.6 mysql-server/root_password_again password $mysql_pass" | debconf-set-selections
 apt-get install mysql-server-5.6 -y
 
 # mysql_secure_installation
@@ -79,6 +79,10 @@ a2enmod rewrite \
         mime \
         ssl \
         setenvif
+        
+# Set hostname and ServerName
+sudo sh -c "echo 'ServerName owncloud' >> /etc/apache2/apache2.conf"
+sudo hostnamectl set-hostname owncloud
 service apache2 restart
 
 # Install PHP 7
@@ -101,24 +105,21 @@ apt-get install -y \
         libsm6 \
         libsmbclient
 
-# Set hostname and ServerName
-sudo sh -c "echo 'ServerName owncloud' >> /etc/apache2/apache2.conf"
-sudo hostnamectl set-hostname owncloud
-sudo service apache2 restart
-
 # Download $OCVERSION
 wget https://download.owncloud.org/community/$OCVERSION -P $HTML
 apt-get install unzip -y
 unzip $HTML/$OCVERSION -d $HTML 
 rm $HTML/$OCVERSION
 
+# Create data folder, occ complains otherwise
+mkdir $HTML/owncloud/data
+
 # Secure permissions
 wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/testing/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
-# Only works in OC 9
-sudo -u www-data php $OCPATH/occ maintenance:install --database-name "owncloud_db" --database-user "root" --database-pass "$mysql_pass" --admin-user "ocadmin" --admin-pass "owncloud"
+sudo -u www-data php $OCPATH/occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$mysql_pass" --admin-user "ocadmin" --admin-pass "owncloud"
 echo
 echo ownCloud version:
 sudo -u www-data php /var/www/owncloud/occ status
