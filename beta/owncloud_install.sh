@@ -2,7 +2,7 @@
 
 # Tech and Me, 2016 - www.techandme.se
 
-/<>\ WARNING /<>\ THIS SCRIPT IS UNDER CONSTRUCTION
+# /<>\ WARNING /<>\ THIS SCRIPT IS UNDER CONSTRUCTION
 
 mysql_pass=owncloud
 OCVERSION=owncloud-8.2.2.zip
@@ -38,12 +38,37 @@ fi
 # Update system
 apt-get update
 
+# Set locales
+sudo locale-gen "sv_SE.UTF-8" && sudo dpkg-reconfigure locales
+
 # Install MYSQL 5.6
 apt-get install software-properties-common -y
 add-apt-repository -y ppa:ondrej/mysql-5.6
-apt-get install mysql-server-5.6 -y
 debconf-set-selections <<< 'mysql-server-5.6 mysql-server-5.6/root_password password $mysql_pass'
 debconf-set-selections <<< 'mysql-server-5.6 mysql-server-5.6/root_password_again password $mysql_pass'
+apt-get install mysql-server-5.6 -y
+
+# mysql_secure_installation
+aptitude -y install expect
+SECURE_MYSQL=$(expect -c "
+set timeout 10
+spawn mysql_secure_installation
+expect \"Enter current password for root (enter for none):\"
+send \"$mysql_pass\r\"
+expect \"Change the root password?\"
+send \"n\r\"
+expect \"Remove anonymous users?\"
+send \"y\r\"
+expect \"Disallow root login remotely?\"
+send \"y\r\"
+expect \"Remove test database and access to it?\"
+send \"y\r\"
+expect \"Reload privilege tables now?\"
+send \"y\r\"
+expect eof
+")
+echo "$SECURE_MYSQL"
+aptitude -y purge expect
 
 # Install Apache
 apt-get install apache2 -y
@@ -54,6 +79,54 @@ a2enmod rewrite \
         mime \
         ssl \
         setenvif
+service apache2 restart
+
+# Enable new config
+a2ensite owncloud_ssl_domain_self_signed.conf
+service apache2 restart
+
+# Install PHP 7
+apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php-7.0
+apt-get update
+apt-get install -y \
+        php7.0 \
+        php7.0-common \
+        php7.0-mysql \
+        php7.0-intl \
+        php7.0-mcrypt \
+        php7.0-ldap \
+        php7.0-imap \
+        php7.0-cli \
+        php7.0-gd \
+        php7.0-pgsql \
+        php7.0-json \
+        php7.0-sqlite3 \
+        php7.0-curl \
+        libsm6 \
+        libsmbclient
+
+# Set hostname and ServerName
+sudo sh -c "echo 'ServerName owncloud' >> /etc/apache2/apache2.conf"
+sudo hostnamectl set-hostname owncloud
+sudo service apache2 restart
+
+# Download $OCVERSION
+wget https://download.owncloud.org/community/$OCVERSION -P $HTML
+apt-get install unzip -y
+unzip $HTML/$OCVERSION
+
+# Secure permissions
+wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/testing/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+bash $SCRIPTS/setup_secure_permissions_owncloud.sh
+
+# Install ownCloud
+# Only works in OC 9
+sudo -u www-data php $OCPATH/occ maintenance:install --database "localhost" --database-name "owncloud_db" --database-user "root" --database-pass "$mysql_pass" --admin-user "ocadmin" --admin-pass "owncloud"
+echo
+echo ownCloud version:
+sudo -u www-data php /var/www/owncloud/occ status
+echo
+sleep 3
 
 # Generate $ssl_conf
 if [ -f $ssl_conf ];
@@ -61,8 +134,6 @@ if [ -f $ssl_conf ];
         echo "Virtual Host exists"
 else
         touch "$ssl_conf"
-        echo "$ssl_conf was successfully created"
-        sleep 3
         cat << SSL_CREATE > "$ssl_conf"
 <VirtualHost *:443>
     Header add Strict-Transport-Security: "max-age=15768000;includeSubdomains"
@@ -94,56 +165,29 @@ else
     SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
 </VirtualHost>
 SSL_CREATE
+echo "$ssl_conf was successfully created"
+sleep 3
 fi
 
-# Enable new config
-a2ensite owncloud_ssl_domain_self_signed.conf
-service apache2 restart
-
-# Install PHP 7
-apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php-7.0
-apt-get install -y \
-        php7.0 \
-        php7.0-common \
-        php7.0-mysql \
-        php7.0-intl \
-        php7.0-mcrypt \
-        php7.0-ldap \
-        php7.0-imap \
-        php7.0-cli \
-        php7.0-gd \
-        php7.0-pgsql \
-        php7.0-json \
-        php7.0-sqlite3 \
-        php7.0-curl \
-        libsm6 \
-        libsmbclient
-
-# Set hostname and ServerName
-sudo sh -c "echo 'ServerName owncloud' >> /etc/apache2/apache2.conf"
-sudo hostnamectl set-hostname owncloud
-sudo service apache2 restart
-
-# Set locales
-sudo locale-gen "sv_SE.UTF-8" && sudo dpkg-reconfigure locales
-
-# Download $OCVERSION
-wget https://download.owncloud.org/community/$OCVERSION -P $HTML
-apt-get install unzip -y
-unzip $HTML/$OCVERSION.zip
-
-# Secure permissions
-wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/testing/setup_secure_permissions_owncloud.sh -P $SCRIPTS
-bash $SCRIPTS/setup_secure_permissions_owncloud.sh
+## Set config values
+# Experimental apps
+sudo -u www-data php $OCPATH/occ config:system:set appstore.experimental.enabled --value="true"
+# Default mail server (make this user configurable?)
+sudo -u www-data php $OCPATH/occ config:system:set mail_smtpmode --value="smtp"
+sudo -u www-data php $OCPATH/occ config:system:set mail_smtpauth --value="1"
+sudo -u www-data php $OCPATH/occ config:system:set mail_smtpport --value="465"
+sudo -u www-data php $OCPATH/occ config:system:set mail_smtphost --value="smtp.gmail.com"
+sudo -u www-data php $OCPATH/occ config:system:set mail_smtpauthtype --value="LOGIN"
+sudo -u www-data php $OCPATH/occ config:system:set mail_from_address --value="www.en0ch.se"
+sudo -u www-data php $OCPATH/occ config:system:set mail_domain --value="gmail.com"
+sudo -u www-data php $OCPATH/occ config:system:set mail_smtpsecure --value="ssl"
+sudo -u www-data php $OCPATH/occ config:system:set mail_smtpname --value="www.en0ch.se@gmail.com"
+sudo -u www-data php $OCPATH/occ config:system:set mail_from_address --value="hejasverige"
 
 # Install Libreoffice Writer
-sudo apt-get install --no-install-recommends libreoffice-writer -y
 echo -ne '\n' | sudo apt-add-repository ppa:libreoffice/libreoffice-4-4
-# php $SCRIPTS/update-config.php $OCPATH/config/config.php preview_libreoffice_path' => '/usr/bin/libreoffice
+apt-get update
+sudo apt-get install --no-install-recommends libreoffice-writer -y
+sudo -u www-data php $OCPATH/occ config:system:set preview_libreoffice_path --value="/usr/bin/libreoffice"
 
-# Install ownCloud
-# Only works in OC 9
-sudo -u www-data php $OCPATH/occ maintenance:install --database "owncloud_db" --database-name "owncloud" --database-user "root" --database-pass "owncloud" --admin-user "ocadmin" --admin-pass "owncloud"
-
-# manual:
-# sudo mysql_secure_installation  
+exit 1
