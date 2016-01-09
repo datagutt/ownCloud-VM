@@ -10,7 +10,7 @@ OCPATH=$HTML/owncloud
 
 
 # Must be root
-[[ `id -u` -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
+[[ $(id -u) -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
 
 # System Upgrade
 sudo apt-get update
@@ -101,7 +101,7 @@ sudo update-grub
 
 # Write to log
 touch /var/log/cronjobs_success.log
-echo "OWNCLOUD UPDATE success-`date +"%Y%m%d"`" >> /var/log/cronjobs_success.log
+echo "OWNCLOUD UPDATE success-$(date +"%Y%m%d")" >> /var/log/cronjobs_success.log
 echo
 echo ownCloud version:
 sudo -u www-data php $OCPATH/occ status
