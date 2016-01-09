@@ -202,6 +202,7 @@ rm /var/scripts/owncloud-startup-script.sh
 rm /var/scripts/ip.sh
 rm /var/scripts/test_connection.sh
 rm /var/scripts/update-config.php
+rm /var/www/html/index.html
 rm /var/scripts/owncloud_install.sh
 rm /var/rc.local
 rm /var/www/html/owncloud/data/owncloud.log
