@@ -173,7 +173,7 @@ sleep 2
 echo
 echo
 apt-get update
-aptutude full-upgrade
+aptutude full-upgrade -y
 
 # Cleanup 1
 apt-get autoremove -y
@@ -203,6 +203,8 @@ rm /var/scripts/owncloud-startup-script.sh
 rm /var/scripts/ip.sh
 rm /var/scripts/trusted.sh
 rm /var/scripts/test_connection.sh
+rm /var/scripts/update-config.php
+rm /var/scripts/owncloud_install.php
 rm /var/www/html/owncloud/data/owncloud.log
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root
