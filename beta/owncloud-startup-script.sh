@@ -60,7 +60,7 @@ echo
 clear
 
 # Change Timezone
-echo "Current Timezone is Europe/Berlin"
+echo "Current Timezone is Europe/Stockholm"
 echo "You must change timezone to your timezone"
 echo -e "\e[32m"
 read -p "Press any key to change timezone... " -n1 -s
