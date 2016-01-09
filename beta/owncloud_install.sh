@@ -10,6 +10,8 @@ SCRIPTS=/var/scripts
 HTML=/var/www/html
 OCPATH=$HTML/owncloud
 ssl_conf="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
+IFACE="eth0"
+IFCONFIG="/sbin/ifconfig"
 ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 
 # Check if root
@@ -112,20 +114,31 @@ unzip $HTML/$OCVERSION -d $HTML
 rm $HTML/$OCVERSION
 
 # Create data folder, occ complains otherwise
-mkdir $HTML/owncloud/data
+mkdir $OCPATH/data
 
 # Secure permissions
 wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/testing/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
-cd $HTML/owncloud
+cd $OCPATH
 sudo -u www-data php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$mysql_pass" --admin-user "ocadmin" --admin-pass "owncloud"
 echo
 echo ownCloud version:
-sudo -u www-data php /var/www/owncloud/occ status
+sudo -u www-data php $OCPATH/occ status
 echo
 sleep 3
+
+# Set trusted domain
+wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/update-config.php -P $SCRIPTS
+chmod a+x $SCRIPTS/update-config.php
+php $SCRIPTS/update-config.php $OCPATH/config/config.php 'trusted_domains[]' localhost ${ADDRESS[@]} $(hostname) $(hostname --fqdn)
+php $SCRIPTS/update-config.php $OCPATH/config/config.php overwrite.cli.url https://$ADDRESS/owncloud
+
+# Prepare cron.php to be run every 15 minutes
+# The user still has to activate it in the settings GUI
+sudo crontab -u www-data -l | { cat; echo "*/15  *  *  *  * php -f /var/www/owncloud/cron.php > /dev/null 2>&1"; } | crontab -u www-data -
+
 
 # Generate $ssl_conf
 if [ -f $ssl_conf ];
@@ -142,23 +155,23 @@ else
 #    ServerName example.com
 #    ServerAlias subdomain.example.com 
 ### SETTINGS ###
-    DocumentRoot $HTML/owncloud
+    DocumentRoot $OCPATH
 
-    <Directory $HTML/owncloud>
+    <Directory $OCPATH>
     Options Indexes FollowSymLinks
     AllowOverride All
     Require all granted
     Satisfy Any 
     </Directory>
 
-    Alias /owncloud "$HTML/owncloud/"
+    Alias /owncloud "$OCPATH/"
 
     <IfModule mod_dav.c>
     Dav off
     </IfModule>
 
-    SetEnv HOME $HTML/owncloud
-    SetEnv HTTP_HOME $HTML/owncloud
+    SetEnv HOME $OCPATH
+    SetEnv HTTP_HOME $OCPATH
 ### LOCATION OF CERT FILES ###
     SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
     SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
