@@ -214,6 +214,23 @@ cat /dev/null > /var/log/apache2/access.log
 cat /dev/null > /var/log/apache2/error.log
 cat /dev/null > /var/log/cronjobs_success.log
 sed -i 's/sudo -i//g' /home/ocadmin/.profile
+cat << RCLOCAL > "/etc/rc.local"
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+exit 0
+
+RCLOCAL
 
 ## Reboot
 reboot
