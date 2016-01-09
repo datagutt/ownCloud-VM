@@ -259,4 +259,6 @@ fi
 # Set secure permissions final (./data/.htaccess has wrong permissions otherwise)
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
+# Start startup-script
+bash $SCRIPTS/owncloud-startup-script.sh
 exit 1
