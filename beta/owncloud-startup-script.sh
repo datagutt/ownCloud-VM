@@ -201,10 +201,9 @@ echo
 sudo -u www-data php /var/www/html/owncloud/occ maintenance:repair
 rm /var/scripts/owncloud-startup-script.sh
 rm /var/scripts/ip.sh
-rm /var/scripts/trusted.sh
 rm /var/scripts/test_connection.sh
 rm /var/scripts/update-config.php
-rm /var/scripts/owncloud_install.php
+rm /var/scripts/owncloud_install.sh
 rm /var/rc.local
 rm /var/www/html/owncloud/data/owncloud.log
 cat /dev/null > ~/.bash_history
