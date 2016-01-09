@@ -7,7 +7,6 @@
 SCRIPTS=/var/scripts
 HTML=/var/www/html
 OCPATH=$HTML/owncloud
-BACKUP="$OCPATH/data/ $OCPATH/config/"
 
 
 # Must be root
