@@ -2,8 +2,6 @@
 
 # Tech and Me, 2016 - www.techandme.se
 
-# /<>\ WARNING /<>\ THIS SCRIPT IS UNDER CONSTRUCTION
-
 mysql_pass=owncloud
 OCVERSION=owncloud-8.2.2.zip
 SCRIPTS=/var/scripts
