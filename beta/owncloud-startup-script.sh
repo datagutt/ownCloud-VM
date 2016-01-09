@@ -205,6 +205,7 @@ rm /var/scripts/trusted.sh
 rm /var/scripts/test_connection.sh
 rm /var/scripts/update-config.php
 rm /var/scripts/owncloud_install.php
+rm /var/rc.local
 rm /var/www/html/owncloud/data/owncloud.log
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root
