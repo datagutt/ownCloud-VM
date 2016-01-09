@@ -4,7 +4,6 @@
 #
 # Tested on Ubuntu Server 14.04.
 #
-OCVERSION=owncloud-8.2.2.zip
 SCRIPTS=/var/scripts
 HTML=/var/www/html
 OCPATH=$HTML/owncloud
