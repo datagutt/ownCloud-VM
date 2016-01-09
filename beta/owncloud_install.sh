@@ -183,6 +183,7 @@ fi
 
 # Enable new config
 a2ensite owncloud_ssl_domain_self_signed.conf
+a2dissite default-ssl
 service apache2 restart
 
 ## Set config values
@@ -200,10 +201,62 @@ sudo -u www-data php $OCPATH/occ config:system:set mail_smtpsecure --value="ssl"
 sudo -u www-data php $OCPATH/occ config:system:set mail_smtpname --value="www.en0ch.se@gmail.com"
 sudo -u www-data php $OCPATH/occ config:system:set mail_smtppassword --value="hejasverige"
 
-# Install Libreoffice Writer
+# Install Libreoffice Writer to be able to read MS documents.
 echo -ne '\n' | sudo apt-add-repository ppa:libreoffice/libreoffice-4-4
 apt-get update
 sudo apt-get install --no-install-recommends libreoffice-writer -y
+
+# Download and install Documents
+if [ -d $OCPATH/apps/documents ]; then
+sleep 1
+else
+wget https://github.com/owncloud/documents/archive/master.zip -P $OCPATH/apps
+cd $OCPATH/apps
+unzip master.zip
+rm master.zip
+mv documents-master/ documents/
+fi
+
+# Enable documents
+if [ -d $OCPATH/apps/documents ]; then
+sudo -u www-data php $OCPATH/occ app:enable documents
 sudo -u www-data php $OCPATH/occ config:system:set preview_libreoffice_path --value="/usr/bin/libreoffice"
+fi
+
+# Download and install Contacts
+if [ -d $OCPATH/apps/contacts ]; then
+sleep 1
+else
+wget https://github.com/owncloud/contacts/archive/master.zip -P $OCPATH/apps
+unzip $OCPATH/apps/master.zip -d $OCPATH/apps
+cd $OCPATH/apps
+rm master.zip
+mv contacts-master/ contacts/
+fi
+
+# Enable Contacts
+if [ -d $OCPATH/apps/contacts ]; then
+sudo -u www-data php $OCPATH/occ app:enable contacts
+fi
+
+# Download and install Calendar
+if [ -d $OCPATH/apps/calendar ]; then
+sleep 1
+else
+wget https://github.com/owncloud/calendar/archive/master.zip -P $OCPATH/apps
+unzip $OCPATH/apps/master.zip -d $OCPATH/apps
+cd $OCPATH/apps
+rm master.zip
+mv calendar-master/ calendar/
+fi
+
+# Enable Calendar
+if [ -d $OCPATH/apps/calendar ]; then
+sudo -u www-data php $OCPATH/occ app:enable calendar
+fi
+
+
+# Set secure permissions final (./data/.htaccess has wrong permissions otherwise)
+bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 exit 1
