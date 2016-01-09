@@ -20,6 +20,13 @@ HTML=/var/www/html
       		else
       	mkdir $SCRIPTS
 fi
+# Get ownCloud install script
+        if [ -f $SCRIPTS/owncloud_install.sh ];
+                then
+                echo "owncloud_install.sh exists"
+                else
+        wget wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_install.sh -P $SCRIPTS
+fi
         # Activate SSL
         if [ -f $SCRIPTS/activate-ssl.sh ];
                 then
