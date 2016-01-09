@@ -189,7 +189,7 @@ echo -e "|         \e[0mLogin to ownCloud in your browser:\e[36m" $ADDRESS"\e[32
 echo    "|                                                                    |"
 echo -e "|         \e[0mPublish your server online! \e[36mhttp://goo.gl/H7IsHm\e[32m           |"
 echo    "|                                                                    |"
-echo -e "|    \e[91m#################### Tech and Me - 2015 ####################\e[32m    |"
+echo -e "|    \e[91m#################### Tech and Me - 2016 ####################\e[32m    |"
 echo    "+--------------------------------------------------------------------+"
 echo
 read -p "Press any key to reboot..." -n1 -s
