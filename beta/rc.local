@@ -1,0 +1,115 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+SCRIPTS=/var/scripts
+HTML=/var/www/html
+
+      	# Create dir
+      	if [ -d $SCRIPTS ]; then
+      		sleep 1
+      		else
+      	mkdir $SCRIPTS
+fi
+        # Activate SSL
+        if [ -f $SCRIPTS/activate-ssl.sh ];
+                then
+                echo "activate-ssl.sh exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh -P $SCRIPTS
+fi
+        
+        # The update script
+        if [ -f $SCRIPTS/owncloud_update.sh ];
+                then
+                echo "owncloud_update.sh exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_update.sh -P $SCRIPTS
+fi
+                # Sets static IP to UNIX
+        if [ -f $SCRIPTS/ip.sh ];
+                then
+                echo "ip.sh exists"
+                else
+      	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/ip.sh -P $SCRIPTS
+fi
+                # Tests connection after static IP is set
+        if [ -f $SCRIPTS/test_connection.sh ];
+                then
+                echo "test_connection.sh exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/test_connection.sh -P $SCRIPTS
+fi
+                # Welcome message after login (change in /home/ocadmin/.profile
+        if [ -f $SCRIPTS/instruction.sh ];
+                then
+                echo "instruction.sh exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/instruction.sh -P $SCRIPTS
+fi
+                # Clears command history on every login
+        if [ -f $SCRIPTS/history.sh ];
+                then
+                echo "history.sh exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/history.sh -P $SCRIPTS
+fi
+                # Change roots .bash_profile
+        if [ -f $SCRIPTS/change-root-profile.sh ];
+                then
+                echo "change-root-profile.sh exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/change-root-profile.sh -P $SCRIPTS
+fi
+                # Change ocadmin .bash_profile
+        if [ -f $SCRIPTS/change-ocadmin-profile.sh ];
+                then
+                echo "change-ocadmin-profile.sh  exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/change-ocadmin-profile.sh -P $SCRIPTS
+fi
+                # Get startup-script for root
+        if [ -f $SCRIPTS/owncloud-startup-script.sh ];
+                then
+                echo "owncloud-startup-script.sh exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud-startup-script.sh -P $SCRIPTS
+fi
+        # Make $SCRIPTS excutable 
+        chmod +x -R $SCRIPTS
+        chown root:root -R $SCRIPTS
+
+        # Allow ocadmin to run theese scripts
+        chown ocadmin:ocadmin $SCRIPTS/instruction.sh
+        chown ocadmin:ocadmin $SCRIPTS/history.sh
+
+        # Get the Welcome Screen when http://$address
+		if [ -f $HTML/index.php ];
+                then
+                rm $HTML/index.php
+                wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/index.php -P $HTML
+		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
+                else        
+		wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/index.php -P $HTML
+		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
+fi	
+	# Remove the regular index.html if it exists
+		if [ -f $HTML/index.html ];
+                then
+                rm -f $HTML/index.html
+fi
+
+        # Change .profile
+        bash $SCRIPTS/change-root-profile.sh
+        bash $SCRIPTS/change-ocadmin-profile.sh
+
+exit 0
