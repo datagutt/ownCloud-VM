@@ -14,8 +14,8 @@ if [ "$BASH" ]; then
   fi
 fi
 
-if [ -x /var/scripts/owncloud-startup-script.sh ]; then
-        /var/scripts/owncloud-startup-script.sh
+if [ -x /var/scripts/owncloud_install.sh ]; then
+        /var/scripts/owncloud_install.sh
 fi
 
 if [ -x /var/scripts/history.sh ]; then
