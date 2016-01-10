@@ -27,6 +27,13 @@ fi
                 else
         wget wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_install.sh -P $SCRIPTS
 fi
+# Get Redis install script
+        if [ -f $SCRIPTS/install-redis-php-7.sh ];
+                then
+                echo "install-redis-php-7.sh exists"
+                else
+        wget wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/install-redis-php-7.sh -P $SCRIPTS
+fi
         # Activate SSL
         if [ -f $SCRIPTS/activate-ssl.sh ];
                 then
