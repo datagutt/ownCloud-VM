@@ -8,9 +8,19 @@ SCRIPTS=/var/scripts
 HTML=/var/www/html
 OCPATH=$HTML/owncloud
 DATA=$OCPATH/data
+SECURE="$SCRIPTS/setup_secure_permissions_owncloud.sh"
 
 # Must be root
 [[ $(id -u) -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
+
+# Set secure permissions
+if [ -f $SECURE ];
+then
+        echo "Script exists"
+else
+        mkdir -p $SCRIPTS
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+fi
 
 # System Upgrade
 sudo apt-get update
@@ -60,7 +70,7 @@ if [ -d $DATA/ ]; then
         cp -R $HTML/data $DATA && rm -rf $HTML/data
         cp -R $HTML/config $OCPATH/ && rm -rf $HTML/config
         cp -R $HTML/apps $OCPATH/ && rm -rf $HTML/apps
-        bash /var/scripts/setup_secure_permissions_owncloud.sh
+        bash $SCRIPTS/setup_secure_permissions_owncloud.sh
         sudo -u www-data php $OCPATH/occ upgrade
 else
         echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
@@ -96,17 +106,6 @@ else
         sed -i 's/  php_value memory_limit 512M/# php_value memory_limit 512M/g' $OCPATH/.htaccess
 fi
 
-# Set secure permissions
-FILE="/var/scripts/setup_secure_permissions_owncloud.sh"
-if [ -f $FILE ];
-then
-        echo "Script exists"
-else
-        mkdir -p /var/scripts
-        wget https://raw.githubusercontent.com/owncloud/vm/master/ATTIC/enoch85-testing/ubuntu/setup_secure_permissions_owncloud.sh -P /var/scripts/
-fi
-sudo bash /var/scripts/setup_secure_permissions_owncloud.sh
-
 # Repair
 sudo -u www-data php $OCPATH/occ maintenance:repair
 
@@ -126,6 +125,9 @@ sudo -u www-data php $OCPATH/occ status
 echo
 echo
 sleep 3
+
+# Set secure permissions again
+sudo bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 ## Un-hash this if you want the system to reboot
 # sudo reboot
