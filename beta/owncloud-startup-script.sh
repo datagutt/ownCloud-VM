@@ -16,6 +16,7 @@ echo "| This script will configure your ownCloud and activate SSL.         |"
 echo "| It will also do the following:                                     |"
 echo "|                                                                    |"
 echo "| - Install Webmin                                                   |"
+echo "| - Install Redis Cache                                              |"
 echo "| - Upgrade your system to latest version                            |"
 echo "| - Set new passwords to Ubuntu Server and ownCloud                  |"
 echo "| - Set new keyboard layout                                          |"
@@ -167,8 +168,10 @@ fi
 
 # Install Redis
 bash /var/scripts/install-redis-php-7.sh
+echo
 redis-cli ping
 echo Testing Redis: PING
+echo
 sleep 3
 
 # Upgrade system
@@ -209,6 +212,7 @@ rm /var/scripts/ip.sh
 rm /var/scripts/test_connection.sh
 rm /var/scripts/change-ocadmin-profile.sh
 rm /var/scripts/change-root-profile.sh
+rm /var/scripts/install-redis-php-7.sh
 rm /var/scripts/index.html
 rm /var/scripts/update-config.php
 rm /var/www/html/index.html
