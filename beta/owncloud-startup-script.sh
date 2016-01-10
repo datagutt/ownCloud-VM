@@ -201,6 +201,9 @@ sudo -u www-data php /var/www/html/owncloud/occ maintenance:repair
 rm /var/scripts/owncloud-startup-script.sh
 rm /var/scripts/ip.sh
 rm /var/scripts/test_connection.sh
+rm /var/scripts/change-ocadmin-profile.sh
+rm /var/scripts/change-root-profile.sh
+rm /var/scripts/index.html
 rm /var/scripts/update-config.php
 rm /var/www/html/index.html
 rm /var/scripts/owncloud_install.sh
