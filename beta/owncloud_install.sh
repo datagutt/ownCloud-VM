@@ -108,7 +108,7 @@ apt-get install -y \
 # Download $OCVERSION
 wget https://download.owncloud.org/community/$OCVERSION -P $HTML
 apt-get install unzip -y
-unzip $HTML/$OCVERSION -d $HTML 
+unzip -q $HTML/$OCVERSION -d $HTML 
 rm $HTML/$OCVERSION
 
 # Create data folder, occ complains otherwise
@@ -210,7 +210,7 @@ sleep 1
 else
 wget https://github.com/owncloud/documents/archive/master.zip -P $OCPATH/apps
 cd $OCPATH/apps
-unzip master.zip
+unzip -q master.zip
 rm master.zip
 mv documents-master/ documents/
 fi
@@ -226,7 +226,7 @@ if [ -d $OCPATH/apps/contacts ]; then
 sleep 1
 else
 wget https://github.com/owncloud/contacts/archive/master.zip -P $OCPATH/apps
-unzip $OCPATH/apps/master.zip -d $OCPATH/apps
+unzip -q $OCPATH/apps/master.zip -d $OCPATH/apps
 cd $OCPATH/apps
 rm master.zip
 mv contacts-master/ contacts/
@@ -242,7 +242,7 @@ if [ -d $OCPATH/apps/calendar ]; then
 sleep 1
 else
 wget https://github.com/owncloud/calendar/archive/master.zip -P $OCPATH/apps
-unzip $OCPATH/apps/master.zip -d $OCPATH/apps
+unzip -q $OCPATH/apps/master.zip -d $OCPATH/apps
 cd $OCPATH/apps
 rm master.zip
 mv calendar-master/ calendar/
