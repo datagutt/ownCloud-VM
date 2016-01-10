@@ -137,6 +137,17 @@ php $SCRIPTS/update-config.php $OCPATH/config/config.php overwrite.cli.url https
 # The user still has to activate it in the settings GUI
 sudo crontab -u www-data -l | { cat; echo "*/15  *  *  *  * php -f /var/www/owncloud/cron.php > /dev/null 2>&1"; } | crontab -u www-data -
 
+# Change values in php.ini (increase max file size)
+# max_execution_time
+sed -i "s|max_execution_time = 30|max_execution_time = 3500|g" /etc/php/7.0/apache2/php.ini
+# max_input_time
+sed -i "s|max_input_time = 60|max_input_time = 3600|g" /etc/php/7.0/apache2/php.ini
+# memory_limit
+sed -i "s|memory_limit = 128M|memory_limit = 512M|g" /etc/php/7.0/apache2/php.ini
+# post_max
+sed -i "s|post_max_size = 8M|post_max_size = 1100M|g" /etc/php/7.0/apache2/php.ini
+# upload_max
+sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php/7.0/apache2/php.ini
 
 # Generate $ssl_conf
 if [ -f $ssl_conf ];
