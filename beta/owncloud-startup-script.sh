@@ -165,6 +165,12 @@ echo
     echo -e "\e[0m"
 fi
 
+# Install Redis
+bash /var/scripts/install-redis-php-7.sh
+redis-cli ping
+echo Testing Redis: PING
+sleep 3
+
 # Upgrade system
 clear
 echo System will now upgrade...
