@@ -7,7 +7,7 @@
 SCRIPTS=/var/scripts
 HTML=/var/www/html
 OCPATH=$HTML/owncloud
-
+DATA=$OCPATH/data
 
 # Must be root
 [[ $(id -u) -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
@@ -16,7 +16,7 @@ OCPATH=$HTML/owncloud
 sudo apt-get update
 sudo aptitude full-upgrade -y
 
-rsync -Aax $OCPATH/data $HTML
+rsync -Aax $DATA $HTML
 rsync -Aax $OCPATH/config $HTML
 rsync -Aax $OCPATH/themes $HTML
 wget https://download.owncloud.org/community/owncloud-latest.tar.bz2 -P $HTML
@@ -43,13 +43,13 @@ else
    exit 1
 fi
 
-if [ -d $OCPATH/data/ ]; then
+if [ -d $DATA/ ]; then
         echo "data/ exists" && sleep 5
         rm -rf $OCPATH
-        tar -xjvf $HTML/owncloud-latest.tar.bz2 -C $HTML 
+        tar -xjf $HTML/owncloud-latest.tar.bz2 -C $HTML 
         rm $HTML/owncloud-latest.tar.bz2
         cp -R $HTML/themes $OCPATH/ && rm -rf $HTML/themes
-        cp -R $HTML/data $OCPATH/ && rm -rf $HTML/data
+        cp -R $HTML/data $DATA && rm -rf $HTML/data
         cp -R $HTML/config $OCPATH/ && rm -rf $HTML/config
         bash /var/scripts/setup_secure_permissions_owncloud.sh
         sudo -u www-data php $OCPATH/occ upgrade
@@ -116,6 +116,7 @@ echo ownCloud version:
 sudo -u www-data php $OCPATH/occ status
 echo
 echo
+sleep 3
 
 ## Un-hash this if you want the system to reboot
 # sudo reboot
