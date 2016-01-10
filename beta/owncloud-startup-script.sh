@@ -139,8 +139,13 @@ echo -e "\e[32m"
 read -p "Press any key to change password for ownCloud... " -n1 -s
 echo -e "\e[0m"
 sudo -u www-data php /var/www/html/owncloud/occ user:resetpassword ocadmin
-echo
-sleep 2
+if [[ $? > 0 ]]
+then
+    sudo -u www-data php /var/www/html/owncloud/occ user:resetpassword ocadmin
+else
+    sleep 2
+fi
+
 # Get the latest active-ssl script
         cd /var/scripts
         rm /var/scripts/activate-ssl.sh
