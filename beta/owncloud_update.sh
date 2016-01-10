@@ -18,6 +18,7 @@ sudo aptitude full-upgrade -y
 
 rsync -Aax $OCPATH/data $HTML
 rsync -Aax $OCPATH/config $HTML
+rsync -Aax $OCPATH/themes $HTML
 wget https://download.owncloud.org/community/owncloud-latest.tar.bz2 -P $HTML
 
 if [ -f $HTML/owncloud-latest.tar.bz2 ];
@@ -35,11 +36,19 @@ else
    exit 1
 fi
 
+if [ -d $OCPATH/themes/ ]; then
+        echo "themes/ exists" 
+else
+        echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
+   exit 1
+fi
+
 if [ -d $OCPATH/data/ ]; then
         echo "data/ exists" && sleep 5
         rm -rf $OCPATH
         tar -xjvf $HTML/owncloud-latest.tar.bz2 -C $HTML 
         rm $HTML/owncloud-latest.tar.bz2
+        cp -R $HTML/themes $OCPATH/ && rm -rf $HTML/themes
         cp -R $HTML/data $OCPATH/ && rm -rf $HTML/data
         cp -R $HTML/config $OCPATH/ && rm -rf $HTML/config
         bash /var/scripts/setup_secure_permissions_owncloud.sh
