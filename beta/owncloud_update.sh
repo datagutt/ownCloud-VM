@@ -70,7 +70,7 @@ if [ -d $DATA/ ]; then
         cp -R $HTML/data $DATA && rm -rf $HTML/data
         cp -R $HTML/config $OCPATH/ && rm -rf $HTML/config
         cp -R $HTML/apps $OCPATH/ && rm -rf $HTML/apps
-        bash $SCRIPTS/setup_secure_permissions_owncloud.sh
+        bash $SECURE
         sudo -u www-data php $OCPATH/occ upgrade
 else
         echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
@@ -127,7 +127,7 @@ echo
 sleep 3
 
 # Set secure permissions again
-sudo bash $SCRIPTS/setup_secure_permissions_owncloud.sh
+bash $SECURE
 
 ## Un-hash this if you want the system to reboot
 # sudo reboot
