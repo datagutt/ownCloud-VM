@@ -155,7 +155,7 @@ fi
 # Get the latest active-ssl script
         cd /var/scripts
         rm /var/scripts/activate-ssl.sh
-        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh
         chmod 755 /var/scripts/activate-ssl.sh
 clear
 # Let's Encrypt
