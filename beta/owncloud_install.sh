@@ -135,7 +135,7 @@ php $SCRIPTS/update-config.php $OCPATH/config/config.php overwrite.cli.url https
 
 # Prepare cron.php to be run every 15 minutes
 # The user still has to activate it in the settings GUI
-sudo crontab -u www-data -l | { cat; echo "*/15  *  *  *  * php -f /var/www/owncloud/cron.php > /dev/null 2>&1"; } | crontab -u www-data -
+crontab -u www-data -l | { cat; echo "*/15  *  *  *  * php -f $OCPATH/cron.php > /dev/null 2>&1"; } | crontab -u www-data -
 
 # Change values in php.ini (increase max file size)
 # max_execution_time
