@@ -1,11 +1,9 @@
 # ownCloud-VM
 **Scripts to setup and configure the ownCloud VM**
 
-You can find all the VMs [here](https://www.techandme.se/pre-configured-owncloud-installaton/).
+You can find all the VMs [here](https://www.techandme.se/pre-configured-owncloud-installaton/). Feel free to contribute!
 
-Feel free to contribute!
-
-### BETA VM
+### HOW TO SETUP THE BETA VM
 
 - Create a clean Ubuntu Server 14.04 VM with VMware Workstation or VirtualBox
 - Edit rc.local likes this:
@@ -31,6 +29,7 @@ Feel free to contribute!
     else
         wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/rc.local -P /var/
         cat /var/rc.local > /etc/rc.local
+        rm -rf /var/rc.local
         reboot
     fi
 
