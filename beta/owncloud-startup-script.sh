@@ -130,6 +130,12 @@ echo -e "\e[32m"
 read -p "Press any key to change password for Linux... " -n1 -s
 echo -e "\e[0m"
 sudo passwd ocadmin
+if [[ $? > 0 ]]
+then
+    sudo passwd ocadmin
+else
+    sleep 2
+fi
 echo
 clear &&
 echo -e "\e[0m"
@@ -186,7 +192,7 @@ sleep 2
 echo
 echo
 apt-get update
-aptutude full-upgrade -y
+aptitude full-upgrade -y
 
 # Cleanup 1
 apt-get autoremove -y
