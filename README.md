@@ -1,6 +1,8 @@
 # ownCloud-VM
 **Scripts to setup and configure the ownCloud VM**
 
+### DOWNLOAD THE VM
+
 You can find all the VMs [here](https://www.techandme.se/pre-configured-owncloud-installaton/). Feel free to contribute!
 
 ### HOW TO SETUP THE BETA VM
@@ -37,10 +39,10 @@ exit 0
 ```
 - Reboot
 
-### Test a live version
+### TEST A LIVE VERSION
 
 You can test the VM [here](https://owncloudphp7.techandme.se/).
 - User: testuser
 - Pass: testingphp7
 
-Please note that if you get an internal server error, it's becuase the user get's deleted every hour.
+Please note that if you get an internal server error, it's becuase the user gets deleted every hour. Just press F5 and reload the page in that case.
