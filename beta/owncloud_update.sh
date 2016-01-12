@@ -26,6 +26,9 @@ fi
 sudo apt-get update
 sudo aptitude full-upgrade -y
 
+# Enable maintenance mode
+sudo -u www-data php $OCPATH/occ maintenance:mode --on
+
 rsync -Aax $DATA $HTML
 rsync -Aax $OCPATH/config $HTML
 rsync -Aax $OCPATH/themes $HTML
