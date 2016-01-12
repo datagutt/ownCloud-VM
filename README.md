@@ -36,3 +36,11 @@ You can find all the VMs [here](https://www.techandme.se/pre-configured-owncloud
 exit 0
 ```
 - Reboot
+
+### Test a live version
+
+You can test the VM [here](https://owncloudphp7.techandme.se/).
+- User: testuser
+- Pass: testingphp7
+
+Please note that if you get an internal server error, it's becuase the user get's deleted every hour.
