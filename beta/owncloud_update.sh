@@ -65,7 +65,7 @@ else
 fi
 
 if [ -d $DATA/ ]; then
-        echo "data/ exists" && sleep 5
+        echo "data/ exists" && sleep 3
         rm -rf $OCPATH
         tar -xjf $HTML/owncloud-latest.tar.bz2 -C $HTML 
         rm $HTML/owncloud-latest.tar.bz2
@@ -74,6 +74,7 @@ if [ -d $DATA/ ]; then
         cp -R $HTML/config $OCPATH/ && rm -rf $HTML/config
         cp -R $HTML/apps $OCPATH/ && rm -rf $HTML/apps
         bash $SECURE
+        sudo -u www-data php $OCPATH/occ maintenance:mode --off
         sudo -u www-data php $OCPATH/occ upgrade
 else
         echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
