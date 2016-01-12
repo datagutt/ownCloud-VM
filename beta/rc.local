@@ -107,14 +107,9 @@ fi
         chown ocadmin:ocadmin $SCRIPTS/history.sh
 
         # Get the Welcome Screen when http://$address
-		if [ -f $HTML/index.php ];
-                then
-                rm $HTML/index.php
-                wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/index.php -P $HTML
-		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
-                else        
-		wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/index.php -P $HTML
-		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
+        rm $HTML/index.php
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/index.php -P $HTML
+	chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
 fi	
 	# Remove the regular index.html if it exists
 		if [ -f $HTML/index.html ];
