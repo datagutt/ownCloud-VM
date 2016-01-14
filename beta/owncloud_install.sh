@@ -25,7 +25,7 @@ echo "nameserver 8.26.56.26" > /etc/resolvconf/resolv.conf.d/base
 echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
 
 # Check network
-sudo ifdown eth0 && sudo ifup eth0
+sudo ifdown $IFACE && sudo ifup $IFACE
 nslookup google.com
 if [[ $? > 0 ]]
 then
