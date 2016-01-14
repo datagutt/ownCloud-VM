@@ -33,6 +33,13 @@ rsync -Aax $DATA $HTML
 rsync -Aax $OCPATH/config $HTML
 rsync -Aax $OCPATH/themes $HTML
 rsync -Aax $OCPATH/apps $HTML
+if [[ $? > 0 ]]
+then
+    echo "Backup was not OK. Please check $HTML and see if the folders are backed up properly"
+    exit
+else
+    echo "Backup OK!"
+fi
 wget https://download.owncloud.org/community/owncloud-latest.tar.bz2 -P $HTML
 
 if [ -f $HTML/owncloud-latest.tar.bz2 ];
