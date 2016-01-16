@@ -45,4 +45,4 @@ You can test the VM [here](https://owncloudphp7.techandme.se/).
 - User: testuser
 - Pass: testingphp7
 
-Please note that if you get an internal server error, it's becuase the user gets deleted every hour. Just press F5 and reload the page in that case.
+Please note that if you get an internal server error (502), it's becuase the data gets deleted via a cronjob on a schedule. Just press F5 and reload the page in that case.
