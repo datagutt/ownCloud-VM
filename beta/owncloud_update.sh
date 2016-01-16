@@ -29,10 +29,11 @@ sudo aptitude full-upgrade -y
 # Enable maintenance mode
 sudo -u www-data php $OCPATH/occ maintenance:mode --on
 
+# Backup data
 rsync -Aaxv $DATA $HTML
-rsync -Aaxv $OCPATH/config $HTML
-rsync -Aaxv $OCPATH/themes $HTML
-rsync -Aaxv $OCPATH/apps $HTML
+rsync -Aax $OCPATH/config $HTML
+rsync -Aax $OCPATH/themes $HTML
+rsync -Aax $OCPATH/apps $HTML
 if [[ $? > 0 ]]
 then
     echo "Backup was not OK. Please check $HTML and see if the folders are backed up properly"
