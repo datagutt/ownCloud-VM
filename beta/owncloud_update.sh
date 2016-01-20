@@ -47,7 +47,7 @@ if [ -f $HTML/owncloud-latest.tar.bz2 ];
 then
         echo "$HTML/owncloud-latest.tar.bz2 exists"
 else
-        echo "Abortitng,something went wrong with the download"
+        echo "Aborting,something went wrong with the download"
    exit 1
 fi
 
