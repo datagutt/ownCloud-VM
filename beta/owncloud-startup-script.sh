@@ -121,6 +121,8 @@ bash /var/scripts/test_connection.sh
 sleep 2
 clear
 
+# Change Trusted Domain and CLI
+bash $SCRIPTS/trusted.sh
 
 # Change password
 echo -e "\e[0m"
