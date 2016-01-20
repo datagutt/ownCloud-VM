@@ -3,10 +3,12 @@
 ## Tech and Me ## - 2016, https://www.techandme.se/
 #
 
+SCRIPTS=/var/scripts
+
 # Check if root
 if [ "$(whoami)" != "root" ]; then
         echo
-        echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msudo \e[0mbash /var/scripts/owncloud-startup-script.sh"
+        echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msudo \e[0mbash $SCRIPTS/owncloud-startup-script.sh"
         echo
         exit 1
 fi
@@ -92,7 +94,7 @@ ifdown eth0
 sleep 2
 ifup eth0
 sleep 2
-bash /var/scripts/ip.sh
+bash $SCRIPTS/ip.sh
 ifdown eth0
 sleep 2
 ifup eth0
@@ -101,7 +103,7 @@ echo
 echo "Testing if network is OK..."
 sleep 1
 echo
-bash /var/scripts/test_connection.sh
+bash $SCRIPTS/test_connection.sh
 sleep 2
 echo
 echo -e "\e[0mIf the output is \e[32mConnected! \o/\e[0m everything is working."
@@ -117,7 +119,7 @@ sleep 2
 ifup eth0
 sleep 2
 echo
-bash /var/scripts/test_connection.sh
+bash $SCRIPTS/test_connection.sh
 sleep 2
 clear
 
@@ -155,10 +157,10 @@ else
 fi
 
 # Get the latest active-ssl script
-        cd /var/scripts
-        rm /var/scripts/activate-ssl.sh
+        cd $SCRIPTS
+        rm $SCRIPTS/activate-ssl.sh
         wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh
-        chmod 755 /var/scripts/activate-ssl.sh
+        chmod 755 $SCRIPTS/activate-ssl.sh
 clear
 # Let's Encrypt
 function ask_yes_or_no() {
@@ -170,17 +172,17 @@ function ask_yes_or_no() {
 }
 if [[ "yes" == $(ask_yes_or_no "Last but not least, do you want to install a real SSL cert (from Let's Encrypt) on this machine?") ]]
 then
-	sudo bash /var/scripts/activate-ssl.sh
+	sudo bash $SCRIPTS/activate-ssl.sh
 else
 echo
-    echo "OK, but if you want to run it later, just type: bash /var/scripts/activate-ssl.sh"
+    echo "OK, but if you want to run it later, just type: bash $SCRIPTS/activate-ssl.sh"
     echo -e "\e[32m"
     read -p "Press any key to continue... " -n1 -s
     echo -e "\e[0m"
 fi
 
 # Install Redis
-bash /var/scripts/install-redis-php-7.sh
+bash $SCRIPTS/install-redis-php-7.sh
 echo
 redis-cli ping
 echo Testing Redis: PING
@@ -220,16 +222,17 @@ echo
 
 # Cleanup 2
 sudo -u www-data php /var/www/html/owncloud/occ maintenance:repair
-rm /var/scripts/owncloud-startup-script.sh
-rm /var/scripts/ip.sh
-rm /var/scripts/test_connection.sh
-rm /var/scripts/change-ocadmin-profile.sh
-rm /var/scripts/change-root-profile.sh
-rm /var/scripts/install-redis-php-7.sh
-rm /var/scripts/index.html
-rm /var/scripts/update-config.php
+rm $SCRIPTS/owncloud-startup-script.sh
+rm $SCRIPTS/ip.sh
+rm $SCRIPTS/test_connection.sh
+rm $SCRIPTS/change-ocadmin-profile.sh
+rm $SCRIPTS/change-root-profile.sh
+rm $SCRIPTS/install-redis-php-7.sh
+rm $SCRIPTS/index.html
+rm $SCRIPTS/update-config.php
+rm $SCRIPTS/owncloud_install.sh
+rm $SCRIPTS/trusted.sh
 rm /var/www/html/index.html
-rm /var/scripts/owncloud_install.sh
 rm /var/rc.local
 rm /var/www/html/owncloud/data/owncloud.log
 cat /dev/null > ~/.bash_history
