@@ -3,7 +3,7 @@
 # Tech and Me, 2016 - www.techandme.se
 
 mysql_pass=owncloud
-OCVERSION=https://download.owncloud.org/community/daily/owncloud-daily-master.tar.bz2
+OCVERSION=owncloud-daily-master
 SCRIPTS=/var/scripts
 HTML=/var/www/html
 OCPATH=$HTML/owncloud
@@ -106,10 +106,9 @@ apt-get install -y \
         libsmbclient
 
 # Download $OCVERSION
-wget $OCVERSION -P $HTML
-apt-get install unzip -y
-unzip -q $HTML/$OCVERSION -d $HTML 
-rm $HTML/$OCVERSION
+wget https://download.owncloud.org/community/daily/$OCVERSION.tar.bz2 -P $HTML
+tar -xjf $HTML/$OCVERSION.tar.bz2 -C $HTML 
+rm $HTML/$OCVERSION.tar.bz2
 
 # Create data folder, occ complains otherwise
 mkdir $OCPATH/data
@@ -214,6 +213,9 @@ sudo -u www-data php $OCPATH/occ config:system:set mail_smtppassword --value="he
 echo -ne '\n' | sudo apt-add-repository ppa:libreoffice/libreoffice-4-4
 apt-get update
 sudo apt-get install --no-install-recommends libreoffice-writer -y
+
+# Intsall Unzip
+apt-get install unzip -y
 
 # Download and install Documents
 if [ -d $OCPATH/apps/documents ]; then
