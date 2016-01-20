@@ -26,7 +26,14 @@ if 		[ -f $SCRIPTS/owncloud_install.sh ];
         then
                 echo "owncloud_install.sh exists"
         else
-        	wget wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_install.sh -P $SCRIPTS
+        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_install.sh -P $SCRIPTS
+fi
+# Get trusted domains script
+if 		[ -f $SCRIPTS/trusted.sh ];
+        then
+                echo "trusted.sh exists"
+        else
+        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/trusted.sh -P $SCRIPTS
 fi
 # Get Redis install script
 if 		[ -f $SCRIPTS/install-redis-php-7.sh ];
