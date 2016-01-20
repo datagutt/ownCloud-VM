@@ -1,11 +1,16 @@
 #!/bin/bash
 
-WGET="/usr/bin/wget"
+IFACE="eth0"
+IFCONFIG="/sbin/ifconfig"
+ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 
-$WGET -q --tries=20 --timeout=10 http://www.google.com -O /tmp/google.idx &> /dev/null
-if [ ! -s /tmp/google.idx ]
-then
-     echo -e "\e[31mNot Connected!"
-else
-    echo -e "\e[32mConnected! \o/"
-fi
+cat <<TRUSTED >> /var/www/html/owncloud/config/config.php
+'trusted_domains' =>
+  array (
+    0 => '$ADDRESS',
+  ),
+'overwrite.cli.url' => 'http://$ADDRESS/owncloud',
+);
+TRUSTED
+
+exit 0
