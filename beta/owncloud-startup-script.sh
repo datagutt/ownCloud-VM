@@ -184,8 +184,8 @@ fi
 # Install Redis
 bash $SCRIPTS/install-redis-php-7.sh
 echo
-redis-cli ping
 echo Testing Redis: PING
+redis-cli ping
 echo
 sleep 3
 
