@@ -39,7 +39,9 @@ then
     echo "Backup was not OK. Please check $HTML and see if the folders are backed up properly"
     exit
 else
+		echo -e "\e[32m"
     echo "Backup OK!"
+    echo -e "\e[0m"
 fi
 wget https://download.owncloud.org/community/owncloud-latest.tar.bz2 -P $HTML
 
@@ -73,12 +75,12 @@ else
 fi
 
 if [ -d $DATA/ ]; then
-        echo "data/ exists" && sleep 3
+        echo "data/ exists" && sleep 2
         rm -rf $OCPATH
         tar -xjf $HTML/owncloud-latest.tar.bz2 -C $HTML 
         rm $HTML/owncloud-latest.tar.bz2
         cp -R $HTML/themes $OCPATH/ && rm -rf $HTML/themes
-        cp -R $HTML/data $DATA && rm -rf $HTML/data
+        cp -Rv $HTML/data $DATA && rm -rf $HTML/data
         cp -R $HTML/config $OCPATH/ && rm -rf $HTML/config
         cp -R $HTML/apps $OCPATH/ && rm -rf $HTML/apps
         bash $SECURE
