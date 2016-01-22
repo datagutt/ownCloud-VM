@@ -4,6 +4,7 @@
 #
 
 SCRIPTS=/var/scripts
+PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install.sh
 
 # Check if root
 if [ "$(whoami)" != "root" ]; then
@@ -212,6 +213,8 @@ echo    "|                                                                    |"
 echo -e "|         \e[0mLogin to ownCloud in your browser:\e[36m" $ADDRESS"\e[32m           |"
 echo    "|                                                                    |"
 echo -e "|         \e[0mPublish your server online! \e[36mhttp://goo.gl/H7IsHm\e[32m           |"
+echo    "|                                                                    |"
+echo -e "|      \e[0mYour MySQL password is stored in: \e[36m$PW_FILE\e[32m    |"
 echo    "|                                                                    |"
 echo -e "|    \e[91m#################### Tech and Me - 2016 ####################\e[32m    |"
 echo    "+--------------------------------------------------------------------+"
