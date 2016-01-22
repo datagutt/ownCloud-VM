@@ -3,8 +3,8 @@
 # Tech and Me, 2016 - www.techandme.se
 
 OCVERSION=owncloud-8.2.2.zip
-SHUF=$(shuf -i 25-31 -n 1)
-MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-xA-X0-9-!@#$%^&*()_+~' | fold -w $SHUF | head -n 1)
+SHUF=$(shuf -i 27-38 -n 1)
+MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
 SCRIPTS=/var/scripts
 HTML=/var/www/html
