@@ -359,5 +359,8 @@ chown ocadmin:ocadmin $SCRIPTS/history.sh
 # Make $SCRIPTS excutable 
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
+
+# Reboot
+reboot
         
 exit 0
