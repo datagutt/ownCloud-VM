@@ -23,6 +23,13 @@ ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
         exit 1
 fi
 
+# Create $SCRIPTS dir
+      	if [ -d $SCRIPTS ]; then
+      		sleep 1
+      		else
+      	mkdir $SCRIPTS
+fi
+
 # Change DNS
 echo "nameserver 8.26.56.26" > /etc/resolvconf/resolv.conf.d/base
 echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
@@ -282,6 +289,53 @@ fi
 # Set secure permissions final (./data/.htaccess has wrong permissions otherwise)
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
-# Start startup-script
-# bash $SCRIPTS/owncloud-startup-script.sh
+                # Change roots .bash_profile
+        if [ -f $SCRIPTS/change-root-profile.sh ];
+                then
+                echo "change-root-profile.sh exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/change-root-profile.sh -P $SCRIPTS
+fi
+                # Change ocadmin .bash_profile
+        if [ -f $SCRIPTS/change-ocadmin-profile.sh ];
+                then
+                echo "change-ocadmin-profile.sh  exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/change-ocadmin-profile.sh -P $SCRIPTS
+fi
+                # Get startup-script for root
+        if [ -f $SCRIPTS/owncloud-startup-script.sh ];
+                then
+                echo "owncloud-startup-script.sh exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/owncloud-startup-script.sh -P $SCRIPTS
+fi
+
+                # Welcome message after login (change in /home/ocadmin/.profile
+        if [ -f $SCRIPTS/instruction.sh ];
+                then
+                echo "instruction.sh exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/instruction.sh -P $SCRIPTS
+fi
+                # Clears command history on every login
+        if [ -f $SCRIPTS/history.sh ];
+                then
+                echo "history.sh exists"
+                else
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/history.sh -P $SCRIPTS
+fi
+
+# Change .profile
+bash $SCRIPTS/change-root-profile.sh
+bash $SCRIPTS/change-ocadmin-profile.sh
+
+# Allow ocadmin to run theese scripts
+chown ocadmin:ocadmin $SCRIPTS/instruction.sh
+chown ocadmin:ocadmin $SCRIPTS/history.sh
+        
+# Make $SCRIPTS excutable 
+chmod +x -R $SCRIPTS
+chown root:root -R $SCRIPTS
+        
 exit 0
