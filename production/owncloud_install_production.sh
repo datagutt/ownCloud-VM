@@ -156,6 +156,14 @@ fi
 # Change Trusted Domain and CLI
 bash $SCRIPTS/trusted.sh
 
+# Install phpMyadmin
+echo 'phpmyadmin phpmyadmin/dbconfig-install boolean true' | debconf-set-selections
+echo 'phpmyadmin phpmyadmin/app-password-confirm password $MYSQL_PASS' | debconf-set-selections
+echo 'phpmyadmin phpmyadmin/mysql/admin-pass password $MYSQL_PASS' | debconf-set-selections
+echo 'phpmyadmin phpmyadmin/mysql/app-pass password $MYSQL_PASS' | debconf-set-selections
+echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2' | debconf-set-selections
+apt-get install phpmyadmin -y
+
 # Prepare cron.php to be run every 15 minutes
 crontab -u www-data -l | { cat; echo "*/15  *  *  *  * php -f $OCPATH/cron.php > /dev/null 2>&1"; } | crontab -u www-data -
 
