@@ -158,11 +158,11 @@ fi
 bash $SCRIPTS/trusted.sh
 
 # Install phpMyadmin
-echo 'phpmyadmin phpmyadmin/dbconfig-install boolean true' | debconf-set-selections
-echo 'phpmyadmin phpmyadmin/app-password-confirm password $MYSQL_PASS' | debconf-set-selections
-echo 'phpmyadmin phpmyadmin/mysql/admin-pass password $MYSQL_PASS' | debconf-set-selections
-echo 'phpmyadmin phpmyadmin/mysql/app-pass password $MYSQL_PASS' | debconf-set-selections
-echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2' | debconf-set-selections
+echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/app-password-confirm password $MYSQL_PASS" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/mysql/admin-pass password $MYSQL_PASS" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/mysql/app-pass password $MYSQL_PASS" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections
 apt-get install phpmyadmin -y
 
 # Prepare cron.php to be run every 15 minutes
