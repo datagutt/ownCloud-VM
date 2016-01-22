@@ -225,6 +225,14 @@ a2ensite owncloud_ssl_domain_self_signed.conf
 a2dissite default-ssl
 service apache2 restart
 
+# Get script for Redis
+        if [ -f $SCRIPTS/instruction.sh ];
+                then
+                echo "redis_latest_php5.sh exists"
+                else
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/redis_latest_php5.sh -P $SCRIPTS
+fi
+
 # Install Redis
 bash $SCRIPTS/redis_latest_php5.sh
 
@@ -303,21 +311,21 @@ fi
 # Set secure permissions final (./data/.htaccess has wrong permissions otherwise)
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
-                # Change roots .bash_profile
+# Change roots .bash_profile
         if [ -f $SCRIPTS/change-root-profile.sh ];
                 then
                 echo "change-root-profile.sh exists"
                 else
         wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-root-profile.sh -P $SCRIPTS
 fi
-                # Change ocadmin .bash_profile
+# Change ocadmin .bash_profile
         if [ -f $SCRIPTS/change-ocadmin-profile.sh ];
                 then
                 echo "change-ocadmin-profile.sh  exists"
                 else
         wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-ocadmin-profile.sh -P $SCRIPTS
 fi
-                # Get startup-script for root
+# Get startup-script for root
         if [ -f $SCRIPTS/owncloud-startup-script.sh ];
                 then
                 echo "owncloud-startup-script.sh exists"
@@ -325,14 +333,14 @@ fi
         wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/owncloud-startup-script.sh -P $SCRIPTS
 fi
 
-                # Welcome message after login (change in /home/ocadmin/.profile
+# Welcome message after login (change in /home/ocadmin/.profile
         if [ -f $SCRIPTS/instruction.sh ];
                 then
                 echo "instruction.sh exists"
                 else
         wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/instruction.sh -P $SCRIPTS
 fi
-                # Clears command history on every login
+# Clears command history on every login
         if [ -f $SCRIPTS/history.sh ];
                 then
                 echo "history.sh exists"
