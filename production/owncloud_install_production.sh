@@ -130,9 +130,6 @@ apt-key add - < Release.key && rm Release.key
 sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /' >> /etc/apt/sources.list.d/owncloud.list"
 apt-get update && apt-get install owncloud -y
 
-# Create data folder, occ complains otherwise
-mkdir $OCPATH/data
-
 # Secure permissions
 wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
@@ -147,7 +144,7 @@ echo
 sleep 3
 
 # Install SMBclient
-apt-get install php5-libsmbclient -y
+apt-get install smbclient -y
 
 # Get trusted domains script
 if 		[ -f $SCRIPTS/trusted.sh ];
