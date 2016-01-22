@@ -147,11 +147,15 @@ sudo -u www-data php $OCPATH/occ status
 echo
 sleep 3
 
-# Set trusted domain
-wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/update-config.php -P $SCRIPTS
-chmod a+x $SCRIPTS/update-config.php
-php $SCRIPTS/update-config.php $OCPATH/config/config.php 'trusted_domains[]' localhost ${ADDRESS[@]} $(hostname) $(hostname --fqdn) 2>&1 >/dev/null
-php $SCRIPTS/update-config.php $OCPATH/config/config.php overwrite.cli.url https://$ADDRESS/owncloud 2>&1 >/dev/null
+# Get trusted domains script
+if 		[ -f $SCRIPTS/trusted.sh ];
+        then
+                echo "trusted.sh exists"
+        else
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/trusted.sh -P $SCRIPTS
+fi
+# Change Trusted Domain and CLI
+bash $SCRIPTS/trusted.sh
 
 # Prepare cron.php to be run every 15 minutes
 crontab -u www-data -l | { cat; echo "*/15  *  *  *  * php -f $OCPATH/cron.php > /dev/null 2>&1"; } | crontab -u www-data -
