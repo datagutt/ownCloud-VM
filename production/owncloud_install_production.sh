@@ -106,7 +106,7 @@ sudo hostnamectl set-hostname owncloud
 service apache2 restart
 
 # Install PHP 5.6
-apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php-5-5.6
+apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php5-5.6
 apt-get update
 apt-get install -y \
         php5 \
