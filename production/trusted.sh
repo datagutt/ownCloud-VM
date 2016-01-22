@@ -1,6 +1,6 @@
 #!/bin/bash
 
-HTML=/var/www/html
+HTML=/var/www
 OCPATH=$HTML/owncloud
 IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
