@@ -120,14 +120,13 @@ apt-get install -y \
         php5-gd \
         php5-pgsql \
         php5-json \
-        php5-sqlite3 \
+        php5-sqlite \
         php5-curl \
         libsm6 \
-        php5-libsmbclient
 
 # Download and install ownCloud
-wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key | apt-key add -
-rm Release.key
+wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
+apt-key add - < Release.key && rm Release.key
 sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /' >> /etc/apt/sources.list.d/owncloud.list"
 apt-get update && apt-get install owncloud -y
 
@@ -146,6 +145,9 @@ echo ownCloud version:
 sudo -u www-data php $OCPATH/occ status
 echo
 sleep 3
+
+# Install SMBclient
+apt-get install php5-libsmbclient -y
 
 # Get trusted domains script
 if 		[ -f $SCRIPTS/trusted.sh ];
@@ -298,21 +300,21 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
                 then
                 echo "change-root-profile.sh exists"
                 else
-        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/change-root-profile.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/change-root-profile.sh -P $SCRIPTS
 fi
                 # Change ocadmin .bash_profile
         if [ -f $SCRIPTS/change-ocadmin-profile.sh ];
                 then
                 echo "change-ocadmin-profile.sh  exists"
                 else
-        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/change-ocadmin-profile.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/change-ocadmin-profile.sh -P $SCRIPTS
 fi
                 # Get startup-script for root
         if [ -f $SCRIPTS/owncloud-startup-script.sh ];
                 then
                 echo "owncloud-startup-script.sh exists"
                 else
-        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/owncloud-startup-script.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/owncloud-startup-script.sh -P $SCRIPTS
 fi
 
                 # Welcome message after login (change in /home/ocadmin/.profile
@@ -320,7 +322,7 @@ fi
                 then
                 echo "instruction.sh exists"
                 else
-        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/instruction.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/instruction.sh -P $SCRIPTS
 fi
                 # Clears command history on every login
         if [ -f $SCRIPTS/history.sh ];
