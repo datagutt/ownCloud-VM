@@ -360,6 +360,8 @@ chown ocadmin:ocadmin $SCRIPTS/history.sh
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
 
+aptitude full-upgrade -y
+
 # Reboot
 reboot
         
