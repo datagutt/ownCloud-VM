@@ -23,49 +23,49 @@ echo "Getting scripts from GitHub to be able to run the first setup..."
                 then
                 echo "activate-ssl.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/lets-encrypt/activate-ssl.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh -P $SCRIPTS
 fi
         # The update script
         if [ -f $SCRIPTS/owncloud_update.sh ];
                 then
                 echo "owncloud_update.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/owncloud_update.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/owncloud_update.sh -P $SCRIPTS
 fi
         # Sets trusted domain in when owncloud-startup-script.sh is finished
         if [ -f $SCRIPTS/trusted.sh ];
                 then
                 echo "trusted.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/trusted.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/trusted.sh -P $SCRIPTS
 fi
                 # Sets static IP to UNIX
         if [ -f $SCRIPTS/ip.sh ];
                 then
                 echo "ip.sh exists"
                 else
-      	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/ip.sh -P $SCRIPTS
+      	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/ip.sh -P $SCRIPTS
 fi
                 # Tests connection after static IP is set
         if [ -f $SCRIPTS/test_connection.sh ];
                 then
                 echo "test_connection.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/test_connection.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/test_connection.sh -P $SCRIPTS
 fi
                 # Sets secure permissions after upgrade
         if [ -f $SCRIPTS/setup_secure_permissions_owncloud.sh ];
                 then
                 echo "setup_secure_permissions_owncloud.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 fi
         # Get the Welcome Screen when http://$address
         if [ -f $SCRIPTS/index.php ];
                 then
                 rm $SCRIPTS/index.php
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/index.php -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/index.php -P $SCRIPTS
 fi
         mv /var/scripts/index.php /var/www/html/index.php && rm -f /var/www/html/index.html
         chmod 750 /var/www/html/index.php && chown www-data:www-data /var/www/html/index.php
