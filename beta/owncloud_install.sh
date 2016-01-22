@@ -43,12 +43,12 @@ apt-get update
 # Set locales
 sudo locale-gen "sv_SE.UTF-8" && sudo dpkg-reconfigure locales
 
-# Show MySQL pass, and write it to a file
+# Show MySQL pass, and write it to a file in case the user fails to write it down
 echo
 echo -e "Your MySQL root password is: \e[32m$MYSQL_PASS\e[0m"
-echo "Please save this somewhere safe. The password is also saved in this file: $SCRIPTS/$PW_FILE."
-echo "$MYSQL_PASS" > $SCRIPTS/$PW_FILE
-chmod 600 $SCRIPTS/$PW_FILE
+echo "Please save this somewhere safe. The password is also saved in this file: $PW_FILE."
+echo "$MYSQL_PASS" > $PW_FILE
+chmod 600 $PW_FILE
 echo -e "\e[32m"
 read -p "Press any key to continue..." -n1 -s
 echo -e "\e[0m"
