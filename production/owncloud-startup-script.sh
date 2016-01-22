@@ -7,6 +7,7 @@ PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install_production.
 IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
 ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
+CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
 
 	# Check if root
 	if [ "$(whoami)" != "root" ]; then
@@ -123,9 +124,9 @@ echo
 echo "Webmin is installed, access it from your browser: https://$ADDRESS:10000"
 sleep 2
 
-# Install SMB-client
-apt-get install php5-libsmbclient --force-yes -y
-apt-get install cifs-utils --force-yes -y
+# Install php5-libsmbclient
+#apt-get install php5-libsmbclient -y
+#apt-get install cifs-utils -y
 clear
 
 # Set keyboard layout
@@ -260,7 +261,6 @@ bash $SCRIPTS/owncloud_update.sh
 # Cleanup 1
 apt-get autoremove -y
 apt-get autoclean
-CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
 echo "$CLEARBOOT"
 clear
 
