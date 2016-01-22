@@ -134,7 +134,7 @@ apt-get update && apt-get install owncloud -y
 mkdir $OCPATH/data
 
 # Secure permissions
-wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
@@ -300,21 +300,21 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
                 then
                 echo "change-root-profile.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/change-root-profile.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-root-profile.sh -P $SCRIPTS
 fi
                 # Change ocadmin .bash_profile
         if [ -f $SCRIPTS/change-ocadmin-profile.sh ];
                 then
                 echo "change-ocadmin-profile.sh  exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/change-ocadmin-profile.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-ocadmin-profile.sh -P $SCRIPTS
 fi
                 # Get startup-script for root
         if [ -f $SCRIPTS/owncloud-startup-script.sh ];
                 then
                 echo "owncloud-startup-script.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/owncloud-startup-script.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/owncloud-startup-script.sh -P $SCRIPTS
 fi
 
                 # Welcome message after login (change in /home/ocadmin/.profile
@@ -322,14 +322,14 @@ fi
                 then
                 echo "instruction.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/instruction.sh -P $SCRIPTS
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/instruction.sh -P $SCRIPTS
 fi
                 # Clears command history on every login
         if [ -f $SCRIPTS/history.sh ];
                 then
                 echo "history.sh exists"
                 else
-        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/history.sh -P $SCRIPTS
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/history.sh -P $SCRIPTS
 fi
 
 # Change .profile
