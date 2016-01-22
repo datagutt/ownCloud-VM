@@ -15,6 +15,9 @@ ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
         echo
         exit 1
 fi
+
+echo "Getting scripts from GitHub to be able to run the first setup..."
+
         # Activate SSL
         if [ -f $SCRIPTS/activate-ssl.sh ];
                 then
@@ -103,7 +106,7 @@ a2enmod headers
 a2dissite default-ssl.conf
 a2ensite owncloud-self-signed-ssl.conf 
 clear
-echo "owncloud_www_en0ch_se.conf is enabled, this is your pre-configured virtual host"
+echo "owncloud-self-signed-ssl.conf is enabled, this is your pre-configured virtual host"
 sleep 4
 echo
 service apache2 reload
@@ -204,18 +207,29 @@ echo -e "\e[32m"
 read -p "Press any key to change password for Linux... " -n1 -s
 echo -e "\e[0m"
 sudo passwd ocadmin
+if [[ $? > 0 ]]
+then
+    sudo passwd ocadmin
+else
+    sleep 2
+fi
 echo
-clear
+clear &&
 echo -e "\e[0m"
 echo "For better security, change the ownCloud password for [ocadmin]"
 echo "The current password is [owncloud]"
 echo -e "\e[32m"
 read -p "Press any key to change password for ownCloud... " -n1 -s
 echo -e "\e[0m"
-sudo -u www-data php /var/www/owncloud/occ user:resetpassword ocadmin
-echo
-sleep 2
+sudo -u www-data php /var/www/html/owncloud/occ user:resetpassword ocadmin
+if [[ $? > 0 ]]
+then
+    sudo -u www-data php /var/www/html/owncloud/occ user:resetpassword ocadmin
+else
+    sleep 2
+fi
 clear
+
 # Let's Encrypt
 function ask_yes_or_no() {
     read -p "$1 ([y]es or [N]o): "
@@ -274,6 +288,7 @@ rm $SCRIPTS/owncloud-startup-script.sh
 rm $SCRIPTS/ip.sh
 rm $SCRIPTS/trusted.sh
 rm $SCRIPTS/test_connection.sh
+rm $SCRIPTS/update-config.php
 rm /var/www/owncloud/data/owncloud.log
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root
