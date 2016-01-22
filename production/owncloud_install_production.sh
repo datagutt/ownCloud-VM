@@ -106,36 +106,36 @@ sudo hostnamectl set-hostname owncloud
 service apache2 restart
 
 # Install PHP 5.6
-apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php-5.6
+apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php-5-5.6
 apt-get update
 apt-get install -y \
-        php5.6 \
-        php5.6-common \
-        php5.6-mysql \
-        php5.6-intl \
-        php5.6-mcrypt \
-        php5.6-ldap \
-        php5.6-imap \
-        php5.6-cli \
-        php5.6-gd \
-        php5.6-pgsql \
-        php5.6-json \
-        php5.6-sqlite3 \
-        php5.6-curl \
+        php5 \
+        php5-common \
+        php5-mysql \
+        php5-intl \
+        php5-mcrypt \
+        php5-ldap \
+        php5-imap \
+        php5-cli \
+        php5-gd \
+        php5-pgsql \
+        php5-json \
+        php5-sqlite3 \
+        php5-curl \
         libsm6 \
         php5-libsmbclient
 
 # Download and install ownCloud
-wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
-apt-key add - < Release.key && rm Release.key
+wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key | apt-key add -
+rm Release.key
 sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /' >> /etc/apt/sources.list.d/owncloud.list"
-apt-get update && apt-get install owncloud
+apt-get update && apt-get install owncloud -y
 
 # Create data folder, occ complains otherwise
 mkdir $OCPATH/data
 
 # Secure permissions
-wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/stable/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
@@ -158,15 +158,15 @@ crontab -u www-data -l | { cat; echo "*/15  *  *  *  * php -f $OCPATH/cron.php >
 
 # Change values in php.ini (increase max file size)
 # max_execution_time
-sed -i "s|max_execution_time = 30|max_execution_time = 3500|g" /etc/php/7.0/apache2/php.ini
+sed -i "s|max_execution_time = 30|max_execution_time = 3500|g" /etc/php5/apache2/php.ini
 # max_input_time
-sed -i "s|max_input_time = 60|max_input_time = 3600|g" /etc/php/7.0/apache2/php.ini
+sed -i "s|max_input_time = 60|max_input_time = 3600|g" /etc/php5/apache2/php.ini
 # memory_limit
-sed -i "s|memory_limit = 128M|memory_limit = 512M|g" /etc/php/7.0/apache2/php.ini
+sed -i "s|memory_limit = 128M|memory_limit = 512M|g" /etc/php5/apache2/php.ini
 # post_max
-sed -i "s|post_max_size = 8M|post_max_size = 1100M|g" /etc/php/7.0/apache2/php.ini
+sed -i "s|post_max_size = 8M|post_max_size = 1100M|g" /etc/php5/apache2/php.ini
 # upload_max
-sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php/7.0/apache2/php.ini
+sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php5/apache2/php.ini
 
 # Generate $SSL_CONF
 if [ -f $SSL_CONF ];
