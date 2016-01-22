@@ -104,9 +104,9 @@ echo -e "\e[0m"
 a2enmod ssl
 a2enmod headers
 a2dissite default-ssl.conf
-a2ensite owncloud-self-signed-ssl.conf 
+a2ensite owncloud_ssl_domain_self_signed.conf 
 clear
-echo "owncloud-self-signed-ssl.conf is enabled, this is your pre-configured virtual host"
+echo "owncloud_ssl_domain_self_signed.conf is enabled, this is your pre-configured virtual host"
 sleep 4
 echo
 service apache2 reload
@@ -221,10 +221,10 @@ echo "The current password is [owncloud]"
 echo -e "\e[32m"
 read -p "Press any key to change password for ownCloud... " -n1 -s
 echo -e "\e[0m"
-sudo -u www-data php /var/www/html/owncloud/occ user:resetpassword ocadmin
+sudo -u www-data php /var/www/owncloud/occ user:resetpassword ocadmin
 if [[ $? > 0 ]]
 then
-    sudo -u www-data php /var/www/html/owncloud/occ user:resetpassword ocadmin
+    sudo -u www-data php /var/www/owncloud/occ user:resetpassword ocadmin
 else
     sleep 2
 fi
