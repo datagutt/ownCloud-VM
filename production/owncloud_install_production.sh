@@ -14,6 +14,7 @@ SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
 IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
 ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
+CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
@@ -360,7 +361,11 @@ chown ocadmin:ocadmin $SCRIPTS/history.sh
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
 
+# Upgrade
 aptitude full-upgrade -y
+
+#Cleanup
+echo "$CLEARBOOT"
 
 # Reboot
 reboot
