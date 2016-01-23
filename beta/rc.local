@@ -21,6 +21,13 @@ if 		[ -d $SCRIPTS ];
       	else
       		mkdir $SCRIPTS
 fi
+# Update Config
+        if [ -f $SCRIPTS/update-config.php ];
+                then
+                echo "update-config.php exists"
+                else
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/master/update-config.php -P $SCRIPTS
+fi
 # Get ownCloud install script
 if 		[ -f $SCRIPTS/owncloud_install.sh ];
         then
