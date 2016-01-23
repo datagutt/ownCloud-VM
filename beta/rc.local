@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 #
 # rc.local
 #
@@ -280,5 +280,8 @@ else
 	echo ".profile scripts executed OK."
 	sleep 1
 fi
+
+# Make a second reboot to be sure everything is downloaded
+reboot
 
 exit 0
