@@ -21,96 +21,99 @@ if 		[ -d $SCRIPTS ];
       	else
       		mkdir $SCRIPTS
 fi
+
+echo "Getting all the latest scripts from GitHub..."
+
 # Update Config
         if [ -f $SCRIPTS/update-config.php ];
                 then
                 echo "update-config.php exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/master/update-config.php -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/master/update-config.php -P $SCRIPTS
 fi
 # Get ownCloud install script
 if 		[ -f $SCRIPTS/owncloud_install.sh ];
         then
                 echo "owncloud_install.sh exists"
         else
-        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_install.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_install.sh -P $SCRIPTS
 fi
 # Get trusted domains script
 if 		[ -f $SCRIPTS/trusted.sh ];
         then
                 echo "trusted.sh exists"
         else
-        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/trusted.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/trusted.sh -P $SCRIPTS
 fi
 # Get Redis install script
 if 		[ -f $SCRIPTS/install-redis-php-7.sh ];
         then
                 echo "install-redis-php-7.sh exists"
         else
-        	wget wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/install-redis-php-7.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/install-redis-php-7.sh -P $SCRIPTS
 fi
 # Activate SSL
 if 		[ -f $SCRIPTS/activate-ssl.sh ];
         then
                 echo "activate-ssl.sh exists"
         else
-        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh -P $SCRIPTS
 fi
 # The update script
 if 		[ -f $SCRIPTS/owncloud_update.sh ];
         then
         	echo "owncloud_update.sh exists"
         else
-        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_update.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_update.sh -P $SCRIPTS
 fi
 # Sets static IP to UNIX
 if 		[ -f $SCRIPTS/ip.sh ];
         then
                 echo "ip.sh exists"
         else
-      		wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/ip.sh -P $SCRIPTS
+      		wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/ip.sh -P $SCRIPTS
 fi
 # Tests connection after static IP is set
 if 		[ -f $SCRIPTS/test_connection.sh ];
         then
                 echo "test_connection.sh exists"
         else
-        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/test_connection.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/test_connection.sh -P $SCRIPTS
 fi
 # Welcome message after login (change in /home/ocadmin/.profile
 if 		[ -f $SCRIPTS/instruction.sh ];
         then
                 echo "instruction.sh exists"
         else
-        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/instruction.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/instruction.sh -P $SCRIPTS
 fi
 # Clears command history on every login
 if 		[ -f $SCRIPTS/history.sh ];
         then
                 echo "history.sh exists"
         else
-        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/history.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/history.sh -P $SCRIPTS
 fi
 # Change roots .bash_profile
 if 		[ -f $SCRIPTS/change-root-profile.sh ];
         then
                 echo "change-root-profile.sh exists"
         else
-        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/change-root-profile.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/change-root-profile.sh -P $SCRIPTS
 fi
 # Change ocadmin .bash_profile
 if 		[ -f $SCRIPTS/change-ocadmin-profile.sh ];
         then
         	echo "change-ocadmin-profile.sh  exists"
         else
-        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/change-ocadmin-profile.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/change-ocadmin-profile.sh -P $SCRIPTS
 fi
 # Get startup-script for root
 if 		[ -f $SCRIPTS/owncloud-startup-script.sh ];
         then
                 echo "owncloud-startup-script.sh exists"
         else
-        	wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud-startup-script.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud-startup-script.sh -P $SCRIPTS
 fi
 # Make $SCRIPTS excutable
         	chmod +x -R $SCRIPTS
@@ -120,14 +123,14 @@ fi
         	chown ocadmin:ocadmin $SCRIPTS/instruction.sh
         	chown ocadmin:ocadmin $SCRIPTS/history.sh
 
-# Get the Welcome Screen when http://$address
+# Get the Welcome Screen when http://$ADDRESS
 if 		[ -f $HTML/index.php ];
 	then
  		rm $HTML/index.php
- 		wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/index.php -P $HTML
+ 		wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/index.php -P $HTML
  		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
  	else	
-		wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/index.php -P $HTML
+		wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/index.php -P $HTML
 		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
 fi	
 # Remove the regular index.html if it exists
