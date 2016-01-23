@@ -8,6 +8,8 @@ IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
 ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
+WANIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+PHPMYADMIN_CONF="/etc/apache2/conf-available/phpmyadmin.conf"
 
 	# Check if root
 	if [ "$(whoami)" != "root" ]; then
@@ -89,6 +91,7 @@ echo "| This script will configure your ownCloud and activate SSL.         |"
 echo "| It will also do the following:                                     |"
 echo "|                                                                    |"
 echo "| - Activate a Virtual Host for your ownCloud install                |"
+echo "| - Make phpMyadmin secure                                           |"
 echo "| - Install Webmin                                                   |"
 echo "| - Upgrade your system to latest version                            |"
 echo "| - Set secure permissions to ownCloud                               |"
@@ -120,6 +123,76 @@ sleep 4
 echo
 service apache2 reload
 
+# Secure phpMyadmin
+if [ -f $PHPMYADMIN_CONF ];
+        then
+        rm $PHPMYADMIN_CONF
+        touch "$PHPMYADMIN_CONF"
+        cat << CONF_CREATE > "$PHPMYADMIN_CONF"
+# phpMyAdmin default Apache configuration
+
+Alias /phpmyadmin /usr/share/phpmyadmin
+
+<Directory /usr/share/phpmyadmin>
+        Options FollowSymLinks
+        DirectoryIndex index.php
+
+        <IfModule mod_authz_core.c>
+# Apache 2.4
+        <RequireAny>
+        Require ip $WANIP # This is the allowed IP, change this if needed. $WANIP was the one used during setup.
+        Require ip 127.0.0.1
+        Require ip ::1
+        </RequireAny>
+        </IfModule>
+        <IfModule !mod_authz_core.c>
+# Apache 2.2
+        Order Deny,Allow
+        Deny from All
+        Allow from $WANIP # This is the allowed IP, change this if needed. $WANIP was the one used during setup.
+        Allow from ::1
+        Allow from localhost
+</IfModule>
+
+        <IfModule mod_php5.c>
+                AddType application/x-httpd-php .php
+
+                php_flag magic_quotes_gpc Off
+                php_flag track_vars On
+                php_flag register_globals Off
+                php_admin_flag allow_url_fopen Off
+                php_value include_path .
+                php_admin_value upload_tmp_dir /var/lib/phpmyadmin/tmp
+                php_admin_value open_basedir /usr/share/phpmyadmin/:/etc/phpmyadmin/:/var/lib/phpmyadmin/:/usr/share/php/php-gettext/:/usr/share/javascript/
+        </IfModule>
+
+</Directory>
+# Authorize for setup
+<Directory /usr/share/phpmyadmin/setup>
+    <IfModule mod_authn_file.c>
+    AuthType Basic
+    AuthName "phpMyAdmin Setup"
+    AuthUserFile /etc/phpmyadmin/htpasswd.setup
+    </IfModule>
+    Require valid-user
+</Directory>
+
+# Disallow web access to directories that don't need it
+<Directory /usr/share/phpmyadmin/libraries>
+    Order Deny,Allow
+    Deny from All
+</Directory>
+<Directory /usr/share/phpmyadmin/setup/lib>
+    Order Deny,Allow
+    Deny from All
+</Directory>
+CONF_CREATE
+echo
+echo "$PHPMYADMIN_CONF was successfully secured."
+echo
+sleep 3
+fi
+
 # Install packages for Webmin
 apt-get install --force-yes -y zip perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 
@@ -130,7 +203,7 @@ apt-get update
 apt-get install --force-yes -y webmin
 echo
 echo "Webmin is installed, access it from your browser: https://$ADDRESS:10000"
-sleep 2
+sleep 3
 
 # Install php5-libsmbclient
 #apt-get install php5-libsmbclient -y
