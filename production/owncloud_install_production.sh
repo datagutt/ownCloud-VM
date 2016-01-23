@@ -147,16 +147,6 @@ sleep 3
 # Install SMBclient
 apt-get install smbclient -y
 
-# Get trusted domains script
-if 		[ -f $SCRIPTS/trusted.sh ];
-        then
-                echo "trusted.sh exists"
-        else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/trusted.sh -P $SCRIPTS
-fi
-# Change Trusted Domain and CLI
-bash $SCRIPTS/trusted.sh
-
 # Install phpMyadmin
 echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections
 echo "phpmyadmin phpmyadmin/app-password-confirm password $MYSQL_PASS" | debconf-set-selections
