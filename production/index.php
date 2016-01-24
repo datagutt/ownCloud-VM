@@ -136,7 +136,7 @@ a:active {
  <p>
  </ul>
 </h3>
-<p>Note Please accept the warning in the browser if you connect via HTTPS.</p>
+<p>Note: Please accept the warning in the browser if you connect via HTTPS.</p>
 <h3>
 <a href="https://www.techandme.se/user-and-password/" target="_blank">Login details</a>
 </h3>
@@ -154,9 +154,9 @@ a:active {
  <p>
  </ul>
 </h3>
-<p>Note Please accept the warning in the browser if you connect via HTTPS.</p>
+<p>Note: Please accept the warning in the browser if you connect via HTTPS.</p>
 <h3>
 <a href="https://www.techandme.se/user-and-password/" target="_blank">Login details</a>
 </h3>
-<p>Note: Access to phpmyadmin is forbidden, and you have to change the settings in /etc/apache2/conf-available/phpmyadmin.conf to allow your external IP<p/>
+<p>Note: Your external IP is set as approved in /etc/apache2/conf-available/phpmyadmin.conf, all other access is forbidden.<p/>
 </div>
