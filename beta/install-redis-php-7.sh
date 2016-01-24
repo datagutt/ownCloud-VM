@@ -18,6 +18,32 @@ apt-get update && sudo apt-get install build-essential -q -y
 apt-get install tcl8.5 -q -y
 apt-get install php-pear php7.0-dev -q -y
 
+# Install Git and clone repo
+apt-get install git -y -q
+git clone -b php7 https://github.com/phpredis/phpredis.git
+
+# Build Redis PHP module
+apt-get install php7.0-dev -y
+sudo mv phpredis/ /etc/ && cd /etc/phpredis
+phpize
+./configure
+make && make install
+if [[ $? > 0 ]]
+then
+    echo "PHP module installation failed"
+    sleep 5
+    exit 1
+else
+		echo -e "\e[32m"
+    echo "PHP module installation OK!"
+    echo -e "\e[0m"
+fi
+echo 'extension=redis.so' >> /etc/php/7.0/apache2/php.ini
+phpenmod redis
+service apache2 restart
+cd ..
+rm -rf phpredis
+
 # Get latest Redis
 wget -q http://download.redis.io/releases/redis-stable.tar.gz -P $SCRIPTS && tar -xzf $SCRIPTS/redis-stable.tar.gz 
 mv $SCRIPTS/redis-stable $SCRIPTS/redis
@@ -52,21 +78,6 @@ fi
 # Remove installation package
 rm -rf $SCRIPTS/redis
 rm $SCRIPTS/redis-stable.tar.gz
-
-# Install Git and clone repo
-apt-get install git -y -q
-git clone -b php7 https://github.com/phpredis/phpredis.git $SCRIPTS/phpredis
-
-# Build Redis PHP module
-cd $SCRIPTS/phpredis
-phpize
-./configure
-make && make install
-echo 'extension=redis.so' >> /etc/php/7.0/apache2/php.ini
-phpenmod redis
-service apache2 restart
-cd /
-rm -rf $SCRIPTS/phpredis
 
 # Prepare for adding redis configuration
 sed -i "s|);||g" /var/www/html/owncloud/config/config.php
