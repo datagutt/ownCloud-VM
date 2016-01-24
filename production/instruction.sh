@@ -11,7 +11,7 @@ echo -e "|"  "\e[32mThe sudo password is: owncloud, or the PW you chose during i
 cat << INST2
 |                                                                       |
 | If you never done this before you can follow the complete             |
-| install instructions: https://goo.gl/j5Vyxm                           |
+| install instructions: https://goo.gl/3FYtz6                           |
 |                                                                       |
 | You can also set the ownCloud update process as a cronjob.            |
 | This is made thru the built in script in this VM that                 |
