@@ -28,7 +28,7 @@ fi
 
 # Install Redis
 make install
-cd utils && sudo ./install_server.sh 
+cd utils && yes "" | sudo ./install_server.sh 
 if [[ $? > 0 ]]
 then
     echo "Installation failed."
