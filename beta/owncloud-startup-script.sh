@@ -5,6 +5,7 @@
 
 SCRIPTS=/var/scripts
 PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install.sh
+CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
 
 # Check if root
 if [ "$(whoami)" != "root" ]; then
@@ -201,7 +202,6 @@ aptitude full-upgrade -y
 
 # Cleanup 1
 apt-get autoremove -y
-CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
 echo "$CLEARBOOT"
 clear
 
