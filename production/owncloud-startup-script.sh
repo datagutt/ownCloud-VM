@@ -140,7 +140,7 @@ Alias /phpmyadmin /usr/share/phpmyadmin
         <IfModule mod_authz_core.c>
 # Apache 2.4
         <RequireAny>
-        Require ip $WANIP # This is the allowed IP, change this if needed. $WANIP was the one used during setup.
+        Require ip $WANIP
         Require ip 127.0.0.1
         Require ip ::1
         </RequireAny>
@@ -149,7 +149,7 @@ Alias /phpmyadmin /usr/share/phpmyadmin
 # Apache 2.2
         Order Deny,Allow
         Deny from All
-        Allow from $WANIP # This is the allowed IP, change this if needed. $WANIP was the one used during setup.
+        Allow from $WANIP
         Allow from ::1
         Allow from localhost
 </IfModule>
