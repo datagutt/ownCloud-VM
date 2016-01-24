@@ -55,19 +55,18 @@ rm $SCRIPTS/redis-stable.tar.gz
 
 # Install Git and clone repo
 apt-get install git -y -q
-git clone -b php7 https://github.com/phpredis/phpredis.git
+git clone -b php7 https://github.com/phpredis/phpredis.git $SCRIPTS/phpredis
 
 # Build Redis PHP module
-apt-get install php7.0-dev -y -q
-mv phpredis/ /etc/ && cd /etc/phpredis
+cd $SCRIPTS/phpredis
 phpize
 ./configure
 make && make install
 echo 'extension=redis.so' >> /etc/php/7.0/apache2/php.ini
 phpenmod redis
 service apache2 restart
-cd ..
-rm -rf phpredis
+cd /
+rm -rf $SCRIPTS/phpredis
 
 # Prepare for adding redis configuration
 sed -i "s|);||g" /var/www/html/owncloud/config/config.php
