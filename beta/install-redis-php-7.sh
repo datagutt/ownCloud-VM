@@ -45,7 +45,7 @@ cd ..
 rm -rf phpredis
 
 # Get latest Redis
-wget -q http://download.redis.io/releases/redis-stable.tar.gz -P $SCRIPTS && tar -xzf $SCRIPTS/redis-stable.tar.gz 
+wget -q http://download.redis.io/releases/redis-stable.tar.gz -P $SCRIPTS && tar -xzf $SCRIPTS/redis-stable.tar.gz -C $SCRIPTS
 mv $SCRIPTS/redis-stable $SCRIPTS/redis
 
 # Test Redis
