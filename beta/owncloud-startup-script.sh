@@ -225,19 +225,19 @@ echo
 
 # Cleanup 2
 sudo -u www-data php /var/www/html/owncloud/occ maintenance:repair
-rm $SCRIPTS/owncloud-startup-script.sh
-rm $SCRIPTS/ip.sh
-rm $SCRIPTS/test_connection.sh
-rm $SCRIPTS/change-ocadmin-profile.sh
-rm $SCRIPTS/change-root-profile.sh
-rm $SCRIPTS/install-redis-php-7.sh
-rm $SCRIPTS/index.html
-rm $SCRIPTS/update-config.php
-rm $SCRIPTS/owncloud_install.sh
-rm $SCRIPTS/trusted.sh
-rm /var/www/html/index.html
-rm /var/rc.local
-rm /var/www/html/owncloud/data/owncloud.log
+rm $SCRIPTS/owncloud-startup-script.sh*
+rm $SCRIPTS/ip.sh*
+rm $SCRIPTS/test_connection.sh*
+rm $SCRIPTS/change-ocadmin-profile.sh*
+rm $SCRIPTS/change-root-profile.sh*
+rm $SCRIPTS/install-redis-php-7.sh*
+rm $SCRIPTS/index.html*
+rm $SCRIPTS/update-config.php*
+rm $SCRIPTS/owncloud_install.sh*
+rm $SCRIPTS/trusted.sh*
+rm /var/www/html/index.html*
+rm /var/rc.local*
+rm /var/www/html/owncloud/data/owncloud.log*
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root
 cat /dev/null > /var/spool/mail/ocadmin
