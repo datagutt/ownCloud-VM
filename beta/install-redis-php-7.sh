@@ -19,7 +19,7 @@ apt-get install tcl8.5 -q -y
 apt-get install php-pear php7.0-dev -q -y
 
 # Get latest Redis
-wget -q http://download.redis.io/releases/redis-stable.tar.gz && tar -xzf redis-stable.tar.gz -P $SCRIPTS
+wget -q http://download.redis.io/releases/redis-stable.tar.gz -P $SCRIPTS && tar -xzf $SCRIPTS/redis-stable.tar.gz 
 mv $SCRIPTS/redis-stable $SCRIPTS/redis
 
 # Test Redis
