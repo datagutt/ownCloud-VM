@@ -16,7 +16,7 @@ fi
 # Get packages to be able to install Redis
 apt-get update && sudo apt-get install build-essential -q -y
 apt-get install tcl8.5 -q -y
-apt-get install php-pear php5-dev -q -y
+apt-get install php-pear php7.0-dev -q -y
 
 # Get latest Redis
 wget -q http://download.redis.io/releases/redis-stable.tar.gz && tar -xzf redis-stable.tar.gz -P $SCRIPTS
@@ -51,7 +51,7 @@ fi
 
 # Remove installation package
 rm -rf $SCRIPTS/redis
-rm -rf $SCRIPTS/redis-stable.tar.gz
+rm $SCRIPTS/redis-stable.tar.gz
 
 # Install Git and clone repo
 apt-get install git -y -q
