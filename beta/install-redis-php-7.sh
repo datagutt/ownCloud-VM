@@ -5,9 +5,45 @@
 # Must be root
 [[ `id -u` -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
 
-# Install Redis Server
-apt-get update
-apt-get install redis-server -y -q
+# Get packages to be able to install Redis
+apt-get update && sudo apt-get install build-essential -q -y
+apt-get install tcl8.5 -q -y
+apt-get install php-pear php5-dev -q -y
+
+# Get latest Redis
+wget -q http://download.redis.io/releases/redis-stable.tar.gz && tar -xzf redis-stable.tar.gz
+mv redis-stable redis
+
+# Test Redis
+cd redis && make && make test
+if [[ $? > 0 ]]
+then
+    echo "Test failed."
+    sleep 5
+    exit 1
+else
+		echo -e "\e[32m"
+    echo "Redis test OK!"
+    echo -e "\e[0m"
+fi
+
+# Install Redis
+make install
+cd utils && yes "" | sudo ./install_server.sh 
+if [[ $? > 0 ]]
+then
+    echo "Installation failed."
+    sleep 5
+    exit 1
+else
+                echo -e "\e[32m"
+    echo "Redis installation OK!"
+    echo -e "\e[0m"
+fi
+
+# Remove installation package
+rm -rf redis
+rm -rf redis-stable.tar.gz
 
 # Install Git and clone repo
 apt-get install git -y -q
