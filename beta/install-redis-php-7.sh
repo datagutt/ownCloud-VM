@@ -2,8 +2,16 @@
 
 # Tech and Me - www.techandme.se - 2015-2016
 
+SCRIPTS=/var/scripts
+
 # Must be root
 [[ `id -u` -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
+
+# Check if dir exists
+if [ -d $SCRIPTS ];
+then sleep 1
+else mkdir $SCRIPTS
+fi
 
 # Get packages to be able to install Redis
 apt-get update && sudo apt-get install build-essential -q -y
@@ -11,11 +19,11 @@ apt-get install tcl8.5 -q -y
 apt-get install php-pear php5-dev -q -y
 
 # Get latest Redis
-wget -q http://download.redis.io/releases/redis-stable.tar.gz && tar -xzf redis-stable.tar.gz
-mv redis-stable redis
+wget -q http://download.redis.io/releases/redis-stable.tar.gz && tar -xzf redis-stable.tar.gz -P $SCRIPTS
+mv $SCRIPTS/redis-stable $SCRIPTS/redis
 
 # Test Redis
-cd redis && make && make test
+cd $SCRIPTS/redis && make && make test
 if [[ $? > 0 ]]
 then
     echo "Test failed."
@@ -42,8 +50,8 @@ else
 fi
 
 # Remove installation package
-rm -rf redis
-rm -rf redis-stable.tar.gz
+rm -rf $SCRIPTS/redis
+rm -rf $SCRIPTS/redis-stable.tar.gz
 
 # Install Git and clone repo
 apt-get install git -y -q
