@@ -65,7 +65,7 @@ exit 0
     else
         wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/dev/rc.local_testing -P /var/
         cat /var/rc.local_testing > /etc/rc.local
-        rm /var/rc.local
+        rm /var/rc.local_testing
         reboot
     fi
 
