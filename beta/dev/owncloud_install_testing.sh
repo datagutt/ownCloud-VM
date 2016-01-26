@@ -2,12 +2,14 @@
 
 # Tech and Me, 2016 - www.techandme.se
 
-mysql_pass=owncloud
 OCVERSION=owncloud-daily-master
+SHUF=$(shuf -i 27-38 -n 1)
+MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
+PW_FILE=/var/mysql_password.txt
 SCRIPTS=/var/scripts
 HTML=/var/www/html
 OCPATH=$HTML/owncloud
-ssl_conf="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
+SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
 IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
 ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
@@ -41,11 +43,21 @@ apt-get update
 # Set locales
 sudo locale-gen "sv_SE.UTF-8" && sudo dpkg-reconfigure locales
 
+# Show MySQL pass, and write it to a file in case the user fails to write it down
+echo
+echo -e "Your MySQL root password is: \e[32m$MYSQL_PASS\e[0m"
+echo "Please save this somewhere safe. The password is also saved in this file: $PW_FILE."
+echo "$MYSQL_PASS" > $PW_FILE
+chmod 600 $PW_FILE
+echo -e "\e[32m"
+read -p "Press any key to continue..." -n1 -s
+echo -e "\e[0m"
+
 # Install MYSQL 5.6
 apt-get install software-properties-common -y
 add-apt-repository -y ppa:ondrej/mysql-5.6
-echo "mysql-server-5.6 mysql-server/root_password password $mysql_pass" | debconf-set-selections
-echo "mysql-server-5.6 mysql-server/root_password_again password $mysql_pass" | debconf-set-selections
+echo "mysql-server-5.6 mysql-server/root_password password $MYSQL_PASS" | debconf-set-selections
+echo "mysql-server-5.6 mysql-server/root_password_again password $MYSQL_PASS" | debconf-set-selections
 apt-get install mysql-server-5.6 -y
 
 # mysql_secure_installation
@@ -148,13 +160,13 @@ sed -i "s|post_max_size = 8M|post_max_size = 1100M|g" /etc/php/7.0/apache2/php.i
 # upload_max
 sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php/7.0/apache2/php.ini
 
-# Generate $ssl_conf
-if [ -f $ssl_conf ];
+# Generate $SSL_CONF
+if [ -f $SSL_CONF ];
         then
         echo "Virtual Host exists"
 else
-        touch "$ssl_conf"
-        cat << SSL_CREATE > "$ssl_conf"
+        touch "$SSL_CONF"
+        cat << SSL_CREATE > "$SSL_CONF"
 <VirtualHost *:443>
     Header add Strict-Transport-Security: "max-age=15768000;includeSubdomains"
     SSLEngine on
@@ -185,7 +197,7 @@ else
     SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
 </VirtualHost>
 SSL_CREATE
-echo "$ssl_conf was successfully created"
+echo "$SSL_CONF was successfully created"
 sleep 3
 fi
 
