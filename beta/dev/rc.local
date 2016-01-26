@@ -47,7 +47,7 @@ if 		[ -f $SCRIPTS/owncloud_install_testing.sh ];
         then
                 echo "owncloud_install_testing.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_install_testing.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/dev/owncloud_install_testing.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -111,7 +111,7 @@ if 		[ -f $SCRIPTS/owncloud_update_testing.sh ];
         then
         	echo "owncloud_update_testing.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_update_testing.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/dev/owncloud_update_testing.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
