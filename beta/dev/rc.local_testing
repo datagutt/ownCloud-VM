@@ -268,7 +268,7 @@ if		[ -f $HTML/index.html ];
 fi
 
 # Change .profile
-        	bash $SCRIPTS/change-root-profile.sh
+        	bash $SCRIPTS/change-root-profile_testing.sh
         	bash $SCRIPTS/change-ocadmin-profile.sh
 
 if [[ $? > 0 ]]
