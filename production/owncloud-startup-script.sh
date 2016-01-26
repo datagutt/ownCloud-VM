@@ -206,8 +206,10 @@ echo "Webmin is installed, access it from your browser: https://$ADDRESS:10000"
 sleep 3
 
 # Install php5-libsmbclient
-#apt-get install php5-libsmbclient -y
-#apt-get install cifs-utils -y
+apt-get install php5-dev -y
+pecl install smbclient
+apt-get install cifs-utils -y
+apt-get purge php5-dev -y
 clear
 
 # Set keyboard layout
