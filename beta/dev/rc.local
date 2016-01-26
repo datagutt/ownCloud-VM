@@ -191,7 +191,7 @@ if 		[ -f $SCRIPTS/change-root-profile.sh ];
         then
                 echo "change-root-profile.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/change-root-profile.sh -P $SCRIPTS
+        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/dev/change-root-profile.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
