@@ -235,7 +235,7 @@ rm $SCRIPTS/index*
 rm $SCRIPTS/update-config*
 rm $SCRIPTS/owncloud_install*
 rm $SCRIPTS/trusted*
-rm /var/www/html/index*
+rm /var/www/html/index.html*
 rm /var/rc.local*
 rm /var/www/html/owncloud/data/owncloud.log*
 cat /dev/null > ~/.bash_history
