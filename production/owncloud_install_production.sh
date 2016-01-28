@@ -339,9 +339,26 @@ fi
         wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/history.sh -P $SCRIPTS
 fi
 
-# Change .profile
-bash $SCRIPTS/change-root-profile.sh
-bash $SCRIPTS/change-ocadmin-profile.sh
+# Change root profile
+        	bash $SCRIPTS/change-root-profile.sh
+if [[ $? > 0 ]]
+then
+	echo "change-root-profile.sh were not executed correctly."
+	sleep 10
+else
+	echo "change-root-profile.sh script executed OK."
+	sleep 1
+fi
+# Change ocadmin profile
+        	bash $SCRIPTS/change-ocadmin-profile.sh
+if [[ $? > 0 ]]
+then
+	echo "change-ocadmin-profile.sh were not executed correctly."
+	sleep 10
+else
+	echo "change-ocadmin-profile.sh executed OK."
+	sleep 1
+fi
 
 # Allow ocadmin to run theese scripts
 chown ocadmin:ocadmin $SCRIPTS/instruction.sh
