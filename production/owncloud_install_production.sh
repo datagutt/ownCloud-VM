@@ -64,7 +64,8 @@ echo -e "\e[0m"
 
 # Install MYSQL 5.6
 apt-get install software-properties-common -y
-add-apt-repository -y ppa:ondrej/mysql-5.6
+apt-get install mysql-client-5.6 mysql-client-core-5.6
+apt-get install mysql-server-5.6
 echo "mysql-server-5.6 mysql-server/root_password password $MYSQL_PASS" | debconf-set-selections
 echo "mysql-server-5.6 mysql-server/root_password_again password $MYSQL_PASS" | debconf-set-selections
 apt-get install mysql-server-5.6 -y
