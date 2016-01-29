@@ -225,6 +225,7 @@ service apache2 restart
 fi
 
 # Install Redis
+wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/redis_latest_php5.sh -P $SCRIPTS
 bash $SCRIPTS/redis_latest_php5.sh
 
 ## Set config values
