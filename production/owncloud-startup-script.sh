@@ -1,7 +1,7 @@
 #!/bin/bash
-#
-## Tech and Me ## - 2015, https://www.techandme.se/about-me
-#
+
+# Tech and Me - 2016, https://www.techandme.se/
+
 SCRIPTS=/var/scripts
 PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install_production.sh
 IFACE="eth0"
