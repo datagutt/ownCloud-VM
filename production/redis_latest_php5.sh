@@ -75,5 +75,7 @@ ADD_TO_CONFIG
 # Remove installation package
 rm -rf redis
 rm -rf redis-stable.tar.gz
+apt-get autoremove -y
+apt-get autoclean
 
 exit 0
