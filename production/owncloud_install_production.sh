@@ -67,7 +67,6 @@ apt-get install software-properties-common -y
 echo "mysql-server-5.6 mysql-server/root_password password $MYSQL_PASS" | debconf-set-selections
 echo "mysql-server-5.6 mysql-server/root_password_again password $MYSQL_PASS" | debconf-set-selections
 apt-get install mysql-server-5.6 -y
-apt-get install mysql-client-5.6 mysql-client-core-5.6 -y
 
 # mysql_secure_installation
 aptitude -y install expect
