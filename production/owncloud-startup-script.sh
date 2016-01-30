@@ -354,7 +354,7 @@ echo    "| You have sucessfully installed ownCloud! System will now reboot... |"
 echo    "|                                                                    |"
 echo -e "|         \e[0mLogin to ownCloud in your browser:\e[36m" $ADDRESS"\e[32m           |"
 echo    "|                                                                    |"
-echo -e "|         \e[0mPublish your server online! \e[36mhttps://goo.gl/iUGE2U\e[32m            |"
+echo -e "|         \e[0mPublish your server online! \e[36mhttps://goo.gl/iUGE2U\e[32m          |"
 echo    "|                                                                    |"
 echo -e "|      \e[0mYour MySQL password is stored in: \e[36m$PW_FILE\e[32m     |"
 echo    "|                                                                    |"
@@ -371,9 +371,9 @@ rm $SCRIPTS/owncloud-startup-script.sh
 rm $SCRIPTS/ip.sh
 rm $SCRIPTS/trusted.sh
 rm $SCRIPTS/test_connection.sh
-rm $SCRIPTS/change-ocadmin-profile.sh
-rm $SCRIPTS/change-root-profile.sh
-rm $SCRIPTS/redis_latest_php5.sh
+# rm $SCRIPTS/change-ocadmin-profile.sh
+# rm $SCRIPTS/change-root-profile.sh
+# rm $SCRIPTS/redis_latest_php5.sh
 rm $SCRIPTS/update-config.php
 rm /var/www/owncloud/data/owncloud.log
 cat /dev/null > ~/.bash_history
