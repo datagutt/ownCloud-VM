@@ -2,4 +2,4 @@
 
 cat /dev/null > ~/.bash_history
 
-exit 1
+exit 0
