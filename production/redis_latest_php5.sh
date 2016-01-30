@@ -21,7 +21,7 @@ then
     echo "Test failed."
     exit
 else
-		echo -e "\e[32m"
+    echo -e "\e[32m"
     echo "Redis test OK!"
     echo -e "\e[0m"
 fi
