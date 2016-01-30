@@ -226,6 +226,7 @@ fi
 # Install Redis
 wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/redis_latest_php5.sh -P $SCRIPTS
 bash $SCRIPTS/redis_latest_php5.sh
+rm $SCRIPTS/redis_latest_php5.sh
 
 ## Set config values
 # Experimental apps
@@ -347,7 +348,8 @@ then
 	sleep 10
 else
 	echo "change-root-profile.sh script executed OK."
-	sleep 1
+	rm $SCRIPTS/change-root-profile.sh
+	sleep 2
 fi
 # Change ocadmin profile
         	bash $SCRIPTS/change-ocadmin-profile.sh
@@ -357,7 +359,8 @@ then
 	sleep 10
 else
 	echo "change-ocadmin-profile.sh executed OK."
-	sleep 1
+	rm $SCRIPTS/change-ocadmin-profile.sh
+	sleep 2
 fi
 
 # Allow ocadmin to run theese scripts
