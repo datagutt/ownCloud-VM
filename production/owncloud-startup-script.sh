@@ -371,9 +371,6 @@ rm $SCRIPTS/owncloud-startup-script.sh
 rm $SCRIPTS/ip.sh
 rm $SCRIPTS/trusted.sh
 rm $SCRIPTS/test_connection.sh
-# rm $SCRIPTS/change-ocadmin-profile.sh
-# rm $SCRIPTS/change-root-profile.sh
-# rm $SCRIPTS/redis_latest_php5.sh
 rm $SCRIPTS/update-config.php
 rm /var/www/owncloud/data/owncloud.log
 cat /dev/null > ~/.bash_history
