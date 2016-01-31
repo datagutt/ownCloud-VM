@@ -39,13 +39,13 @@ clear
 echo -e "\e[0m"
 
 # Install packages for Webmin
-aptitude install --force-yes -y zip perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
+aptitude install -y zip perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 
 # Install Webmin
 sed -i '$a deb http://download.webmin.com/download/repository sarge contrib' /etc/apt/sources.list
 wget -q http://www.webmin.com/jcameron-key.asc -O- | sudo apt-key add -
 aptitude update
-aptitude install --force-yes -y webmin
+aptitude install -y webmin
 IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
 ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')

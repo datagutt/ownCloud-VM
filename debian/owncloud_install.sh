@@ -62,10 +62,11 @@ echo -e "\e[0m"
 
 # Install MYSQL 5.7
 aptitude install debconf-utils -y
+rm -R /var/lib/mysql
 echo "deb http://repo.mysql.com/apt/debian/ jessie mysql-$MYSQL_VERSION" > /etc/apt/sources.list.d/mysql.list
 echo "deb-src http://repo.mysql.com/apt/debian/ jessie mysql-$MYSQL_VERSION" >> /etc/apt/sources.list.d/mysql.list
-echo mysql-community-server mysql-community-server/root-pass password "$MYSQL_PASS" | debconf-set-selections
-echo mysql-community-server mysql-community-server/re-root-pass password "$MYSQL_PASS" | debconf-set-selections
+echo mysql-community-server mysql-community-server/root-pass password $MYSQL_PASS | debconf-set-selections
+echo mysql-community-server mysql-community-server/re-root-pass password $MYSQL_PASS | debconf-set-selections
 apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys A4A9406876FCBD3C456770C88C718D3B5072E1F5
 aptitude update
 aptitude install mysql-community-server -y

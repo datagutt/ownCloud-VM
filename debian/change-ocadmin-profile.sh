@@ -24,7 +24,6 @@ if [ -d "$HOME/bin" ] ; then
 fi
 bash /var/scripts/instruction.sh
 bash /var/scripts/history.sh
-su
 
 OCADMIN-PROFILE
 

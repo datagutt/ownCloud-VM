@@ -3,11 +3,12 @@
 clear
 cat << INST1
 +-----------------------------------------------------------------------+
-| Thank you for downloading this ownCloud VM made by Tech and Me!       |
-|                                                                       |
+| Thank you for downloading this ownCloud VM made by Tech and Me!      	|
+|                                                                      	|
 INST1
-echo -e "|"  "\e[32mTo run the startup script, just type: the sudo password\e[0m               |"
-echo -e "|"  "\e[32mThe sudo password is: owncloud, or the PW you chose during install\e[0m    |"
+echo -e "|"  "\e[38mTo run the startup script just type:\e[0m			       		|"
+echo -e "|"  "\e[36msu -l root /var/scripts/owncloud_install.sh\e[0m		       		|"
+echo -e "|"  "\e[38mThe root password is: owncloud, or the PW you chose during install\e[0m    |"
 cat << INST2
 |                                                                       |
 | If you never done this before you can follow the complete             |
