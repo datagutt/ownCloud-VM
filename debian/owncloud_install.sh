@@ -1,20 +1,21 @@
 #!/bin/bash
 
 # Tech and Me, ©2016 - www.techandme.se
-# 
-# This install from ownCloud repos with PHP 5.6
 
+# Debian 8.3 Jessie
+
+OCVERSION=owncloud-8.2.2.zip
+MYSQL_VERSION=5.7
 SHUF=$(shuf -i 27-38 -n 1)
 MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
 SCRIPTS=/var/scripts
-HTML=/var/www
+HTML=/var/www/html
 OCPATH=$HTML/owncloud
 SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
 IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
 ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
-CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
@@ -24,19 +25,12 @@ CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cu
         exit 1
 fi
 
-# Create $SCRIPTS dir
-      	if [ -d $SCRIPTS ]; then
-      		sleep 1
-      		else
-      	mkdir $SCRIPTS
-fi
-
 # Change DNS
-echo "nameserver 8.26.56.26" > /etc/resolvconf/resolv.conf.d/base
-echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
+echo "nameserver 8.26.56.26" > /etc/resolv.conf
+echo "nameserver 8.20.247.20" >> /etc/resolv.conf
 
 # Check network
-sudo ifdown $IFACE && sudo ifup $IFACE
+ifdown $IFACE && ifup $IFACE
 nslookup google.com
 if [[ $? > 0 ]]
 then
@@ -47,10 +41,14 @@ else
 fi
 
 # Update system
-apt-get update
+aptitude update
+
+# Install Sudo
+aptitude install sudo -y
 
 # Set locales
-sudo locale-gen "sv_SE.UTF-8" && sudo dpkg-reconfigure locales
+sudo locale-gen "sv_SE.UTF-8"
+echo "sv_SE.UTF-8" >> /etc/default/locale
 
 # Show MySQL pass, and write it to a file in case the user fails to write it down
 echo
@@ -62,11 +60,15 @@ echo -e "\e[32m"
 read -p "Press any key to continue..." -n1 -s
 echo -e "\e[0m"
 
-# Install MYSQL 5.6
-apt-get install software-properties-common -y
-echo "mysql-server-5.6 mysql-server/root_password password $MYSQL_PASS" | debconf-set-selections
-echo "mysql-server-5.6 mysql-server/root_password_again password $MYSQL_PASS" | debconf-set-selections
-apt-get install mysql-server-5.6 -y
+# Install MYSQL 5.7
+aptitude install debconf-utils -y
+echo "deb http://repo.mysql.com/apt/debian/ jessie mysql-$MYSQL_VERSION" > /etc/apt/sources.list.d/mysql.list
+echo "deb-src http://repo.mysql.com/apt/debian/ jessie mysql-$MYSQL_VERSION" >> /etc/apt/sources.list.d/mysql.list
+echo mysql-community-server mysql-community-server/root-pass password "$MYSQL_PASS" | debconf-set-selections
+echo mysql-community-server mysql-community-server/re-root-pass password "$MYSQL_PASS" | debconf-set-selections
+apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys A4A9406876FCBD3C456770C88C718D3B5072E1F5
+aptitude update
+aptitude install mysql-community-server -y
 
 # mysql_secure_installation
 aptitude -y install expect
@@ -91,7 +93,7 @@ echo "$SECURE_MYSQL"
 aptitude -y purge expect
 
 # Install Apache
-apt-get install apache2 -y
+aptitude install apache2 -y
 a2enmod rewrite \
         headers \
         env \
@@ -105,33 +107,41 @@ sudo sh -c "echo 'ServerName owncloud' >> /etc/apache2/apache2.conf"
 sudo hostnamectl set-hostname owncloud
 service apache2 restart
 
-# Install PHP 5.6
-apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php5-5.6
-apt-get update
-apt-get install -y \
-        php5 \
-        php5-common \
-        php5-mysql \
-        php5-intl \
-        php5-mcrypt \
-        php5-ldap \
-        php5-imap \
-        php5-cli \
-        php5-gd \
-        php5-pgsql \
-        php5-json \
-        php5-sqlite \
-        php5-curl \
+# Install PHP 7
+echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
+echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
+wget https://www.dotdeb.org/dotdeb.gpg
+apt-key add dotdeb.gpg
+rm dotdeb.gpg
+aptitude update
+aptitude install -y \
+        php7.0 \
+        php7.0-common \
+        php7.0-mysql \
+        php7.0-intl \
+        php7.0-mcrypt \
+        php7.0-ldap \
+        php7.0-imap \
+        php7.0-cli \
+        php7.0-gd \
+        php7.0-pgsql \
+        php7.0-json \
+        php7.0-sqlite3 \
+        php7.0-curl \
         libsm6 \
+        libsmbclient
 
-# Download and install ownCloud
-wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
-apt-key add - < Release.key && rm Release.key
-sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /' >> /etc/apt/sources.list.d/owncloud.list"
-apt-get update && apt-get install owncloud -y
+# Download $OCVERSION
+wget https://download.owncloud.org/community/$OCVERSION -P $HTML
+aptitude install unzip -y
+unzip -q $HTML/$OCVERSION -d $HTML
+rm $HTML/$OCVERSION
+
+# Create data folder, occ complains otherwise
+mkdir $OCPATH/data
 
 # Secure permissions
-wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/debian//setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
@@ -143,31 +153,27 @@ sudo -u www-data php $OCPATH/occ status
 echo
 sleep 3
 
-# Install SMBclient
-apt-get install smbclient -y
-
-# Install phpMyadmin
-echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections
-echo "phpmyadmin phpmyadmin/app-password-confirm password $MYSQL_PASS" | debconf-set-selections
-echo "phpmyadmin phpmyadmin/mysql/admin-pass password $MYSQL_PASS" | debconf-set-selections
-echo "phpmyadmin phpmyadmin/mysql/app-pass password $MYSQL_PASS" | debconf-set-selections
-echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections
-apt-get install phpmyadmin -y
+# Set trusted domain
+wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/debian//update-config.php -P $SCRIPTS
+chmod a+x $SCRIPTS/update-config.php
+php $SCRIPTS/update-config.php $OCPATH/config/config.php 'trusted_domains[]' localhost ${ADDRESS[@]} $(hostname) $(hostname --fqdn) 2>&1 >/dev/null
+php $SCRIPTS/update-config.php $OCPATH/config/config.php overwrite.cli.url https://$ADDRESS/owncloud 2>&1 >/dev/null
 
 # Prepare cron.php to be run every 15 minutes
+# The user still has to activate it in the settings GUI
 crontab -u www-data -l | { cat; echo "*/15  *  *  *  * php -f $OCPATH/cron.php > /dev/null 2>&1"; } | crontab -u www-data -
 
 # Change values in php.ini (increase max file size)
 # max_execution_time
-sed -i "s|max_execution_time = 30|max_execution_time = 3500|g" /etc/php5/apache2/php.ini
+sed -i "s|max_execution_time = 30|max_execution_time = 3500|g" /etc/php/7.0/apache2/php.ini
 # max_input_time
-sed -i "s|max_input_time = 60|max_input_time = 3600|g" /etc/php5/apache2/php.ini
+sed -i "s|max_input_time = 60|max_input_time = 3600|g" /etc/php/7.0/apache2/php.ini
 # memory_limit
-sed -i "s|memory_limit = 128M|memory_limit = 512M|g" /etc/php5/apache2/php.ini
+sed -i "s|memory_limit = 128M|memory_limit = 512M|g" /etc/php/7.0/apache2/php.ini
 # post_max
-sed -i "s|post_max_size = 8M|post_max_size = 1100M|g" /etc/php5/apache2/php.ini
+sed -i "s|post_max_size = 8M|post_max_size = 1100M|g" /etc/php/7.0/apache2/php.ini
 # upload_max
-sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php5/apache2/php.ini
+sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php/7.0/apache2/php.ini
 
 # Generate $SSL_CONF
 if [ -f $SSL_CONF ];
@@ -215,18 +221,6 @@ a2ensite owncloud_ssl_domain_self_signed.conf
 a2dissite default-ssl
 service apache2 restart
 
-# Get script for Redis
-        if [ -f $SCRIPTS/instruction.sh ];
-                then
-                echo "redis_latest_php5.sh exists"
-                else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/redis_latest_php5.sh -P $SCRIPTS
-fi
-
-# Install Redis
-bash $SCRIPTS/redis_latest_php5.sh
-rm $SCRIPTS/redis_latest_php5.sh
-
 ## Set config values
 # Experimental apps
 sudo -u www-data php $OCPATH/occ config:system:set appstore.experimental.enabled --value="true"
@@ -244,11 +238,8 @@ sudo -u www-data php $OCPATH/occ config:system:set mail_smtppassword --value="te
 
 # Install Libreoffice Writer to be able to read MS documents.
 echo -ne '\n' | sudo apt-add-repository ppa:libreoffice/libreoffice-4-4
-apt-get update
-sudo apt-get install --no-install-recommends libreoffice-writer -y
-
-# Install Unzip
-apt-get install unzip -y
+aptitude update
+apt-get install --no-install-recommends libreoffice-writer -y
 
 # Download and install Documents
 if [ -d $OCPATH/apps/documents ]; then
@@ -299,84 +290,10 @@ if [ -d $OCPATH/apps/calendar ]; then
 sudo -u www-data php $OCPATH/occ app:enable calendar
 fi
 
+
 # Set secure permissions final (./data/.htaccess has wrong permissions otherwise)
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
-# Change roots .bash_profile
-        if [ -f $SCRIPTS/change-root-profile.sh ];
-                then
-                echo "change-root-profile.sh exists"
-                else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-root-profile.sh -P $SCRIPTS
-fi
-# Change ocadmin .bash_profile
-        if [ -f $SCRIPTS/change-ocadmin-profile.sh ];
-                then
-                echo "change-ocadmin-profile.sh  exists"
-                else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-ocadmin-profile.sh -P $SCRIPTS
-fi
-# Get startup-script for root
-        if [ -f $SCRIPTS/owncloud-startup-script.sh ];
-                then
-                echo "owncloud-startup-script.sh exists"
-                else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/owncloud-startup-script.sh -P $SCRIPTS
-fi
-
-# Welcome message after login (change in /home/ocadmin/.profile
-        if [ -f $SCRIPTS/instruction.sh ];
-                then
-                echo "instruction.sh exists"
-                else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/instruction.sh -P $SCRIPTS
-fi
-# Clears command history on every login
-        if [ -f $SCRIPTS/history.sh ];
-                then
-                echo "history.sh exists"
-                else
-        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/history.sh -P $SCRIPTS
-fi
-
-# Change root profile
-        	bash $SCRIPTS/change-root-profile.sh
-if [[ $? > 0 ]]
-then
-	echo "change-root-profile.sh were not executed correctly."
-	sleep 10
-else
-	echo "change-root-profile.sh script executed OK."
-	rm $SCRIPTS/change-root-profile.sh
-	sleep 2
-fi
-# Change ocadmin profile
-        	bash $SCRIPTS/change-ocadmin-profile.sh
-if [[ $? > 0 ]]
-then
-	echo "change-ocadmin-profile.sh were not executed correctly."
-	sleep 10
-else
-	echo "change-ocadmin-profile.sh executed OK."
-	rm $SCRIPTS/change-ocadmin-profile.sh
-	sleep 2
-fi
-
-# Allow ocadmin to run theese scripts
-chown ocadmin:ocadmin $SCRIPTS/instruction.sh
-chown ocadmin:ocadmin $SCRIPTS/history.sh
-        
-# Make $SCRIPTS excutable 
-chmod +x -R $SCRIPTS
-chown root:root -R $SCRIPTS
-
-# Upgrade
-aptitude full-upgrade -y
-
-#Cleanup
-echo "$CLEARBOOT"
-
-# Reboot
-reboot
-        
+# Start startup-script
+bash $SCRIPTS/owncloud-startup-script.sh
 exit 0

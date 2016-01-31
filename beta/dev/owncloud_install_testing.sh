@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Tech and Me, 2016 - www.techandme.se
+# Tech and Me, ©2016 - www.techandme.se
 
 OCVERSION=owncloud-daily-master
 SHUF=$(shuf -i 27-38 -n 1)

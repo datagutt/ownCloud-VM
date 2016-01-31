@@ -14,16 +14,16 @@ else mkdir $SCRIPTS
 fi
 
 # Get packages to be able to install Redis
-apt-get update && sudo apt-get install build-essential -q -y
-apt-get install tcl8.5 -q -y
-apt-get install php-pear php7.0-dev -q -y
+aptitude update && sudo aptitude install build-essential -q -y
+aptitude install tcl8.5 -q -y
+aptitude install php-pear php7.0-dev -q -y
 
 # Install Git and clone repo
-apt-get install git -y -q
+aptitude install git -y -q
 git clone -b php7 https://github.com/phpredis/phpredis.git
 
 # Build Redis PHP module
-apt-get install php7.0-dev -y
+aptitude install php7.0-dev -y
 sudo mv phpredis/ /etc/ && cd /etc/phpredis
 phpize
 ./configure
@@ -99,6 +99,6 @@ cat <<ADD_TO_CONFIG>> /var/www/html/owncloud/config/config.php
 ADD_TO_CONFIG
 
 # Cleanup
-apt-get purge git -y
+aptitude purge git -y
 
 exit 0

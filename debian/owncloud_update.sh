@@ -23,7 +23,7 @@ else
 fi
 
 # System Upgrade
-sudo apt-get update
+sudo aptitude update
 sudo aptitude full-upgrade -y
 
 # Enable maintenance mode
@@ -124,8 +124,8 @@ fi
 sudo -u www-data php $OCPATH/occ maintenance:repair
 
 # Cleanup un-used packages
-sudo apt-get autoremove -y
-sudo apt-get autoclean
+sudo aptitude autoremove -y
+sudo aptitude autoclean
 
 # Update GRUB, just in case
 sudo update-grub

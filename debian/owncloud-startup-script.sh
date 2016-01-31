@@ -5,7 +5,7 @@
 
 SCRIPTS=/var/scripts
 PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install.sh
-CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
+CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo aptitude -y purge)
 
 # Check if root
 if [ "$(whoami)" != "root" ]; then
@@ -31,7 +31,7 @@ echo "|                                                                    |"
 echo "|   The script will take about 10 minutes to finish,                 |"
 echo "|   depending on your internet connection.                           |"
 echo "|                                                                    |"
-echo "| ####################### Tech and Me - 2016 ####################### |"
+echo "| ####################### Tech and Me - ©2016 ####################### |"
 echo "+--------------------------------------------------------------------+"
 echo -e "\e[32m"
 read -p "Press any key to start the script..." -n1 -s
@@ -39,13 +39,13 @@ clear
 echo -e "\e[0m"
 
 # Install packages for Webmin
-apt-get install --force-yes -y zip perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
+aptitude install --force-yes -y zip perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 
 # Install Webmin
 sed -i '$a deb http://download.webmin.com/download/repository sarge contrib' /etc/apt/sources.list
 wget -q http://www.webmin.com/jcameron-key.asc -O- | sudo apt-key add -
-apt-get update
-apt-get install --force-yes -y webmin
+aptitude update
+aptitude install --force-yes -y webmin
 IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
 ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
@@ -197,11 +197,11 @@ echo System will now upgrade...
 sleep 2
 echo
 echo
-apt-get update
+aptitude update
 aptitude full-upgrade -y
 
 # Cleanup 1
-apt-get autoremove -y
+aptitude autoremove -y
 echo "$CLEARBOOT"
 clear
 
@@ -216,7 +216,7 @@ echo -e "|         \e[0mPublish your server online! \e[36mhttps://goo.gl/iUGE2U\
 echo    "|                                                                    |"
 echo -e "|      \e[0mYour MySQL password is stored in: \e[36m$PW_FILE\e[32m     |"
 echo    "|                                                                    |"
-echo -e "|    \e[91m#################### Tech and Me - 2016 ####################\e[32m    |"
+echo -e "|    \e[91m#################### Tech and Me - ©2016 ####################\e[32m    |"
 echo    "+--------------------------------------------------------------------+"
 echo
 read -p "Press any key to reboot..." -n1 -s
