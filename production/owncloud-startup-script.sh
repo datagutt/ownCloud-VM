@@ -366,7 +366,7 @@ echo -e "|         \e[0mPublish your server online! \e[36mhttps://goo.gl/iUGE2U\
 echo    "|                                                                    |"
 echo -e "|      \e[0mYour MySQL password is stored in: \e[36m$PW_FILE\e[32m     |"
 echo    "|                                                                    |"
-echo -e "|    \e[91m#################### Tech and Me - 2016 ####################\e[32m     |"
+echo -e "|    \e[91m#################### Tech and Me - 2016 ####################\e[32m    |"
 echo    "+--------------------------------------------------------------------+"
 echo
 read -p "Press any key to reboot..." -n1 -s

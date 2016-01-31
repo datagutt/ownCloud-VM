@@ -31,7 +31,7 @@ echo "|                                                                    |"
 echo "|   The script will take about 10 minutes to finish,                 |"
 echo "|   depending on your internet connection.                           |"
 echo "|                                                                    |"
-echo "| ####################### Tech and Me - ©2016 ####################### |"
+echo "| ####################### Tech and Me - 2016 ####################### |"
 echo "+--------------------------------------------------------------------+"
 echo -e "\e[32m"
 read -p "Press any key to start the script..." -n1 -s
@@ -216,7 +216,7 @@ echo -e "|         \e[0mPublish your server online! \e[36mhttps://goo.gl/iUGE2U\
 echo    "|                                                                    |"
 echo -e "|      \e[0mYour MySQL password is stored in: \e[36m$PW_FILE\e[32m     |"
 echo    "|                                                                    |"
-echo -e "|    \e[91m#################### Tech and Me - ©2016 ####################\e[32m    |"
+echo -e "|    \e[91m#################### Tech and Me - 2016 ####################\e[32m    |"
 echo    "+--------------------------------------------------------------------+"
 echo
 read -p "Press any key to reboot..." -n1 -s
