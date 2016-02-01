@@ -4,11 +4,11 @@
 #
 # Tested on Ubuntu Server 14.04.
 #
-SCRIPTS=/var/scripts
-HTML=/var/www/html
-OCPATH=$HTML/owncloud
-DATA=$OCPATH/data
-SECURE="$SCRIPTS/setup_secure_permissions_owncloud.sh"
+export SCRIPTS=/var/scripts
+export HTML=/var/www/html
+export OCPATH=$HTML/owncloud
+export DATA=$OCPATH/data
+export SECURE="$SCRIPTS/setup_secure_permissions_owncloud.sh"
 
 # Must be root
 [[ $(id -u) -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
@@ -27,7 +27,7 @@ sudo aptitude update
 sudo aptitude full-upgrade -y
 
 # Enable maintenance mode
-php $OCPATH/occ maintenance:mode --on
+su -s /bin/sh -c 'php $OCPATH/occ maintenance:mode --on' www-data
 
 # Backup data
 rsync -Aaxv $DATA $HTML
@@ -84,29 +84,29 @@ if [ -d $DATA/ ]; then
         cp -R $HTML/config $OCPATH/ && rm -rf $HTML/config
         cp -R $HTML/apps $OCPATH/ && rm -rf $HTML/apps
         bash $SECURE
-        php $OCPATH/occ maintenance:mode --off
-        php $OCPATH/occ upgrade
+        su -s /bin/sh -c 'php $OCPATH/occ maintenance:mode --off' www-data
+        su -s /bin/sh -c 'php $OCPATH/occ upgrade' www-data
 else
         echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
    exit 1
 fi
 
 # Enable Apps
-php $OCPATH/occ app:enable calendar
-php $OCPATH/occ app:enable contacts
-php $OCPATH/occ app:enable documents
-php $OCPATH/occ app:enable external
+su -s /bin/sh -c 'php $OCPATH/occ app:enable calendar' www-data
+su -s /bin/sh -c 'php $OCPATH/occ app:enable contacts' www-data
+su -s /bin/sh -c 'php $OCPATH/occ app:enable documents' www-data
+su -s /bin/sh -c 'php $OCPATH/occ app:enable external' www-data
 
 # Second run (to make sure everything is updated, somtimes apps needs a second run)
-php $OCPATH/occ upgrade
+su -s /bin/sh -c 'php $OCPATH/occ upgrade' www-data
 # Enable Apps
-php $OCPATH/occ app:enable calendar
-php $OCPATH/occ app:enable contacts
-php $OCPATH/occ app:enable documents
-php $OCPATH/occ app:enable external
+su -s /bin/sh -c 'php $OCPATH/occ app:enable calendar' www-data
+su -s /bin/sh -c 'php $OCPATH/occ app:enable contacts' www-data
+su -s /bin/sh -c 'php $OCPATH/occ app:enable documents' www-data
+su -s /bin/sh -c 'php $OCPATH/occ app:enable external' www-data
 
 # Disable maintenance mode
-php $OCPATH/occ maintenance:mode --off
+su -s /bin/sh -c 'php $OCPATH/occ maintenance:mode --off' www-data
 
 # Increase max filesize (expects that changes are made in /etc/php5/apache2/php.ini)
 # Here is a guide: https://www.techandme.se/increase-max-file-size/
@@ -121,7 +121,7 @@ else
 fi
 
 # Repair
-php $OCPATH/occ maintenance:repair
+su -s /bin/sh -c 'php $OCPATH/occ maintenance:repair' www-data
 
 # Cleanup un-used packages
 sudo aptitude autoremove -y
@@ -135,7 +135,7 @@ touch /var/log/cronjobs_success.log
 echo "OWNCLOUD UPDATE success-$(date +"%Y%m%d")" >> /var/log/cronjobs_success.log
 echo
 echo ownCloud version:
-php $OCPATH/occ status
+su -s /bin/sh -c 'php $OCPATH/occ status' www-data
 echo
 echo
 sleep 3

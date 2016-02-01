@@ -5,9 +5,9 @@ IFCONFIG="/sbin/ifconfig"
 IP="/sbin/ip"
 INTERFACES="/etc/network/interfaces"
 
-ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
-NETMASK=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $8; exit}')
-GATEWAY=$($IP route | awk '/\<default\>/ {print $3; exit}')
+ADDRESS=$(ip route get 1 | awk '{print $NF;exit}')
+NETMASK=$($IFCONFIG eth0 | grep Mask | sed s/^.*Mask://)
+GATEWAY=$($IP route | awk '/default/ { print $3 }')
 
 cat <<-IPCONFIG > "$INTERFACES"
         auto lo $IFACE

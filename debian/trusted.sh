@@ -2,9 +2,7 @@
 
 HTML=/var/www/html
 OCPATH=$HTML/owncloud
-IFACE="eth0"
-IFCONFIG="/sbin/ifconfig"
-ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
+ADDRESS=$(ip route get 1 | awk '{print $NF;exit}')
 SCRIPTS=/var/scripts
 
 php $SCRIPTS/update-config.php $OCPATH/config/config.php 'trusted_domains[]' localhost ${ADDRESS[@]} $(hostname) $(hostname --fqdn) 2>&1 >/dev/null

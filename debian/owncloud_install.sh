@@ -46,14 +46,15 @@ aptitude update
 # Install Sudo
 aptitude install sudo -y
 
+# Install Rsync
+aptitude install rsync -y
+
 # Set locales & timezone to Swedish
 echo "Europe/Stockholm" > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata && \
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# sv_SE.UTF-8 UTF-8/sv_SE.UTF-8 UTF-8/' /etc/locale.gen && \
-    echo 'LANG="sv_SE.UTF-8"'>/etc/default/locale && \
-    dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=sv_SE.UTF-8
+    dpkg-reconfigure --frontend=noninteractive locales
 
 # Show MySQL pass, and write it to a file in case the user fails to write it down
 echo
@@ -158,12 +159,11 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
 cd $OCPATH
-
-php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "ocadmin" --admin-pass "owncloud"
+su -s /bin/sh -c 'php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "ocadmin" --admin-pass "owncloud"' www-data
 echo
 echo ownCloud version:
 
-php $OCPATH/occ status
+su -s /bin/sh -c 'php $OCPATH/occ status' www-data
 echo
 sleep 3
 
@@ -238,18 +238,18 @@ service apache2 restart
 ## Set config values
 # Experimental apps
 
-php $OCPATH/occ config:system:set appstore.experimental.enabled --value="true"
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set appstore.experimental.enabled --value="true"' www-data
 # Default mail server (make this user configurable?)
-php $OCPATH/occ config:system:set mail_smtpmode --value="smtp"
-php $OCPATH/occ config:system:set mail_smtpauth --value="1"
-php $OCPATH/occ config:system:set mail_smtpport --value="465"
-php $OCPATH/occ config:system:set mail_smtphost --value="smtp.gmail.com"
-php $OCPATH/occ config:system:set mail_smtpauthtype --value="LOGIN"
-php $OCPATH/occ config:system:set mail_from_address --value="www.en0ch.se"
-php $OCPATH/occ config:system:set mail_domain --value="gmail.com"
-php $OCPATH/occ config:system:set mail_smtpsecure --value="ssl"
-php $OCPATH/occ config:system:set mail_smtpname --value="www.en0ch.se@gmail.com"
-php $OCPATH/occ config:system:set mail_smtppassword --value="techandme_se"
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set mail_smtpmode --value="smtp"' www-data
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set mail_smtpauth --value="1"' www-data
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set mail_smtpport --value="465"' www-data
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set mail_smtphost --value="smtp.gmail.com"' www-data
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set mail_smtpauthtype --value="LOGIN"' www-data
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set mail_from_address --value="www.en0ch.se"' www-data
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set mail_domain --value="gmail.com"' www-data
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set mail_smtpsecure --value="ssl"' www-data
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set mail_smtpname --value="www.en0ch.se@gmail.com"' www-data
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set mail_smtppassword --value="techandme_se"' www-data
 
 # Install Libreoffice Writer to be able to read MS documents.
 echo -ne '\n' | sudo apt-add-repository ppa:libreoffice/libreoffice-4-4
@@ -270,8 +270,8 @@ fi
 # Enable documents
 if [ -d $OCPATH/apps/documents ]; then
 
-php $OCPATH/occ app:enable documents
-php $OCPATH/occ config:system:set preview_libreoffice_path --value="/usr/bin/libreoffice"
+su -s /bin/sh -c 'php $OCPATH/occ app:enable documents' www-data
+su -s /bin/sh -c 'php $OCPATH/occ config:system:set preview_libreoffice_path --value="/usr/bin/libreoffice"' www-data
 fi
 
 # Download and install Contacts
@@ -287,7 +287,7 @@ fi
 
 # Enable Contacts
 if [ -d $OCPATH/apps/contacts ]; then
-php $OCPATH/occ app:enable contacts
+su -s /bin/sh -c 'php $OCPATH/occ app:enable contacts' www-data
 fi
 
 # Download and install Calendar
@@ -303,7 +303,7 @@ fi
 
 # Enable Calendar
 if [ -d $OCPATH/apps/calendar ]; then
-php $OCPATH/occ app:enable calendar
+su -s /bin/sh -c 'php $OCPATH/occ app:enable calendar' www-data
 fi
 
 

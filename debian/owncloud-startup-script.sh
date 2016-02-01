@@ -3,9 +3,12 @@
 ## Tech and Me ## - ©2016, https://www.techandme.se/
 #
 
-SCRIPTS=/var/scripts
-PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install.sh
-CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo aptitude -y purge)
+export SCRIPTS=/var/scripts
+export PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install.sh
+export CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo aptitude -y purge)
+export IFACE="eth0"
+export IFCONFIG="/sbin/ifconfig"
+export ADDRESS=$(ip route get 1 | awk '{print $NF;exit}')
 
 # Check if root
 if [ "$(whoami)" != "root" ]; then
@@ -46,9 +49,6 @@ sed -i '$a deb http://download.webmin.com/download/repository sarge contrib' /et
 wget -q http://www.webmin.com/jcameron-key.asc -O- | sudo apt-key add -
 aptitude update
 aptitude install -y webmin
-IFACE="eth0"
-IFCONFIG="/sbin/ifconfig"
-ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 echo
 echo "Webmin is installed, access it from your browser: https://$ADDRESS:10000"
 sleep 2
@@ -76,9 +76,6 @@ sleep 3
 clear
 
 # Change IP
-IFACE="eth0"
-IFCONFIG="/sbin/ifconfig"
-ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 echo -e "\e[0m"
 echo "The script will now configure your IP to be static."
 echo -e "\e[36m"
