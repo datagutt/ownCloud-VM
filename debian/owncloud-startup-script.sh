@@ -4,7 +4,7 @@
 #
 
 export SCRIPTS=/var/scripts
-export PW_FILE=/var/important_passwords.txt # Keep in sync with owncloud_install.sh
+export PW_FILE=/var/M-R_passwords.txt # Keep in sync with owncloud_install.sh
 export CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo aptitude -y purge)
 export IFACE="eth0"
 export IFCONFIG="/sbin/ifconfig"
@@ -198,7 +198,7 @@ aptitude update
 aptitude full-upgrade -y
 
 # Cleanup 1
-aptitude autoremove -y
+aptitude autoclean
 echo "$CLEARBOOT"
 clear
 
@@ -211,7 +211,7 @@ echo -e "|         \e[0mLogin to ownCloud in your browser:\e[36m" $ADDRESS"\e[32
 echo    "|                                                                    |"
 echo -e "|         \e[0mPublish your server online! \e[36mhttps://goo.gl/iUGE2U\e[32m          |"
 echo    "|                                                                    |"
-echo -e "|      \e[0mYour MySQL password is stored in: \e[36m$PW_FILE\e[32m     |"
+echo -e "|      \e[0mYour MySQL & ROOT passwords is stored in: \e[36m$PW_FILE\e[32m     |"
 echo    "|                                                                    |"
 echo -e "|    \e[91m#################### Tech and Me - 2016 ####################\e[32m    |"
 echo    "+--------------------------------------------------------------------+"

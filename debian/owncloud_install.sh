@@ -10,7 +10,7 @@ export SHUF=$(shuf -i 25-30 -n 1)
 export MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
 export SHUF2=$(shuf -i 8-10 -n 1)
 export ROOT_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z2-9" | fold -w $SHUF2 | head -n 1)
-export PW_FILE=/var/important_passwords.txt
+export PW_FILE=/var/M-R_passwords.txt
 export SCRIPTS=/var/scripts
 export HTML=/var/www/html
 export OCPATH=$HTML/owncloud
@@ -63,7 +63,8 @@ echo "The MySQL password will now be set..."
 echo
 sleep 2
 echo -e "Your MySQL root password is: \e[32m$MYSQL_PASS\e[0m"
-echo "Please save this somewhere safe. The password is also saved in this file: $PW_FILE."
+echo "Please save this somewhere safe.You can not login to MySQL without it." 
+echo "The password is also saved in this file: $PW_FILE."
 echo "$MYSQL_PASS" > $PW_FILE
 echo -e "\e[32m"
 read -p "Press any key to continue..." -n1 -s
@@ -74,7 +75,7 @@ echo
 sleep 2
 echo -e "root:$ROOT_PASS" | chpasswd
 echo -e "Your new ROOT password is: \e[32m$ROOT_PASS\e[0m"
-echo "Please save this somewhere safe. You can not login as root without this."
+echo "Please save this somewhere safe. You can not login as root without it."
 echo "The password is also saved in this file: $PW_FILE."
 echo "ROOT password: $ROOT_PASS" > $PW_FILE
 chmod 600 $PW_FILE
