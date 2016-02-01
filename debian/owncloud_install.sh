@@ -46,9 +46,14 @@ aptitude update
 # Install Sudo
 aptitude install sudo -y
 
-# Set locales
-sudo locale-gen "sv_SE.UTF-8"
-echo "sv_SE.UTF-8" >> /etc/default/locale
+# Set locales & timezone to Swedish
+echo "Europe/Stockholm" > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    sed -i -e 's/# sv_SE.UTF-8 UTF-8/sv_SE.UTF-8 UTF-8/' /etc/locale.gen && \
+    echo 'LANG="sv_SE.UTF-8"'>/etc/default/locale && \
+    dpkg-reconfigure --frontend=noninteractive locales && \
+    update-locale LANG=sv_SE.UTF-8
 
 # Show MySQL pass, and write it to a file in case the user fails to write it down
 echo
