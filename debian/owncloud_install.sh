@@ -73,12 +73,14 @@ aptitude install mysql-community-server -y
 
 # mysql_secure_installation
 aptitude -y install expect
-SECURE_MYSQL=$(expect -c "
+export SECURE_MYSQL=$(expect -c "
 set timeout 10
 spawn mysql_secure_installation
-expect \"Enter current password for root (enter for none):\"
+expect \"Enter current password for root:\"
 send \"$MYSQL_PASS\r\"
-expect \"Change the root password?\"
+expect \"Would you like to setup VALIDATE PASSWORD plugin?\"
+send \"n\r\"
+expect \"Change the password for root ?\"
 send \"n\r\"
 expect \"Remove anonymous users?\"
 send \"y\r\"
@@ -91,6 +93,7 @@ send \"y\r\"
 expect eof
 ")
 echo "$SECURE_MYSQL"
+unset SECURE_MYSQL
 aptitude -y purge expect
 
 # Install Apache
@@ -102,7 +105,7 @@ a2enmod rewrite \
         mime \
         ssl \
         setenvif
-        
+
 # Set hostname and ServerName
 sudo sh -c "echo 'ServerName owncloud' >> /etc/apache2/apache2.conf"
 sudo hostnamectl set-hostname owncloud
@@ -147,7 +150,8 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
 cd $OCPATH
-sudo -u www-data php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "ocadmin" --admin-pass "owncloud"
+su www-data
+php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "ocadmin" --admin-pass "owncloud"
 echo
 echo ownCloud version:
 sudo -u www-data php $OCPATH/occ status
