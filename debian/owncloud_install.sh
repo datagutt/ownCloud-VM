@@ -4,18 +4,18 @@
 
 # Debian 8.3 Jessie
 
-OCVERSION=owncloud-8.2.2.zip
-MYSQL_VERSION=5.7
-SHUF=$(shuf -i 27-38 -n 1)
-MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
-PW_FILE=/var/mysql_password.txt
-SCRIPTS=/var/scripts
-HTML=/var/www/html
-OCPATH=$HTML/owncloud
-SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
-IFACE="eth0"
-IFCONFIG="/sbin/ifconfig"
-ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
+export OCVERSION=owncloud-8.2.2.zip
+export MYSQL_VERSION=5.7
+export SHUF=$(shuf -i 27-38 -n 1)
+export MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
+export PW_FILE=/var/mysql_password.txt
+export SCRIPTS=/var/scripts
+export HTML=/var/www/html
+export OCPATH=$HTML/owncloud
+export SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
+export IFACE="eth0"
+export IFCONFIG="/sbin/ifconfig"
+export ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
