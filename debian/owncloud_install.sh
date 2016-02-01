@@ -58,10 +58,10 @@ echo "Europe/Stockholm" > /etc/timezone && \
     dpkg-reconfigure --frontend=noninteractive locales
 
 # Set Random passwords
-
 echo
 echo "The MySQL password will now be set..."
 echo
+sleep 2
 echo -e "Your MySQL root password is: \e[32m$MYSQL_PASS\e[0m"
 echo "Please save this somewhere safe. The password is also saved in this file: $PW_FILE."
 echo "$MYSQL_PASS" > $PW_FILE
@@ -177,8 +177,7 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 cd $OCPATH
 su -s /bin/sh -c 'php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "ocadmin" --admin-pass "owncloud"' www-data
 echo
-echo ownCloud version:
-
+echo "ownCloud version:"
 su -s /bin/sh -c 'php $OCPATH/occ status' www-data
 echo
 sleep 3
@@ -190,7 +189,6 @@ php $SCRIPTS/update-config.php $OCPATH/config/config.php 'trusted_domains[]' loc
 php $SCRIPTS/update-config.php $OCPATH/config/config.php overwrite.cli.url https://$ADDRESS/owncloud 2>&1 >/dev/null
 
 # Prepare cron.php to be run every 15 minutes
-# The user still has to activate it in the settings GUI
 crontab -u www-data -l | { cat; echo "*/15  *  *  *  * php -f $OCPATH/cron.php > /dev/null 2>&1"; } | crontab -u www-data -
 
 # Change values in php.ini (increase max file size)
@@ -285,7 +283,6 @@ fi
 
 # Enable documents
 if [ -d $OCPATH/apps/documents ]; then
-
 su -s /bin/sh -c 'php $OCPATH/occ app:enable documents' www-data
 su -s /bin/sh -c 'php $OCPATH/occ config:system:set preview_libreoffice_path --value="/usr/bin/libreoffice"' www-data
 fi
@@ -329,12 +326,6 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 # Start startup-script
 bash $SCRIPTS/owncloud-startup-script.sh
 
-# Change root password
-su -c /bin/sh 'export SHUF=$(shuf -i 5-7 -n 1)' root
-su -c /bin/sh 'export ROOT_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z2-9" | fold -w $SHUF | head -n 1)' root
-su -c /bin/sh 'echo -e "root:$ROOT_PASS" | chpasswd' root
-su -c /bin/sh 'echo "$ROOT_PASS" > /var/root_pass.txt' root
-
 # Unset all $VARs
 unset OCVERSION
 unset MYSQL_VERSION
@@ -347,5 +338,6 @@ unset OCPATH
 unset SSL_CONF
 unset IFACE
 unset ADDRESS
+unset ROOT_PASS
 
 exit 0
