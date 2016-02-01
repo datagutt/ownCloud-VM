@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OCADMIN_PROFILE="/home/ocadmin/.bash_profile"
+OCADMIN_PROFILE="/home/ocadmin/.profile"
 
 cat <<-OCADMIN-PROFILE > "$OCADMIN_PROFILE"
 # ~/.profile: executed by the command interpreter for login shells.
@@ -24,6 +24,7 @@ if [ -d "$HOME/bin" ] ; then
 fi
 bash /var/scripts/instruction.sh
 bash /var/scripts/history.sh
+su -l root
 
 OCADMIN-PROFILE
 

@@ -13,7 +13,7 @@ export ADDRESS=$(ip route get 1 | awk '{print $NF;exit}')
 # Check if root
 if [ "$(whoami)" != "root" ]; then
         echo
-        echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msudo \e[0mbash $SCRIPTS/owncloud-startup-script.sh"
+        echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msu root -c 'bash $SCRIPTS/owncloud-startup-script.sh'"
         echo
         exit 1
 fi
@@ -147,10 +147,10 @@ echo "The current password is [owncloud]"
 echo -e "\e[32m"
 read -p "Press any key to change password for ownCloud... " -n1 -s
 echo -e "\e[0m"
-php /var/www/html/owncloud/occ user:resetpassword ocadmin
+su -s /bin/sh -c 'php /var/www/html/owncloud/occ user:resetpassword ocadmin' www-data
 if [[ $? > 0 ]]
 then
-    php /var/www/html/owncloud/occ user:resetpassword ocadmin
+    su -s /bin/sh -c 'php /var/www/html/owncloud/occ user:resetpassword ocadmin' www-data
 else
     sleep 2
 fi
@@ -221,7 +221,7 @@ echo -e "\e[0m"
 echo
 
 # Cleanup 2
-php /var/www/html/owncloud/occ maintenance:repair
+su -s /bin/sh -c 'php /var/www/html/owncloud/occ maintenance:repair' www-data
 rm $SCRIPTS/owncloud-startup-script*
 rm $SCRIPTS/ip*
 rm $SCRIPTS/test_connection*

@@ -14,13 +14,12 @@ export HTML=/var/www/html
 export OCPATH=$HTML/owncloud
 export SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
 export IFACE="eth0"
-export IFCONFIG="/sbin/ifconfig"
-export ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
+export ADDRESS=$(ip route get 1 | awk '{print $NF;exit}')
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
         echo
-        echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msudo \e[0mbash $SCRIPTS/owncloud_install.sh"
+        echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msu root -c 'bash $SCRIPTS/owncloud_install.sh'"
         echo
         exit 1
 fi
@@ -312,4 +311,18 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Start startup-script
 bash $SCRIPTS/owncloud-startup-script.sh
+
+# Unset all $VARs
+unset OCVERSION
+unset MYSQL_VERSION
+unset SHUF
+unset MYSQL_PASS
+unset PW_FILE
+unset SCRIPTS
+unset HTML
+unset OCPATH
+unset SSL_CONF
+unset IFACE
+unset ADDRESS
+
 exit 0

@@ -11,7 +11,7 @@ export DATA=$OCPATH/data
 export SECURE="$SCRIPTS/setup_secure_permissions_owncloud.sh"
 
 # Must be root
-[[ $(id -u) -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
+[[ $(id -u) -eq 0 ]] || { echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msu root -c 'bash $SCRIPTS/owncloud_update.sh'""; exit 1; }
 
 # Set secure permissions
 if [ -f $SECURE ];
