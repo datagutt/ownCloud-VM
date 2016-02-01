@@ -4,7 +4,7 @@
 #
 
 export SCRIPTS=/var/scripts
-export PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install.sh
+export PW_FILE=/var/important_passwords.txt # Keep in sync with owncloud_install.sh
 export CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo aptitude -y purge)
 export IFACE="eth0"
 export IFCONFIG="/sbin/ifconfig"
@@ -132,10 +132,10 @@ echo "The current password is [owncloud]"
 echo -e "\e[32m"
 read -p "Press any key to change password for Linux... " -n1 -s
 echo -e "\e[0m"
-sudo passwd ocadmin
+    passwd ocadmin
 if [[ $? > 0 ]]
 then
-    sudo passwd ocadmin
+    passwd ocadmin
 else
     sleep 2
 fi
@@ -239,7 +239,7 @@ cat /dev/null > /var/spool/mail/ocadmin
 cat /dev/null > /var/log/apache2/access.log
 cat /dev/null > /var/log/apache2/error.log
 cat /dev/null > /var/log/cronjobs_success.log
-sed -i 's/sudo -i//g' /home/ocadmin/.bash_profile
+sed -i 's/su -l root//g' /home/ocadmin/.profile
 cat << RCLOCAL > "/etc/rc.local"
 #!/bin/sh -e
 #

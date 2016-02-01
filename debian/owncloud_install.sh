@@ -6,9 +6,11 @@
 
 export OCVERSION=owncloud-8.2.2.zip
 export MYSQL_VERSION=5.7
-export SHUF=$(shuf -i 27-38 -n 1)
+export SHUF=$(shuf -i 25-30 -n 1)
 export MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
-export PW_FILE=/var/mysql_password.txt
+export SHUF2=$(shuf -i 8-10 -n 1)
+export ROOT_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z2-9" | fold -w $SHUF2 | head -n 1)
+export PW_FILE=/var/important_passwords.txt
 export SCRIPTS=/var/scripts
 export HTML=/var/www/html
 export OCPATH=$HTML/owncloud
@@ -55,11 +57,26 @@ echo "Europe/Stockholm" > /etc/timezone && \
     sed -i -e 's/# sv_SE.UTF-8 UTF-8/sv_SE.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales
 
-# Show MySQL pass, and write it to a file in case the user fails to write it down
+# Set Random passwords
+
+echo
+echo "The MySQL password will now be set..."
 echo
 echo -e "Your MySQL root password is: \e[32m$MYSQL_PASS\e[0m"
 echo "Please save this somewhere safe. The password is also saved in this file: $PW_FILE."
 echo "$MYSQL_PASS" > $PW_FILE
+echo -e "\e[32m"
+read -p "Press any key to continue..." -n1 -s
+echo -e "\e[0m"
+echo
+echo "The ROOT password will now change..."
+echo
+sleep 2
+echo -e "root:$ROOT_PASS" | chpasswd
+echo -e "Your new ROOT password is: \e[32m$ROOT_PASS\e[0m"
+echo "Please save this somewhere safe. You can not login as root without this."
+echo "The password is also saved in this file: $PW_FILE."
+echo "ROOT password: $ROOT_PASS" > $PW_FILE
 chmod 600 $PW_FILE
 echo -e "\e[32m"
 read -p "Press any key to continue..." -n1 -s
@@ -311,6 +328,12 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Start startup-script
 bash $SCRIPTS/owncloud-startup-script.sh
+
+# Change root password
+su -c /bin/sh 'export SHUF=$(shuf -i 5-7 -n 1)' root
+su -c /bin/sh 'export ROOT_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z2-9" | fold -w $SHUF | head -n 1)' root
+su -c /bin/sh 'echo -e "root:$ROOT_PASS" | chpasswd' root
+su -c /bin/sh 'echo "$ROOT_PASS" > /var/root_pass.txt' root
 
 # Unset all $VARs
 unset OCVERSION
