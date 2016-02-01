@@ -231,12 +231,10 @@ rm $SCRIPTS/test_connection*
 rm $SCRIPTS/change-ocadmin-profile*
 rm $SCRIPTS/change-root-profile*
 rm $SCRIPTS/install-redis-php-7*
-rm $SCRIPTS/index*
 rm $SCRIPTS/update-config*
 rm $SCRIPTS/owncloud_install*
 rm $SCRIPTS/trusted*
 rm /var/www/html/index.html*
-rm /var/rc.local*
 rm /var/www/html/owncloud/data/owncloud.log*
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root
