@@ -27,7 +27,7 @@ sudo aptitude update
 sudo aptitude full-upgrade -y
 
 # Enable maintenance mode
-sudo -u www-data php $OCPATH/occ maintenance:mode --on
+php $OCPATH/occ maintenance:mode --on
 
 # Backup data
 rsync -Aaxv $DATA $HTML
@@ -84,29 +84,29 @@ if [ -d $DATA/ ]; then
         cp -R $HTML/config $OCPATH/ && rm -rf $HTML/config
         cp -R $HTML/apps $OCPATH/ && rm -rf $HTML/apps
         bash $SECURE
-        sudo -u www-data php $OCPATH/occ maintenance:mode --off
-        sudo -u www-data php $OCPATH/occ upgrade
+        php $OCPATH/occ maintenance:mode --off
+        php $OCPATH/occ upgrade
 else
         echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
    exit 1
 fi
 
 # Enable Apps
-sudo -u www-data php $OCPATH/occ app:enable calendar
-sudo -u www-data php $OCPATH/occ app:enable contacts
-sudo -u www-data php $OCPATH/occ app:enable documents
-sudo -u www-data php $OCPATH/occ app:enable external
+php $OCPATH/occ app:enable calendar
+php $OCPATH/occ app:enable contacts
+php $OCPATH/occ app:enable documents
+php $OCPATH/occ app:enable external
 
 # Second run (to make sure everything is updated, somtimes apps needs a second run)
-sudo -u www-data php $OCPATH/occ upgrade
+php $OCPATH/occ upgrade
 # Enable Apps
-sudo -u www-data php $OCPATH/occ app:enable calendar
-sudo -u www-data php $OCPATH/occ app:enable contacts
-sudo -u www-data php $OCPATH/occ app:enable documents
-sudo -u www-data php $OCPATH/occ app:enable external
+php $OCPATH/occ app:enable calendar
+php $OCPATH/occ app:enable contacts
+php $OCPATH/occ app:enable documents
+php $OCPATH/occ app:enable external
 
 # Disable maintenance mode
-sudo -u www-data php $OCPATH/occ maintenance:mode --off
+php $OCPATH/occ maintenance:mode --off
 
 # Increase max filesize (expects that changes are made in /etc/php5/apache2/php.ini)
 # Here is a guide: https://www.techandme.se/increase-max-file-size/
@@ -121,7 +121,7 @@ else
 fi
 
 # Repair
-sudo -u www-data php $OCPATH/occ maintenance:repair
+php $OCPATH/occ maintenance:repair
 
 # Cleanup un-used packages
 sudo aptitude autoremove -y
@@ -135,7 +135,7 @@ touch /var/log/cronjobs_success.log
 echo "OWNCLOUD UPDATE success-$(date +"%Y%m%d")" >> /var/log/cronjobs_success.log
 echo
 echo ownCloud version:
-sudo -u www-data php $OCPATH/occ status
+php $OCPATH/occ status
 echo
 echo
 sleep 3

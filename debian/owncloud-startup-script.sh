@@ -150,10 +150,10 @@ echo "The current password is [owncloud]"
 echo -e "\e[32m"
 read -p "Press any key to change password for ownCloud... " -n1 -s
 echo -e "\e[0m"
-sudo -u www-data php /var/www/html/owncloud/occ user:resetpassword ocadmin
+php /var/www/html/owncloud/occ user:resetpassword ocadmin
 if [[ $? > 0 ]]
 then
-    sudo -u www-data php /var/www/html/owncloud/occ user:resetpassword ocadmin
+    php /var/www/html/owncloud/occ user:resetpassword ocadmin
 else
     sleep 2
 fi
@@ -224,7 +224,7 @@ echo -e "\e[0m"
 echo
 
 # Cleanup 2
-sudo -u www-data php /var/www/html/owncloud/occ maintenance:repair
+php /var/www/html/owncloud/occ maintenance:repair
 rm $SCRIPTS/owncloud-startup-script*
 rm $SCRIPTS/ip*
 rm $SCRIPTS/test_connection*
