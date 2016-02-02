@@ -29,7 +29,7 @@ echo "Getting scripts from GitHub to be able to run the first setup..."
                 else
         wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/update-config.php -P $SCRIPTS
 fi
-        
+
         # Activate SSL
         if [ -f $SCRIPTS/activate-ssl.sh ];
                 then

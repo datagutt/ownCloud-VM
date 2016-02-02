@@ -11,7 +11,7 @@ export DATA=$OCPATH/data
 export SECURE="$SCRIPTS/setup_secure_permissions_owncloud.sh"
 
 # Must be root
-[[ $(id -u) -eq 0 ]] || { echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msu root -c 'bash $SCRIPTS/owncloud_update.sh'""; exit 1; }
+[[ $(id -u) -eq 0 ]] || { echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msu root -c 'bash $SCRIPTS/owncloud_update.sh'"; exit 1; }
 
 # Set secure permissions
 if [ -f $SECURE ];
@@ -19,12 +19,12 @@ then
         echo "Script exists"
 else
         mkdir -p $SCRIPTS
-        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/debian/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 fi
 
 # System Upgrade
-sudo aptitude update
-sudo aptitude full-upgrade -y
+aptitude update
+aptitude full-upgrade -y
 
 # Enable maintenance mode
 su -s /bin/sh -c 'php $OCPATH/occ maintenance:mode --on' www-data
@@ -124,11 +124,10 @@ fi
 su -s /bin/sh -c 'php $OCPATH/occ maintenance:repair' www-data
 
 # Cleanup un-used packages
-sudo aptitude autoremove -y
-sudo aptitude autoclean
+aptitude autoclean
 
 # Update GRUB, just in case
-sudo update-grub
+update-grub
 
 # Write to log
 touch /var/log/cronjobs_success.log
@@ -144,6 +143,6 @@ sleep 3
 bash $SECURE
 
 ## Un-hash this if you want the system to reboot
-# sudo reboot
+# reboot
 
 exit 0

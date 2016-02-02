@@ -51,7 +51,7 @@ wget -q http://download.redis.io/releases/redis-stable.tar.gz -P $SCRIPTS && tar
 mv $SCRIPTS/redis-stable $SCRIPTS/redis
 
 # Test Redis
-cd $SCRIPTS/redis && make && make test
+cd $SCRIPTS/redis && make && taskset -c 1 make test
 if [[ $? > 0 ]]
 then
     echo "Test failed."

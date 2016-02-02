@@ -45,6 +45,8 @@ aptitude update
 
 # Install Sudo
 aptitude install sudo -y
+# If you want to add ocadmin as sudo user
+# adduser ocadmin sudo
 
 # Install Rsync
 aptitude install rsync -y

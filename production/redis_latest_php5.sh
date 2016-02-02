@@ -15,7 +15,7 @@ wget -q http://download.redis.io/releases/redis-stable.tar.gz && tar -xzf redis-
 mv redis-stable redis
 
 # Test Redis
-cd redis && make && make test
+cd redis && make && taskset -c 1 make test
 if [[ $? > 0 ]]
 then
     echo "Test failed."
