@@ -158,12 +158,12 @@ fi
 clear
 echo
 echo "The ROOT password is:"
--e "\e[32m"
-cat /var/$PW_FILE
--e "\e[0m"
+echo -e "\e[32m"
+cat $PW_FILE
+echo -e "\e[0m"
 echo "Please note that this will not change, this is your last chance to save it!"
 echo -e "\e[32m"
-read -p "Press any key to change password for ownCloud... " -n1 -s
+read -p "Press any key to continue... " -n1 -s
 echo -e "\e[0m"
 
 # Get the latest active-ssl script
