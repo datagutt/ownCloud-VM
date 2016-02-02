@@ -157,7 +157,7 @@ fi
 
 clear
 echo
-echo "The MySQL & ROOT password is:"
+echo "The MySQL & ROOT passwords are:"
 echo -e "\e[32m"
 cat $PW_FILE
 echo -e "\e[0m"
@@ -222,9 +222,9 @@ echo -e "|         \e[0mLogin to ownCloud in your browser:\e[36m" $ADDRESS"\e[32
 echo    "|                                                                    |"
 echo -e "|         \e[0mPublish your server online! \e[36mhttps://goo.gl/iUGE2U\e[32m          |"
 echo    "|                                                                    |"
-echo -e "|      \e[0mMySQL & ROOT passwords are stored in: \e[36m$PW_FILE\e[32m   |"
+echo -e "|      \e[0mMySQL & ROOT passwords are stored in: \e[36m$PW_FILE\e[32m  |"
 echo    "|                                                                    |"
-echo -e "|\e[91m###################### Tech and Me - 2016 ######################\e[32m    |"
+echo -e "|\e[91m####################### Tech and Me - 2016 #########################\e[32m|"
 echo    "+--------------------------------------------------------------------+"
 echo
 read -p "Press any key to reboot..." -n1 -s
@@ -270,4 +270,12 @@ RCLOCAL
 
 ## Reboot
 reboot
+
+unset SCRIPTS
+unset PW_FILE
+unset CLEARBOOT
+unset IFACE
+unset IFCONFIG
+unset ADDRESS
+
 exit 0

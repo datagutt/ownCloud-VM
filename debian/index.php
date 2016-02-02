@@ -136,7 +136,7 @@ a:active {
  <p>
  </ul>
 </h3>
-<p>Note Please accept the warning in the browser if you connect via HTTPS.</p>
+<p>Note: Please accept the warning in the browser if you connect via HTTPS.</p>
 <h3>
 <a href="https://www.techandme.se/user-and-password/" target="_blank">Login details</a>
 </h3>
