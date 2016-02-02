@@ -155,6 +155,17 @@ else
     sleep 2
 fi
 
+clear
+echo
+echo "The ROOT password is:"
+-e "\e[32m"
+cat /var/$PW_FILE
+-e "\e[0m"
+echo "Please note that this will not change, this is your last chance to save it!"
+echo -e "\e[32m"
+read -p "Press any key to change password for ownCloud... " -n1 -s
+echo -e "\e[0m"
+
 # Get the latest active-ssl script
         cd $SCRIPTS
         rm $SCRIPTS/activate-ssl.sh
@@ -211,7 +222,7 @@ echo -e "|         \e[0mLogin to ownCloud in your browser:\e[36m" $ADDRESS"\e[32
 echo    "|                                                                    |"
 echo -e "|         \e[0mPublish your server online! \e[36mhttps://goo.gl/iUGE2U\e[32m          |"
 echo    "|                                                                    |"
-echo -e "|      \e[0mYour MySQL & ROOT passwords is stored in: \e[36m$PW_FILE\e[32m     |"
+echo -e "|      \e[0mMySQL & ROOT passwords are stored in: \e[36m$PW_FILE\e[32m     |"
 echo    "|                                                                    |"
 echo -e "|    \e[91m#################### Tech and Me - 2016 ####################\e[32m    |"
 echo    "+--------------------------------------------------------------------+"
