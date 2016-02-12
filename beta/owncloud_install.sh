@@ -120,8 +120,8 @@ apt-get install -y \
 # Download $OCVERSION
 wget https://download.owncloud.org/community/testing/owncloud-$OCVERSION.zip -P $HTML
 apt-get install unzip -y
-unzip -q $HTML/$OCVERSION.zip -d $HTML
-rm $HTML/$OCVERSION.zip
+unzip -q $HTML/owncloud-$OCVERSION.zip -d $HTML
+rm $HTML/owncloud-$OCVERSION.zip
 
 # Create data folder, occ complains otherwise
 mkdir $OCPATH/data
