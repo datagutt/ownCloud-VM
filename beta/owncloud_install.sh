@@ -2,7 +2,7 @@
 
 # Tech and Me, ©2016 - www.techandme.se
 
-OCVERSION=owncloud-8.2.2.zip
+OCVERSION=9.0beta1
 SHUF=$(shuf -i 27-38 -n 1)
 MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
@@ -100,28 +100,28 @@ service apache2 restart
 apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php
 apt-get update
 apt-get install -y \
-        php \
-        php-common \
-        php-mysql \
-        php-intl \
-        php-mcrypt \
-        php-ldap \
-        php-imap \
-        php-cli \
-        php-gd \
-        php-pgsql \
-        php-json \
-        php-sqlite3 \
-        php-curl \
+        php7.0 \
+        php7.0-common \
+        php7.0-mysql \
+        php7.0-intl \
+        php7.0-mcrypt \
+        php7.0-ldap \
+        php7.0-imap \
+        php7.0-cli \
+        php7.0-gd \
+        php7.0-pgsql \
+        php7.0-json \
+        php7.0-sqlite3 \
+        php7.0-curl \
         php-smbclient \
         libsm6 \
         libsmbclient
 
 # Download $OCVERSION
-wget https://download.owncloud.org/community/$OCVERSION -P $HTML
+wget https://download.owncloud.org/community/testing/owncloud-$OCVERSION.zip -P $HTML
 apt-get install unzip -y
-unzip -q $HTML/$OCVERSION -d $HTML 
-rm $HTML/$OCVERSION
+unzip -q $HTML/$OCVERSION.zip -d $HTML
+rm $HTML/$OCVERSION.zip
 
 # Create data folder, occ complains otherwise
 mkdir $OCPATH/data

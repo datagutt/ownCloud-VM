@@ -100,19 +100,19 @@ service apache2 restart
 apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php
 apt-get update
 apt-get install -y \
-        php \
-        php-common \
-        php-mysql \
-        php-intl \
-        php-mcrypt \
-        php-ldap \
-        php-imap \
-        php-cli \
-        php-gd \
-        php-pgsql \
-        php-json \
-        php-sqlite3 \
-        php-curl \
+        php7.0 \
+        php7.0-common \
+        php7.0-mysql \
+        php7.0-intl \
+        php7.0-mcrypt \
+        php7.0-ldap \
+        php7.0-imap \
+        php7.0-cli \
+        php7.0-gd \
+        php7.0-pgsql \
+        php7.0-json \
+        php7.0-sqlite3 \
+        php7.0-curl \
         php-smbclient \
         libsm6 \
         libsmbclient

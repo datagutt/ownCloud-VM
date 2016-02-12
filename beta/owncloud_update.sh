@@ -9,6 +9,7 @@ HTML=/var/www/html
 OCPATH=$HTML/owncloud
 DATA=$OCPATH/data
 SECURE="$SCRIPTS/setup_secure_permissions_owncloud.sh"
+OCVERSION=9.0beta2
 
 # Must be root
 [[ $(id -u) -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
@@ -43,9 +44,9 @@ else
     echo "Backup OK!"
     echo -e "\e[0m"
 fi
-wget https://download.owncloud.org/community/owncloud-latest.tar.bz2 -P $HTML
+wget https://download.owncloud.org/community/testing/owncloud-$OCVERSION.tar.bz2 -P $HTML
 
-if [ -f $HTML/owncloud-latest.tar.bz2 ];
+if [ -f $HTML/owncloud-$OCVERSION.tar.bz2 ];
 then
         echo "$HTML/owncloud-latest.tar.bz2 exists"
 else
