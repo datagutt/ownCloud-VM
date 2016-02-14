@@ -4,7 +4,6 @@
 #
 # Tested on Ubuntu Server 14.04.
 #
-OCVERSION=owncloud-daily-master
 SCRIPTS=/var/scripts
 HTML=/var/www/html
 OCPATH=$HTML/owncloud
@@ -21,7 +20,7 @@ then
 else
         mkdir -p $SCRIPTS
         wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/setup_secure_permissions_owncloud.sh -P $SCRIPTS
-fi
+    fi
 
 # System Upgrade
 sudo apt-get update
@@ -31,79 +30,82 @@ sudo aptitude full-upgrade -y
 sudo -u www-data php $OCPATH/occ maintenance:mode --on
 
 # Backup data
+echo "Backing up data and config files + theme..."
 rsync -Aaxv $DATA $HTML
 rsync -Aax $OCPATH/config $HTML
 rsync -Aax $OCPATH/themes $HTML
-rsync -Aax $OCPATH/apps $HTML
 if [[ $? > 0 ]]
 then
     echo "Backup was not OK. Please check $HTML and see if the folders are backed up properly"
     exit
 else
-    echo "Backup OK!"
-fi
+   echo "Backup OK!"
+    fi
 
-wget https://download.owncloud.org/community/daily/$OCVERSION.tar.bz2 -P $HTML
-
-if [ -f $HTML/$OCVERSION.tar.bz2 ];
-then
-        echo "$HTML/$OCVERSION.tar.bz2 exists"
+# Get new version of ownCloud.
+	git --version 2>&1 >/dev/null
+	GIT_IS_AVAILABLE=$?
+# ...
+if [ $GIT_IS_AVAILABLE -eq 1 ]; then
+        sleep 1
 else
-        echo "Abortitng,something went wrong with the download"
+        apt-get install git -y -q
+    fi
+if [ -d $OCPATH ]; 
+then 
+echo "$OCPATH will be deleted and replaced with the latest git clone of ownCloud core."
+    fi
+read -p "Are you sure? " -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+rm -rf $OCPATH
+cd $HTML
+git clone https://github.com/owncloud/core.git owncloud 
+else
+exit
+    fi
+if [[ $? > 0 ]]
+then
+    echo "Git Clone NOT OK"
+    exit 1
+else
+   echo "Git Clone OK!"
+    fi
+# Check that $OCPATH exists, else abort.
+if [ -d $OCPATH ];
+then
+        echo "/$OCPATH exists"
+else
+        echo "Aborting, $OCPATH does not exist."
    exit 1
-fi
+    fi
 
+# Check that everything is backed up properly
 if [ -d $OCPATH/config/ ]; then
         echo "config/ exists" 
 else
         echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
    exit 1
-fi
+    fi
 
 if [ -d $OCPATH/themes/ ]; then
         echo "themes/ exists" 
 else
         echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
    exit 1
-fi
-
-if [ -d $OCPATH/apps/ ]; then
-        echo "apps/ exists" 
-else
-        echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
-   exit 1
-fi
+    fi
 
 if [ -d $DATA/ ]; then
         echo "data/ exists" && sleep 3
-        rm -rf $OCPATH
-	tar -xjf $HTML/$OCVERSION.tar.bz2 -C $HTML
-	rm $HTML/$OCVERSION.tar.bz2
-	cp -R $HTML/themes $OCPATH/ && rm -rf $HTML/themes
+        cp -R $HTML/themes $OCPATH/ && rm -rf $HTML/themes
         cp -R $HTML/data $DATA && rm -rf $HTML/data
         cp -R $HTML/config $OCPATH/ && rm -rf $HTML/config
-        cp -R $HTML/apps $OCPATH/ && rm -rf $HTML/apps
         bash $SECURE
         sudo -u www-data php $OCPATH/occ maintenance:mode --off
-        sudo -u www-data php $OCPATH/occ upgrade
 else
         echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
    exit 1
-fi
-
-# Enable Apps
-sudo -u www-data php $OCPATH/occ app:enable calendar
-sudo -u www-data php $OCPATH/occ app:enable contacts
-sudo -u www-data php $OCPATH/occ app:enable documents
-sudo -u www-data php $OCPATH/occ app:enable external
-
-# Second run (to make sure everything is updated, somtimes apps needs a second run)
-sudo -u www-data php $OCPATH/occ upgrade
-# Enable Apps
-sudo -u www-data php $OCPATH/occ app:enable calendar
-sudo -u www-data php $OCPATH/occ app:enable contacts
-sudo -u www-data php $OCPATH/occ app:enable documents
-sudo -u www-data php $OCPATH/occ app:enable external
+    fi
 
 # Disable maintenance mode
 sudo -u www-data php $OCPATH/occ maintenance:mode --off
@@ -118,10 +120,7 @@ else
         sed -i 's/  php_value upload_max_filesize 513M/# php_value upload_max_filesize 513M/g' $OCPATH/.htaccess
         sed -i 's/  php_value post_max_size 513M/# php_value post_max_size 513M/g' $OCPATH/.htaccess
         sed -i 's/  php_value memory_limit 512M/# php_value memory_limit 512M/g' $OCPATH/.htaccess
-fi
-
-# Repair
-sudo -u www-data php $OCPATH/occ maintenance:repair
+    fi
 
 # Cleanup un-used packages
 sudo apt-get autoremove -y
