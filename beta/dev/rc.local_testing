@@ -187,9 +187,9 @@ else
 	sleep 1
 fi
 # Change roots .bash_profile
-if 		[ -f $SCRIPTS/change-root-profile.sh ];
+if 		[ -f $SCRIPTS/change-root-profile_testing.sh ];
         then
-                echo "change-root-profile.sh exists"
+                echo "change-root-profile_testing.sh exists"
         else
         	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/dev/change-root-profile_testing.sh -P $SCRIPTS
 fi
