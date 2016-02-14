@@ -26,11 +26,10 @@ else
 sudo apt-get update
 sudo aptitude full-upgrade -y
 
-# Enable maintenance mode
-sudo -u www-data php $OCPATH/occ maintenance:mode --on
-
 # Backup data
+clear 
 echo "Backing up data and config files + theme..."
+sleep 1
 rsync -Aaxv $DATA $HTML
 rsync -Aax $OCPATH/config $HTML
 rsync -Aax $OCPATH/themes $HTML
@@ -55,9 +54,10 @@ if [ -d $OCPATH ];
 then 
 echo "$OCPATH will be deleted and replaced with the latest git clone of ownCloud core."
     fi
-read -p "Are you sure? " -n 1 -r
+read -p "Are you sure? (Yy/Nn) " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
+echo
 rm -rf $OCPATH
 cd $HTML
 git clone https://github.com/owncloud/core.git owncloud 
@@ -81,36 +81,32 @@ else
     fi
 
 # Check that everything is backed up properly
-if [ -d $OCPATH/config/ ]; then
+if [ -d $HTML/config/ ]; then
         echo "config/ exists" 
 else
         echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
    exit 1
     fi
 
-if [ -d $OCPATH/themes/ ]; then
+if [ -d $HTML/themes/ ]; then
         echo "themes/ exists" 
 else
         echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
    exit 1
     fi
 
-if [ -d $DATA/ ]; then
+if [ -d $HTML/data ]; then
         echo "data/ exists" && sleep 3
         cp -R $HTML/themes $OCPATH/ && rm -rf $HTML/themes
         cp -R $HTML/data $DATA && rm -rf $HTML/data
         cp -R $HTML/config $OCPATH/ && rm -rf $HTML/config
         bash $SECURE
-        sudo -u www-data php $OCPATH/occ maintenance:mode --off
 else
-        echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist."
+        echo "Something went wrong with backing up your old ownCloud instance, please check in $HTML if data/ and config/ folders exist in $HTML."
    exit 1
     fi
 
-# Disable maintenance mode
-sudo -u www-data php $OCPATH/occ maintenance:mode --off
-
-# Increase max filesize (expects that changes are made in /etc/php5/apache2/php.ini)
+# Increase max filesize (expects that changes are made in Apache's php.ini)
 # Here is a guide: https://www.techandme.se/increase-max-file-size/
 VALUE="# php_value upload_max_filesize 513M"
 if grep -Fxq "$VALUE" $OCPATH/.htaccess
@@ -132,12 +128,6 @@ sudo update-grub
 # Write to log
 touch /var/log/cronjobs_success.log
 echo "OWNCLOUD UPDATE success-$(date +"%Y%m%d")" >> /var/log/cronjobs_success.log
-echo
-echo ownCloud version:
-sudo -u www-data php $OCPATH/occ status
-echo
-echo
-sleep 3
 
 # Set secure permissions again
 bash $SECURE
