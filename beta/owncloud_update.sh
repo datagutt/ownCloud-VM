@@ -10,6 +10,7 @@ OCPATH=$HTML/owncloud
 DATA=$OCPATH/data
 SECURE="$SCRIPTS/setup_secure_permissions_owncloud.sh"
 OCVERSION=9.0beta2
+THEME_NAME=""
 
 # Must be root
 [[ $(id -u) -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
@@ -119,6 +120,16 @@ else
         sed -i 's/  php_value upload_max_filesize 513M/# php_value upload_max_filesize 513M/g' $OCPATH/.htaccess
         sed -i 's/  php_value post_max_size 513M/# php_value post_max_size 513M/g' $OCPATH/.htaccess
         sed -i 's/  php_value memory_limit 512M/# php_value memory_limit 512M/g' $OCPATH/.htaccess
+fi
+
+# Set $THEME_NAME
+VALUE2="$THEME_NAME"
+if grep -Fxq "$VALUE2" /var/www/owncloud/config/config.php
+then
+        echo "Theme correct"
+else
+        sed -i "s|'theme' => '',|'theme' => '$THEME_NAME',|g" /var/www/owncloud/config/config.php
+        echo "Theme set"
 fi
 
 # Repair

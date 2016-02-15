@@ -9,6 +9,7 @@ export HTML=/var/www/html
 export OCPATH=$HTML/owncloud
 export DATA=$OCPATH/data
 export SECURE="$SCRIPTS/setup_secure_permissions_owncloud.sh"
+export THEME_NAME=""
 
 # Must be root
 [[ $(id -u) -eq 0 ]] || { echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msu root -c 'bash $SCRIPTS/owncloud_update.sh'"; exit 1; }
@@ -120,6 +121,16 @@ else
         sed -i 's/  php_value memory_limit 512M/# php_value memory_limit 512M/g' $OCPATH/.htaccess
 fi
 
+# Set $THEME_NAME
+VALUE2="$THEME_NAME"
+if grep -Fxq "$VALUE2" /var/www/owncloud/config/config.php
+then
+        echo "Theme correct"
+else
+        sed -i "s|'theme' => '',|'theme' => '$THEME_NAME',|g" /var/www/owncloud/config/config.php
+        echo "Theme set"
+fi
+
 # Repair
 su -s /bin/sh -c 'php $OCPATH/occ maintenance:repair' www-data
 
@@ -144,5 +155,12 @@ bash $SECURE
 
 ## Un-hash this if you want the system to reboot
 # reboot
+
+unset SCRIPTS
+unset HTML
+unset OCPATH
+unset DATA
+unset SECURE
+unset THEME_NAME
 
 exit 0

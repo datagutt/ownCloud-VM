@@ -5,6 +5,8 @@
 # Tested on Ubuntu Server 14.04.
 #
 
+THEME_NAME=""
+
 # Must be root
 [[ `id -u` -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
 
@@ -40,6 +42,16 @@ else
         sed -i 's/  php_value upload_max_filesize 513M/# php_value upload_max_filesize 513M/g' /var/www/owncloud/.htaccess
         sed -i 's/  php_value post_max_size 513M/# php_value post_max_size 513M/g' /var/www/owncloud/.htaccess
         sed -i 's/  php_value memory_limit 512M/# php_value memory_limit 512M/g' /var/www/owncloud/.htaccess
+fi
+
+# Set $THEME_NAME
+VALUE2="$THEME_NAME"
+if grep -Fxq "$VALUE2" /var/www/owncloud/config/config.php
+then
+        echo "Theme correct"
+else
+        sed -i "s|'theme' => '',|'theme' => '$THEME_NAME',|g" /var/www/owncloud/config/config.php
+	echo "Theme set"
 fi
 
 # Set secure permissions
