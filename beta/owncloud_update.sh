@@ -124,11 +124,11 @@ fi
 
 # Set $THEME_NAME
 VALUE2="$THEME_NAME"
-if grep -Fxq "$VALUE2" /var/www/owncloud/config/config.php
+if grep -Fxq "$VALUE2" $OCPATH/config/config.php
 then
         echo "Theme correct"
 else
-        sed -i "s|'theme' => '',|'theme' => '$THEME_NAME',|g" /var/www/owncloud/config/config.php
+        sed -i "s|'theme' => '',|'theme' => '$THEME_NAME',|g" $OCPATH/config/config.php
         echo "Theme set"
 fi
 
