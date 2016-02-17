@@ -3,6 +3,7 @@
 # Tech and Me, ©2016 - www.techandme.se
 
 OCVERSION=9.0beta1
+CALVER=1.0-alpha2
 SHUF=$(shuf -i 27-38 -n 1)
 MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
@@ -264,11 +265,11 @@ fi
 if [ -d $OCPATH/apps/calendar ]; then
 sleep 1
 else
-wget https://github.com/owncloud/calendar/archive/master.zip -P $OCPATH/apps
-unzip -q $OCPATH/apps/master.zip -d $OCPATH/apps
+wget https://github.com/owncloud/calendar-rework/archive/v$CALVER.zip -P $OCPATH/apps
+unzip -q $OCPATH/apps/v$CALVER.zip -d $OCPATH/apps
 cd $OCPATH/apps
-rm master.zip
-mv calendar-master/ calendar/
+rm v1.0-alpha2.zip
+mv calendar-rework-$CALVER/ calendar/
 fi
 
 # Enable Calendar
