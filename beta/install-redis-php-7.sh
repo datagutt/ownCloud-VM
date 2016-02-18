@@ -38,7 +38,6 @@ else
     echo "PHP module installation OK!"
     echo -e "\e[0m"
 fi
-echo 'extension=redis.so' >> /etc/php/7.0/apache2/php.ini
 touch /etc/php/mods-available/redis.ini
 echo 'extension=redis.so' > /etc/php/mods-available/redis.ini
 phpenmod redis
