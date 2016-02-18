@@ -3,6 +3,7 @@
 # Tech and Me, ©2016 - www.techandme.se
 
 OCVERSION=owncloud-daily-master
+CALVER=v1.0-alpha2
 SHUF=$(shuf -i 27-38 -n 1)
 MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
@@ -219,7 +220,7 @@ sudo -u www-data php $OCPATH/occ config:system:set mail_from_address --value="ww
 sudo -u www-data php $OCPATH/occ config:system:set mail_domain --value="gmail.com"
 sudo -u www-data php $OCPATH/occ config:system:set mail_smtpsecure --value="ssl"
 sudo -u www-data php $OCPATH/occ config:system:set mail_smtpname --value="www.en0ch.se@gmail.com"
-sudo -u www-data php $OCPATH/occ config:system:set mail_smtppassword --value="hejasverige"
+sudo -u www-data php $OCPATH/occ config:system:set mail_smtppassword --value="techandme_se"
 
 # Install Libreoffice Writer to be able to read MS documents.
 echo -ne '\n' | sudo apt-add-repository ppa:libreoffice/libreoffice-4-4
@@ -257,20 +258,15 @@ rm master.zip
 mv contacts-master/ contacts/
 fi
 
-# Enable Contacts
-if [ -d $OCPATH/apps/contacts ]; then
-sudo -u www-data php $OCPATH/occ app:enable contacts
-fi
-
 # Download and install Calendar
 if [ -d $OCPATH/apps/calendar ]; then
 sleep 1
 else
-wget https://github.com/owncloud/calendar/archive/master.zip -P $OCPATH/apps
-unzip -q $OCPATH/apps/master.zip -d $OCPATH/apps
+wget https://github.com/owncloud/calendar-rework/archive/$CALVER.zip -P $OCPATH/apps
+unzip -q $OCPATH/apps/$CALVER.zip -d $OCPATH/apps
 cd $OCPATH/apps
-rm master.zip
-mv calendar-master/ calendar/
+rm $CALVER.zip
+mv calendar-rework-$CALVER/ calendar/
 fi
 
 # Enable Calendar

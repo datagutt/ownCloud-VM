@@ -3,8 +3,9 @@
 # Tech and Me, ©2016 - www.techandme.se
 
 OCVERSION=9.0beta1
+OCREPO=https://download.owncloud.org/community/testing/owncloud
 CALVER=v1.0-alpha2
-SHUF=$(shuf -i 27-38 -n 1)
+SHUF=$(shuf -i 10-15 -n 1)
 MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
 SCRIPTS=/var/scripts
@@ -91,7 +92,7 @@ a2enmod rewrite \
         mime \
         ssl \
         setenvif
-        
+
 # Set hostname and ServerName
 sudo sh -c "echo 'ServerName owncloud' >> /etc/apache2/apache2.conf"
 sudo hostnamectl set-hostname owncloud
@@ -119,10 +120,10 @@ apt-get install -y \
         libsmbclient
 
 # Download $OCVERSION
-wget https://download.owncloud.org/community/testing/owncloud-$OCVERSION.zip -P $HTML
+wget $OCREPO-$OCVERSION.zip -P $HTML
 apt-get install unzip -y
-unzip -q $HTML/owncloud-$OCVERSION.zip -d $HTML
-rm $HTML/owncloud-$OCVERSION.zip
+unzip -q $OCPATH-$OCVERSION.zip -d $HTML
+rm $OCPATH-$OCVERSION.zip
 
 # Create data folder, occ complains otherwise
 mkdir $OCPATH/data
@@ -175,7 +176,7 @@ else
 ### YOUR SERVER ADDRESS ###
 #    ServerAdmin admin@example.com
 #    ServerName example.com
-#    ServerAlias subdomain.example.com 
+#    ServerAlias subdomain.example.com
 ### SETTINGS ###
     DocumentRoot $OCPATH
 
@@ -183,7 +184,7 @@ else
     Options Indexes FollowSymLinks
     AllowOverride All
     Require all granted
-    Satisfy Any 
+    Satisfy Any
     </Directory>
 
     Alias /owncloud "$OCPATH/"

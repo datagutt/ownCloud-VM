@@ -2,6 +2,8 @@
 
 # Tech and Me - ©2016, https://www.techandme.se/
 
+WWW_ROOT=/var/www
+OCPATH=$WWW_ROOT/owncloud
 SCRIPTS=/var/scripts
 PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install_production.sh
 IFACE="eth0"
@@ -10,6 +12,8 @@ ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
 WANIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 PHPMYADMIN_CONF="/etc/apache2/conf-available/phpmyadmin.conf"
+GITHUB_REPO="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production"
+LETS_ENC="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt"
 
 	# Check if root
 	if [ "$(whoami)" != "root" ]; then
@@ -25,69 +29,69 @@ echo "Getting scripts from GitHub to be able to run the first setup..."
         if [ -f $SCRIPTS/update-config.php ];
                 then
                 rm $SCRIPTS/update-config.php
-                wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/update-config.php -P $SCRIPTS
+                wget -q $GITHUB_REPO/update-config.php -P $SCRIPTS
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/update-config.php -P $SCRIPTS
+       	wget -q $GITHUB_REPO/update-config.php -P $SCRIPTS
 fi
 
         # Activate SSL
         if [ -f $SCRIPTS/activate-ssl.sh ];
                 then
                 rm $SCRIPTS/activate-ssl.sh
-                wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh -P $SCRIPTS
+                wget -q $LETS_ENC/activate-ssl.sh -P $SCRIPTS
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh -P $SCRIPTS
+        wget -q $LETS_ENC/activate-ssl.sh -P $SCRIPTS
 fi
         # The update script
         if [ -f $SCRIPTS/owncloud_update.sh ];
                 then
                 rm $SCRIPTS/owncloud_update.sh
-                wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/owncloud_update.sh -P $SCRIPTS
+                wget -q $GITHUB_REPO/owncloud_update.sh -P $SCRIPTS
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/owncloud_update.sh -P $SCRIPTS
+        wget -q $GITHUB_REPO/owncloud_update.sh -P $SCRIPTS
 fi
         # Sets trusted domain in when owncloud-startup-script.sh is finished
         if [ -f $SCRIPTS/trusted.sh ];
                 then
                 rm $SCRIPTS/trusted.sh
-                wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/trusted.sh -P $SCRIPTS
+                wget -q $GITHUB_REPO/trusted.sh -P $SCRIPTS
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/trusted.sh -P $SCRIPTS
+        wget -q $GITHUB_REPO/trusted.sh -P $SCRIPTS
 fi
                 # Sets static IP to UNIX
         if [ -f $SCRIPTS/ip.sh ];
                 then
                 rm $SCRIPTS/ip.sh
-                wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/ip.sh -P $SCRIPTS
+                wget -q $GITHUB_REPO/production/ip.sh -P $SCRIPTS
                 else
-      	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/ip.sh -P $SCRIPTS
+      	wget -q $GITHUB_REPO/ip.sh -P $SCRIPTS
 fi
                 # Tests connection after static IP is set
         if [ -f $SCRIPTS/test_connection.sh ];
                 then
                 rm $SCRIPTS/test_connection.sh
-                wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/test_connection.sh -P $SCRIPTS
+                wget -q $GITHUB_REPO/test_connection.sh -P $SCRIPTS
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/test_connection.sh -P $SCRIPTS
+        wget -q $GITHUB_REPO/test_connection.sh -P $SCRIPTS
 fi
                 # Sets secure permissions after upgrade
         if [ -f $SCRIPTS/setup_secure_permissions_owncloud.sh ];
                 then
                 rm $SCRIPTS/setup_secure_permissions_owncloud.sh
-                wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh
+                wget -q $GITHUB_REPO/setup_secure_permissions_owncloud.sh
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+        wget -q $GITHUB_REPO/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 fi
         # Get the Welcome Screen when http://$address
         if [ -f $SCRIPTS/index.php ];
                 then
                 rm $SCRIPTS/index.php
-                wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/index.php -P $SCRIPTS
+                wget -q $GITHUB_REPO/index.php -P $SCRIPTS
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/index.php -P $SCRIPTS
+        wget -q $GITHUB_REPO/index.php -P $SCRIPTS
 fi
-        mv $SCRIPTS/index.php /var/www/html/index.php && rm -f /var/www/html/index.html
-        chmod 750 /var/www/html/index.php && chown www-data:www-data /var/www/html/index.php
+        mv $SCRIPTS/index.php $WWW_ROOT/html/index.php && rm -f $WWW_ROOT/html/index.html
+        chmod 750 $WWW_ROOT/html/index.php && chown www-data:www-data $WWW_ROOT/html/index.php
         
 # Make $SCRIPTS excutable 
 chmod +x -R $SCRIPTS
@@ -313,10 +317,10 @@ echo "The current password is [owncloud]"
 echo -e "\e[32m"
 read -p "Press any key to change password for ownCloud... " -n1 -s
 echo -e "\e[0m"
-sudo -u www-data php /var/www/owncloud/occ user:resetpassword ocadmin
+sudo -u www-data php $OCPATH/occ user:resetpassword ocadmin
 if [[ $? > 0 ]]
 then
-    sudo -u www-data php /var/www/owncloud/occ user:resetpassword ocadmin
+    sudo -u www-data php $OCPATH/occ user:resetpassword ocadmin
 else
     sleep 2
 fi
@@ -374,13 +378,13 @@ echo -e "\e[0m"
 echo
 
 # Cleanup 2
-sudo -u www-data php /var/www/owncloud/occ maintenance:repair
+sudo -u www-data php $OCPATH/occ maintenance:repair
 rm $SCRIPTS/owncloud-startup-script.sh
 rm $SCRIPTS/ip.sh
 rm $SCRIPTS/trusted.sh
 rm $SCRIPTS/test_connection.sh
 rm $SCRIPTS/update-config.php
-rm /var/www/owncloud/data/owncloud.log
+rm $OCPATH/data/owncloud.log
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root
 cat /dev/null > /var/spool/mail/ocadmin

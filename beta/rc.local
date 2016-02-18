@@ -11,8 +11,10 @@
 #
 # By default this script does nothing.
 
-SCRIPTS=/var/scripts
-HTML=/var/www/html
+SCRIPTS="/var/scripts"
+HTML="/var/www/html"
+GITHUB_REPO="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta"
+LETS_ENC="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt"
 
       	# Create dir
 if 		[ -d $SCRIPTS ];
@@ -21,6 +23,8 @@ if 		[ -d $SCRIPTS ];
       	else
       		mkdir $SCRIPTS
 fi
+
+sleep 2 # Avoid latency in messages
 
 echo
 echo "Getting all the latest scripts from GitHub..."
@@ -31,7 +35,7 @@ echo
                 then
                 echo "update-config.php exists"
                 else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/update-config.php -P $SCRIPTS
+        	wget -q $GITHUB_REPO/update-config.php -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -47,7 +51,7 @@ if 		[ -f $SCRIPTS/owncloud_install.sh ];
         then
                 echo "owncloud_install.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_install.sh -P $SCRIPTS
+        	wget -q $GITHUB_REPO/owncloud_install.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -63,7 +67,7 @@ if 		[ -f $SCRIPTS/trusted.sh ];
         then
                 echo "trusted.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/trusted.sh -P $SCRIPTS
+        	wget -q $GITHUB_REPO/trusted.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -79,7 +83,7 @@ if 		[ -f $SCRIPTS/install-redis-php-7.sh ];
         then
                 echo "install-redis-php-7.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/install-redis-php-7.sh -P $SCRIPTS
+        	wget -q $GITHUB_REPO/install-redis-php-7.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -95,7 +99,7 @@ if 		[ -f $SCRIPTS/activate-ssl.sh ];
         then
                 echo "activate-ssl.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh -P $SCRIPTS
+        	wget -q $LETS_ENC/activate-ssl.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -111,7 +115,7 @@ if 		[ -f $SCRIPTS/owncloud_update.sh ];
         then
         	echo "owncloud_update.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud_update.sh -P $SCRIPTS
+        	wget -q $GITHUB_REPO/owncloud_update.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -127,7 +131,7 @@ if 		[ -f $SCRIPTS/ip.sh ];
         then
                 echo "ip.sh exists"
         else
-      		wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/ip.sh -P $SCRIPTS
+      		wget -q $GITHUB_REPO/beta/ip.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -143,7 +147,7 @@ if 		[ -f $SCRIPTS/test_connection.sh ];
         then
                 echo "test_connection.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/test_connection.sh -P $SCRIPTS
+        	wget -q $GITHUB_REPO/test_connection.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -159,7 +163,7 @@ if 		[ -f $SCRIPTS/instruction.sh ];
         then
                 echo "instruction.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/instruction.sh -P $SCRIPTS
+        	wget -q $GITHUB_REPO/instruction.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -175,7 +179,7 @@ if 		[ -f $SCRIPTS/history.sh ];
         then
                 echo "history.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/history.sh -P $SCRIPTS
+        	wget -q $GITHUB_REPO/history.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -191,7 +195,7 @@ if 		[ -f $SCRIPTS/change-root-profile.sh ];
         then
                 echo "change-root-profile.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/change-root-profile.sh -P $SCRIPTS
+        	wget -q $GITHUB_REPO/change-root-profile.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -207,7 +211,7 @@ if 		[ -f $SCRIPTS/change-ocadmin-profile.sh ];
         then
         	echo "change-ocadmin-profile.sh  exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/change-ocadmin-profile.sh -P $SCRIPTS
+        	wget -q $GITHUB_REPO/change-ocadmin-profile.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -223,7 +227,7 @@ if 		[ -f $SCRIPTS/owncloud-startup-script.sh ];
         then
                 echo "owncloud-startup-script.sh exists"
         else
-        	wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/owncloud-startup-script.sh -P $SCRIPTS
+        	wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
@@ -246,10 +250,10 @@ fi
 if 		[ -f $HTML/index.php ];
 	then
  		rm $HTML/index.php
- 		wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/index.php -P $HTML
+ 		wget -q $GITHUB_REPO/index.php -P $HTML
  		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
  	else	
-		wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/index.php -P $HTML
+		wget -q $GITHUB_REPO/index.php -P $HTML
 		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
 fi
 if [[ $? > 0 ]]

@@ -15,6 +15,7 @@ IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
 ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
+GITHUB_REPO=https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
@@ -99,7 +100,7 @@ a2enmod rewrite \
         mime \
         ssl \
         setenvif
-        
+
 # Set hostname and ServerName
 sudo sh -c "echo 'ServerName owncloud' >> /etc/apache2/apache2.conf"
 sudo hostnamectl set-hostname owncloud
@@ -131,7 +132,7 @@ sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Ubunt
 apt-get update && apt-get install owncloud -y
 
 # Secure permissions
-wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+wget $GITHUB_REPO/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
@@ -182,7 +183,7 @@ else
 ### YOUR SERVER ADDRESS ###
 #    ServerAdmin admin@example.com
 #    ServerName example.com
-#    ServerAlias subdomain.example.com 
+#    ServerAlias subdomain.example.com
 ### SETTINGS ###
     DocumentRoot $OCPATH
 
@@ -220,7 +221,7 @@ service apache2 restart
                 then
                 echo "redis_latest_php5.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/redis_latest_php5.sh -P $SCRIPTS
+        wget -q $GITHUB_REPO/redis_latest_php5.sh -P $SCRIPTS
 fi
 
 # Install Redis
@@ -307,21 +308,21 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
                 then
                 echo "change-root-profile.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-root-profile.sh -P $SCRIPTS
+        wget -q $GITHUB_REPO/change-root-profile.sh -P $SCRIPTS
 fi
 # Change ocadmin .bash_profile
         if [ -f $SCRIPTS/change-ocadmin-profile.sh ];
                 then
                 echo "change-ocadmin-profile.sh  exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/change-ocadmin-profile.sh -P $SCRIPTS
+        wget -q $GITHUB_REPO/change-ocadmin-profile.sh -P $SCRIPTS
 fi
 # Get startup-script for root
         if [ -f $SCRIPTS/owncloud-startup-script.sh ];
                 then
                 echo "owncloud-startup-script.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/owncloud-startup-script.sh -P $SCRIPTS
+        wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
 fi
 
 # Welcome message after login (change in /home/ocadmin/.profile
@@ -329,14 +330,14 @@ fi
                 then
                 echo "instruction.sh exists"
                 else
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/instruction.sh -P $SCRIPTS
+        wget -q $GITHUB_REPO/instruction.sh -P $SCRIPTS
 fi
 # Clears command history on every login
         if [ -f $SCRIPTS/history.sh ];
                 then
                 echo "history.sh exists"
                 else
-        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/history.sh -P $SCRIPTS
+        wget -q $GITHUB_REPO/history.sh -P $SCRIPTS
 fi
 
 # Change root profile
@@ -365,7 +366,7 @@ fi
 # Allow ocadmin to run theese scripts
 chown ocadmin:ocadmin $SCRIPTS/instruction.sh
 chown ocadmin:ocadmin $SCRIPTS/history.sh
-        
+
 # Make $SCRIPTS excutable 
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
@@ -378,5 +379,5 @@ echo "$CLEARBOOT"
 
 # Reboot
 reboot
-        
+
 exit 0
