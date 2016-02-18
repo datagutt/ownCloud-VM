@@ -1,11 +1,17 @@
 # ownCloud-VM
-**Scripts to setup and configure the ownCloud VM**
+Scripts to setup and configure the ownCloud VM.
 
-### DOWNLOAD THE VM
+Feel free to contribute!
 
-You can find all the VMs [here](https://www.techandme.se/pre-configured-owncloud-installaton/). Feel free to contribute!
+----------------------------------------------------------------------------------------------------------------------------
 
-### HOW TO SETUP THE BETA VM (PRE-PRODUCTION)
+### **DOWNLOAD THE VM**
+
+**You can find all the VMs [here](https://www.techandme.se/pre-configured-owncloud-installaton/).**
+
+----------------------------------------------------------------------------------------------------------------------------
+
+#### HOW TO SETUP THE BETA VM (PRE-PRODUCTION)
 
 - Create a clean Ubuntu Server 14.04 VM with VMware Workstation or VirtualBox
 - Edit rc.local likes this:
@@ -39,7 +45,7 @@ exit 0
 ```
 - Reboot
 
-### HOW TO SETUP THE DEV VM (DAILY BUILD)
+#### HOW TO SETUP THE DEV VM (DAILY BUILD)
 
 - Create a clean Ubuntu Server 14.04 VM with VMware Workstation or VirtualBox
 - Edit rc.local likes this:
@@ -71,7 +77,10 @@ exit 0
 
 exit 0
 ```
+
 - Reboot
+
+----------------------------------------------------------------------------------------------------------------------------
 
 ### TEST A LIVE VERSION
 
@@ -79,4 +88,5 @@ You can test the VM [here](https://owncloudphp7.techandme.se/).
 - User: testuser
 - Pass: testingphp7
 
-Please note that if you get an internal server error (502), it's becuase the data gets deleted via a cronjob on a schedule. Just press F5 and reload the page in that case.
+----------------------------------------------------------------------------------------------------------------------------
+*Send me an email if you have any questions: daniel [a] techandme.se*
