@@ -131,7 +131,7 @@ if 		[ -f $SCRIPTS/ip.sh ];
         then
                 echo "ip.sh exists"
         else
-      		wget -q $GITHUB_REPO/beta/ip.sh -P $SCRIPTS
+      		wget -q $GITHUB_REPO/ip.sh -P $SCRIPTS
 fi
 if [[ $? > 0 ]]
 then
