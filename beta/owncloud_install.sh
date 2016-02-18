@@ -6,6 +6,7 @@ OCVERSION=9.0beta1
 OCREPO=https://download.owncloud.org/community/testing/owncloud
 CALVER_FILE=v1.0-alpha2
 CALVER_FOLDER=calendar-rework-1.0-alpha2
+CALVER_REPO=https://github.com/owncloud/calendar-rework/archive
 SHUF=$(shuf -i 10-15 -n 1)
 MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
@@ -267,7 +268,7 @@ fi
 if [ -d $OCPATH/apps/calendar ]; then
 sleep 1
 else
-wget https://github.com/owncloud/calendar-rework/archive/$CALVER_FILE.zip -P $OCPATH/apps
+wget $CALVER_REPO/$CALVER_FILE.zip -P $OCPATH/apps
 unzip -q $OCPATH/apps/$CALVER_FILE.zip -d $OCPATH/apps
 cd $OCPATH/apps
 rm $CALVER_FILE.zip
