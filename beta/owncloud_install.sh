@@ -2,7 +2,7 @@
 
 # Tech and Me, ©2016 - www.techandme.se
 
-OCVERSION=9.0beta1
+OCVERSION=9.0.0beta2
 OCREPO=https://download.owncloud.org/community/testing/owncloud
 CALVER_FILE=v1.0-alpha2
 CALVER_FOLDER=calendar-rework-1.0-alpha2

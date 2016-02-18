@@ -9,7 +9,7 @@ HTML=/var/www/html
 OCPATH=$HTML/owncloud
 DATA=$OCPATH/data
 SECURE="$SCRIPTS/setup_secure_permissions_owncloud.sh"
-OCVERSION=9.0beta2
+OCVERSION=9.0.0beta3
 THEME_NAME=""
 
 # Must be root
