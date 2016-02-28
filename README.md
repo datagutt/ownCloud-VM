@@ -90,3 +90,4 @@ You can test the VM [here](https://owncloudphp7.techandme.se/).
 
 ----------------------------------------------------------------------------------------------------------------------------
 *Send me an email if you have any questions: daniel [a] techandme.se*
+*You can also join our [IRC channel](https://irc.techandme.se/)*
