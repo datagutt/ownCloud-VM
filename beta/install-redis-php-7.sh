@@ -55,6 +55,7 @@ cd $SCRIPTS/redis && make
 grep -c ^processor /proc/cpuinfo > /tmp/cpu.txt
 if grep -Fxq "1" /tmp/cpu.txt
 then echo "Not running taskset"
+make test
 else echo "Running taskset limit to 1 proccessor"
 taskset -c 1 make test
 rm /tmp/cpu.txt
