@@ -5,8 +5,8 @@
 OCVERSION=9.0.0RC1
 OCREPO=https://download.owncloud.org/community/testing/owncloud
 CALVER_FILE=v1.0-alpha2
-CALVER_FOLDER=calendar-rework-1.0-alpha2
-CALVER_REPO=https://github.com/owncloud/calendar-rework/archive
+CALVER_FOLDER=calendar-1.0-alpha2
+CALVER_REPO=https://github.com/owncloud/calendar/archive
 SHUF=$(shuf -i 10-15 -n 1)
 MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
