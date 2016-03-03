@@ -95,7 +95,7 @@ a2enmod rewrite \
         setenvif
 
 # Install Apache mod
-apt-get install libapache2-mod-php7.0
+apt-get install libapache2-mod-php7.0 -y
 
 # Set hostname and ServerName
 sudo sh -c "echo 'ServerName owncloud' >> /etc/apache2/apache2.conf"
