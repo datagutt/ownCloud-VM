@@ -38,8 +38,8 @@ else
     echo "PHP module installation OK!"
     echo -e "\e[0m"
 fi
-touch /etc/php/mods-available/redis.ini
-echo 'extension=redis.so' > /etc/php/mods-available/redis.ini
+touch /etc/php/7.0/mods-available/redis.ini
+echo 'extension=redis.so' > /etc/php/7.0/mods-available/redis.ini
 phpenmod redis
 service apache2 restart
 cd ..
@@ -50,7 +50,9 @@ wget -q http://download.redis.io/releases/redis-stable.tar.gz -P $SCRIPTS && tar
 mv $SCRIPTS/redis-stable $SCRIPTS/redis
 
 # Test Redis
-cd $SCRIPTS/redis && make && taskset -c 1 make test
+cd $SCRIPTS/redis && make
+# taskset -c 1 # Only if needed
+make test
 if [[ $? > 0 ]]
 then
     echo "Test failed."
