@@ -94,9 +94,6 @@ a2enmod rewrite \
         ssl \
         setenvif
 
-# Install Apache mod
-apt-get install libapache2-mod-php7.0 -y
-
 # Set hostname and ServerName
 sudo sh -c "echo 'ServerName owncloud' >> /etc/apache2/apache2.conf"
 sudo hostnamectl set-hostname owncloud
@@ -124,6 +121,9 @@ apt-get install -y \
         php-smbclient \
         libsm6 \
         libsmbclient
+
+# Install Apache mod
+apt-get install libapache2-mod-php7.0 -y
 
 # Download $OCVERSION
 wget https://download.owncloud.org/community/daily/$OCVERSION.tar.bz2 -P $HTML
