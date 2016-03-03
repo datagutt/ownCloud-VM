@@ -51,17 +51,13 @@ mv $SCRIPTS/redis-stable $SCRIPTS/redis
 
 # Test Redis
 cd $SCRIPTS/redis && make
-# taskset -c 1 # Only if needed
-make test
-if [[ $? > 0 ]]
-then
-    echo "Test failed."
-    sleep 5
-    exit 1
-else
-		echo -e "\e[32m"
-    echo "Redis test OK!"
-    echo -e "\e[0m"
+# Check if taskset need to be run
+grep -c ^processor /proc/cpuinfo > /tmp/cpu.txt
+if grep -Fxq "1" /tmp/cpu.txt
+then echo "Not running taskset"
+else echo "Running taskset limit to 1 proccessor"
+taskset -c 1 make test
+rm /tmp/cpu.txt
 fi
 
 # Install Redis
