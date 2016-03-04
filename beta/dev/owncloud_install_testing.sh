@@ -216,6 +216,7 @@ service apache2 restart
 
 # Install phpMyadmin
 bash $SCRIPTS/phpmyadmin_install.sh
+rm $SCRIPTS/phpmyadmin_install.sh
 
 ## Set config values
 # Experimental apps
