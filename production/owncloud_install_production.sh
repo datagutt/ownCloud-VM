@@ -4,8 +4,8 @@
 # 
 # This install from ownCloud repos with PHP 5.6
 
-SHUF=$(shuf -i 27-38 -n 1)
-MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
+SHUF=$(shuf -i 13-15 -n 1)
+MYSQL_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9@#*=" | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
 SCRIPTS=/var/scripts
 HTML=/var/www

@@ -29,6 +29,22 @@ echo
 echo "Getting all the latest scripts from GitHub..."
 echo
 
+# phpMyadmin
+        if [ -f $SCRIPTS/phpmyadmin_install.sh ];
+                then
+                echo "phpmyadmin_install.sh exists"
+                else
+                wget -q $GITHUB_REPO/phpmyadmin_install.sh -P $SCRIPTS
+fi
+if [[ $? > 0 ]]
+then
+        echo "Download of scripts failed. System will reboot in 10 seconds..."
+        sleep 10
+        reboot
+else
+        echo "Downloaded phpmyadmin_install.sh."
+        sleep 1
+fi
 # Update Config
         if [ -f $SCRIPTS/update-config.php ];
                 then

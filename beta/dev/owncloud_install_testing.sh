@@ -7,7 +7,7 @@ CALVER_FILE=v1.0-alpha2
 CALVER_FOLDER=calendar-1.0-alpha2
 CALVER_REPO=https://github.com/owncloud/calendar/archive
 SHUF=$(shuf -i 27-38 -n 1)
-MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
+MYSQL_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9@#*=" | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
 SCRIPTS=/var/scripts
 HTML=/var/www/html
@@ -213,6 +213,9 @@ fi
 a2ensite owncloud_ssl_domain_self_signed.conf
 a2dissite default-ssl
 service apache2 restart
+
+# Install phpMyadmin
+bash $SCRIPTS/phpmyadmin_install.sh
 
 ## Set config values
 # Experimental apps

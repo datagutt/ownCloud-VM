@@ -7,8 +7,8 @@
 export OCVERSION=owncloud-8.2.2.zip
 export MYSQL_VERSION=5.7
 export SHUF=$(shuf -i 13-15 -n 1)
-export MYSQL_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $SHUF | head -n 1)
-export ROOT_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z2-9" | fold -w $SHUF | head -n 1)
+export MYSQL_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9@#*=" | fold -w $SHUF | head -n 1)
+export ROOT_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9@#*=" | fold -w $SHUF | head -n 1)
 export PW_FILE=/var/M-R_passwords.txt
 export SCRIPTS=/var/scripts
 export HTML=/var/www/html
