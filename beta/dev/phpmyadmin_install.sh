@@ -24,6 +24,7 @@ fi
 # Install mbstring for PHP
 apt-get install php7.0-mbstring -y
 
+# Download phpMyadmin
 if [ -d $PHPMYADMINDIR ];
         then
 rm -rf $PHPMYADMINDIR
@@ -106,7 +107,8 @@ if [ -f $CONFIG ];
         rm $CONIG
 fi
         touch "$CONFIG"
-	chmod 644 $CONFIG
+        chmod 644 $CONFIG
+        chwon www-data:www-data $CONFIG
         cat << CONFIG_CREATE > "$CONFIG"
 <?php
 $cfg['UploadDir'] = '$SAVEPATH';
@@ -120,6 +122,8 @@ $cfg['Export']['lock_tables'] = true;
 ?>
 CONFIG_CREATE
 
+mv $CONFIG $PHPMYADMINDIR/
+rm -R $PHPMYADMINDIR/config
 service apache2 restart
 
 echo
