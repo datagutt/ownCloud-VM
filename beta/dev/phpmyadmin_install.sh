@@ -9,7 +9,7 @@ PHPMYADMINDIR=$INSTALLDIR/phpmyadmin
 WANIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 ADDRESS=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 PHPMYADMIN_CONF="/etc/apache2/conf-available/phpmyadmin.conf"
-BLOWFISH=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 15 | head -1)
+BLOWFISH=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 25 | head -1)
 UPLOADPATH=""
 SAVEPATH=""
 
@@ -75,12 +75,8 @@ Alias /phpmyadmin $PHPMYADMINDIR
 
 # Authorize for setup
 <Directory $PHPMYADMINDIR/setup>
-    <IfModule mod_authn_file.c>
-    AuthType Basic
-    AuthName "phpMyAdmin Setup"
-    AuthUserFile /etc/phpmyadmin/htpasswd.setup
-    </IfModule>
-    Require valid-user
+   Order Deny,Allow
+   Deny from All
 </Directory>
 
 # Disallow web access to directories that don't need it
@@ -95,35 +91,39 @@ Alias /phpmyadmin $PHPMYADMINDIR
 CONF_CREATE
 
 # Secure phpMyadmin even more
-CONFIG=$PHPMYADMINDIR/config/config.inc.php
+CONFIG=$PHPMYADMINDIR/config.inc.php
 if [ -d $PHPMYADMINDIR/config ];
         then
 rm -R $PHPMYADMINDIR/config
 fi
-mkdir -p $PHPMYADMINDIR/config
-chmod -R o+rw $PHPMYADMINDIR/config/
 if [ -f $CONFIG ];
         then
         rm $CONIG
 fi
         touch "$CONFIG"
-        chmod 644 $CONFIG
-        chwon www-data:www-data $CONFIG
-        cat << CONFIG_CREATE > "$CONFIG"
-<?php
-$cfg['UploadDir'] = '$SAVEPATH';
-$cfg['SaveDir'] = '$UPLOADPATH';
-$cfg['BZipDump'] = false;
-$cfg['blowfish_secret'] = '$BLOWFISH';
-$cfg['DefaultLang'] = 'en';
-$cfg['ServerDefault'] = 1;
-$cfg['ShowPhpInfo'] = true;
-$cfg['Export']['lock_tables'] = true;
+        chmod 660 $CONFIG
+        chown www-data:www-data $CONFIG
+ cat << CONFIG_CREATE > "$CONFIG"
+ <?php
+\$cfg['blowfish_secret'] = '$BLOWFISH';
+
+\$i = 0;
+\$i++;
+\$cfg['Servers'][\$i]['host'] = 'localhost';
+\$cfg['Servers'][\$i]['extension'] = 'mysql';
+\$cfg['Servers'][\$i]['connect_type'] = 'tcp';
+\$cfg['Servers'][\$i]['compress'] = false;
+\$cfg['Servers'][\$i]['auth_type'] = 'cookie';
+\$cfg['UploadDir'] = '$SAVEPATH';
+\$cfg['SaveDir'] = '$UPLOADPATH';
+\$cfg['BZipDump'] = false;
+\$cfg['DefaultLang'] = 'en';
+\$cfg['ServerDefault'] = 1;
+\$cfg['ShowPhpInfo'] = true;
+\$cfg['Export']['lock_tables'] = true;
 ?>
 CONFIG_CREATE
 
-mv $CONFIG $PHPMYADMINDIR/
-rm -R $PHPMYADMINDIR/config
 service apache2 restart
 
 echo
