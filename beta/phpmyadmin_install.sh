@@ -90,6 +90,9 @@ Alias /phpmyadmin $PHPMYADMINDIR
 </Directory>
 CONF_CREATE
 
+# Activate new config
+a2enconf $PHPMYADMIN_CONF
+
 # Secure phpMyadmin even more
 CONFIG=$PHPMYADMINDIR/config.inc.php
 if [ -d $PHPMYADMINDIR/config ];
