@@ -156,7 +156,8 @@ apt-get update
 apt-get install --force-yes -y webmin
 echo
 echo "Webmin is installed, access it from your browser: https://$ADDRESS:10000"
-sleep 3
+sleep 4
+clear
 
 # Set keyboard layout
 echo "Current keyboard layout is Swedish"
