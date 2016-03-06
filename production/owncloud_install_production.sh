@@ -2,7 +2,7 @@
 
 # Tech and Me, ©2016 - www.techandme.se
 # 
-# This install from ownCloud repos with PHP 5.6
+# This install from ownCloud repos with PHP 7
 CONVER_FILE=v1.0
 CONVER_FOLDER=contacts-1.0
 CONVER_REPO=https://github.com/owncloud/contacts/archive
@@ -181,10 +181,12 @@ else
 <VirtualHost *:443>
     Header add Strict-Transport-Security: "max-age=15768000;includeSubdomains"
     SSLEngine on
+
 ### YOUR SERVER ADDRESS ###
 #    ServerAdmin admin@example.com
 #    ServerName example.com
 #    ServerAlias subdomain.example.com
+
 ### SETTINGS ###
     DocumentRoot $OCPATH
 
@@ -203,6 +205,7 @@ else
 
     SetEnv HOME $OCPATH
     SetEnv HTTP_HOME $OCPATH
+
 ### LOCATION OF CERT FILES ###
     SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
     SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
