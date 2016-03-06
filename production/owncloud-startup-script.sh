@@ -25,6 +25,14 @@ fi
 
 echo "Getting scripts from GitHub to be able to run the first setup..."
 
+        # phpMyadmin
+        if [ -f $SCRIPTS/phpmyadmin_install.sh ];
+                then
+                rm $SCRIPTS/phpmyadmin_install.sh
+                wget -q $GITHUB_REPO/phpmyadmin_install.sh -P $SCRIPTS
+                else
+        wget -q $GITHUB_REPO/phpmyadmin_install.sh -P $SCRIPTS
+fi
 	# Update Config
         if [ -f $SCRIPTS/update-config.php ];
                 then
@@ -92,7 +100,7 @@ fi
 fi
         mv $SCRIPTS/index.php $WWW_ROOT/html/index.php && rm -f $WWW_ROOT/html/index.html
         chmod 750 $WWW_ROOT/html/index.php && chown www-data:www-data $WWW_ROOT/html/index.php
-        
+
 # Make $SCRIPTS excutable 
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
@@ -103,7 +111,7 @@ echo "| This script will configure your ownCloud and activate SSL.         |"
 echo "| It will also do the following:                                     |"
 echo "|                                                                    |"
 echo "| - Activate a Virtual Host for your ownCloud install                |"
-echo "| - Make phpMyadmin secure                                           |"
+echo "| - Install phpMyadmin and make it secure                            |"
 echo "| - Install Webmin                                                   |"
 echo "| - Upgrade your system to latest version                            |"
 echo "| - Set secure permissions to ownCloud                               |"
@@ -135,75 +143,9 @@ sleep 4
 echo
 service apache2 reload
 
-# Secure phpMyadmin
-if [ -f $PHPMYADMIN_CONF ];
-        then
-        rm $PHPMYADMIN_CONF
-        touch "$PHPMYADMIN_CONF"
-        cat << CONF_CREATE > "$PHPMYADMIN_CONF"
-# phpMyAdmin default Apache configuration
-
-Alias /phpmyadmin /usr/share/phpmyadmin
-
-<Directory /usr/share/phpmyadmin>
-        Options FollowSymLinks
-        DirectoryIndex index.php
-
-        <IfModule mod_authz_core.c>
-# Apache 2.4
-        <RequireAny>
-        Require ip $WANIP
-        Require ip 127.0.0.1
-        Require ip ::1
-        </RequireAny>
-        </IfModule>
-        <IfModule !mod_authz_core.c>
-# Apache 2.2
-        Order Deny,Allow
-        Deny from All
-        Allow from $WANIP
-        Allow from ::1
-        Allow from localhost
-</IfModule>
-
-        <IfModule mod_php5.c>
-                AddType application/x-httpd-php .php
-
-                php_flag magic_quotes_gpc Off
-                php_flag track_vars On
-                php_flag register_globals Off
-                php_admin_flag allow_url_fopen Off
-                php_value include_path .
-                php_admin_value upload_tmp_dir /var/lib/phpmyadmin/tmp
-                php_admin_value open_basedir /usr/share/phpmyadmin/:/etc/phpmyadmin/:/var/lib/phpmyadmin/:/usr/share/php/php-gettext/:/usr/share/javascript/
-        </IfModule>
-
-</Directory>
-# Authorize for setup
-<Directory /usr/share/phpmyadmin/setup>
-    <IfModule mod_authn_file.c>
-    AuthType Basic
-    AuthName "phpMyAdmin Setup"
-    AuthUserFile /etc/phpmyadmin/htpasswd.setup
-    </IfModule>
-    Require valid-user
-</Directory>
-
-# Disallow web access to directories that don't need it
-<Directory /usr/share/phpmyadmin/libraries>
-    Order Deny,Allow
-    Deny from All
-</Directory>
-<Directory /usr/share/phpmyadmin/setup/lib>
-    Order Deny,Allow
-    Deny from All
-</Directory>
-CONF_CREATE
-echo
-echo "$PHPMYADMIN_CONF was successfully secured."
-echo
-sleep 3
-fi
+# Install phpMyadmin
+bash $SCRIPTS/phpmyadmin_install.sh
+rm $SCRIPTS/phpmyadmin_install.sh
 
 # Install packages for Webmin
 apt-get install --force-yes -y zip perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
@@ -216,13 +158,6 @@ apt-get install --force-yes -y webmin
 echo
 echo "Webmin is installed, access it from your browser: https://$ADDRESS:10000"
 sleep 3
-
-# Install php5-libsmbclient
-apt-get install php5-dev -y
-pecl install smbclient
-apt-get install cifs-utils -y
-apt-get purge php5-dev -y
-clear
 
 # Set keyboard layout
 echo "Current keyboard layout is Swedish"
@@ -334,7 +269,7 @@ function ask_yes_or_no() {
         *)     echo "no" ;;
     esac
 }
-if [[ "yes" == $(ask_yes_or_no "Last but not least, do you want to install a real SSL cert (from Let's Encrypt) on this machine?") ]]
+if [[ "yes" == $(ask_yes_or_no "Last but not least, do you want to install a real SSL cert (from Let's Encrypt) on this machine? The script is still Alpha, feel free to contribute!") ]]
 then
 	sudo bash $SCRIPTS/activate-ssl.sh
 else
