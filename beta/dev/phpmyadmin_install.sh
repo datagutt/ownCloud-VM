@@ -91,7 +91,7 @@ Alias /phpmyadmin $PHPMYADMINDIR
 CONF_CREATE
 
 # Activate new config
-a2enconf $PHPMYADMIN_CONF
+a2enconf phpmyadmin
 
 # Secure phpMyadmin even more
 CONFIG=$PHPMYADMINDIR/config.inc.php

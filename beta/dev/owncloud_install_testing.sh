@@ -103,7 +103,7 @@ service apache2 restart
 apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php
 apt-get update
 apt-get install -y \
-        php7.0 \
+        libapache2-mod-php7.0 \
         php7.0-common \
         php7.0-mysql \
         php7.0-intl \
@@ -121,9 +121,6 @@ apt-get install -y \
         php-smbclient \
         libsm6 \
         libsmbclient
-
-# Install Apache mod
-apt-get install libapache2-mod-php7.0 -y
 
 # Download $OCVERSION
 wget https://download.owncloud.org/community/daily/$OCVERSION.tar.bz2 -P $HTML
