@@ -156,10 +156,6 @@ sleep 3
 # Install SMBclient
 apt-get install smbclient -y
 
-# Install phpMyadmin
-bash $SCRIPTS/phpmyadmin_install.sh
-rm $SCRIPTS/phpmyadmin_install.sh
-
 # Prepare cron.php to be run every 15 minutes
 crontab -u www-data -l | { cat; echo "*/15  *  *  *  * php -f $OCPATH/cron.php > /dev/null 2>&1"; } | crontab -u www-data -
 
