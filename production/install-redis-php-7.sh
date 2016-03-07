@@ -3,6 +3,7 @@
 # Tech and Me - www.techandme.se - ©2016
 
 SCRIPTS=/var/scripts
+OCPATH=/var/www/owncloud
 
 # Must be root
 [[ `id -u` -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
@@ -80,10 +81,10 @@ rm -rf $SCRIPTS/redis
 rm $SCRIPTS/redis-stable.tar.gz
 
 # Prepare for adding redis configuration
-sed -i "s|);||g" /var/www/html/owncloud/config/config.php
+sed -i "s|);||g" $OCPATH/config/config.php
 
 # Add the needed config to ownClouds config.php
-cat <<ADD_TO_CONFIG>> /var/www/html/owncloud/config/config.php
+cat <<ADD_TO_CONFIG>> $OCPATH/config/config.php
   'memcache.local' => '\\OC\\Memcache\\Redis',
   'filelocking.enabled' => 'true',
   'memcache.distributed' => '\\OC\\Memcache\\Redis',
