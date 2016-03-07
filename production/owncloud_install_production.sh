@@ -274,7 +274,7 @@ if [ -d $OCPATH/apps/contacts ]; then
 sleep 1
 else
 wget -q $CONVER_REPO/$CONVER/$CONVER_FILE -P $OCPATH/apps
-tar -jxf $OCPATH/apps/$CONVER_FILE -C $OCPATH/apps
+tar -zxf $OCPATH/apps/$CONVER_FILE -C $OCPATH/apps
 cd $OCPATH/apps
 rm $CONVER_FILE
 fi
@@ -289,7 +289,7 @@ if [ -d $OCPATH/apps/calendar ]; then
 sleep 1
 else
 wget -q $CALVER_REPO/$CALVER/$CALVER_FILE -P $OCPATH/apps
-tar -jxf $OCPATH/apps/$CALVER_FILE -C $OCPATH/apps
+tar -zxf $OCPATH/apps/$CALVER_FILE -C $OCPATH/apps
 cd $OCPATH/apps
 rm $CALVER_FILE
 fi
