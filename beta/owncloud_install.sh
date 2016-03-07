@@ -4,9 +4,12 @@
 
 OCVERSION=9.0.0RC3
 OCREPO=https://download.owncloud.org/community/testing/owncloud
-CALVER_FILE=v1.0-alpha2
-CALVER_FOLDER=calendar-1.0-alpha2
-CALVER_REPO=https://github.com/owncloud/calendar/archive
+CONVER=v0.0.0.4
+CONVER_FILE=contacts.tar.gz
+CONVER_REPO=https://github.com/owncloud/contacts/releases/download
+CALVER=v1.0
+CALVER_FILE=calendar.tar.gz
+CALVER_REPO=https://github.com/owncloud/calendar/releases/download
 SHUF=$(shuf -i 10-15 -n 1)
 MYSQL_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9@#*=" | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
@@ -258,11 +261,10 @@ fi
 if [ -d $OCPATH/apps/contacts ]; then
 sleep 1
 else
-wget https://github.com/owncloud/contacts/archive/master.zip -P $OCPATH/apps
-unzip -q $OCPATH/apps/master.zip -d $OCPATH/apps
+wget -q $CONVER_REPO/$CONVER/$CONVER_FILE -P $OCPATH/apps
+tar -zxf $OCPATH/apps/$CONVER_FILE -C $OCPATH/apps
 cd $OCPATH/apps
-rm master.zip
-mv contacts-master/ contacts/
+rm $CONVER_FILE
 fi
 
 # Enable Contacts
@@ -274,18 +276,16 @@ fi
 if [ -d $OCPATH/apps/calendar ]; then
 sleep 1
 else
-wget $CALVER_REPO/$CALVER_FILE.zip -P $OCPATH/apps
-unzip -q $OCPATH/apps/$CALVER_FILE.zip -d $OCPATH/apps
+wget -q $CALVER_REPO/$CALVER/$CALVER_FILE -P $OCPATH/apps
+tar -zxf $OCPATH/apps/$CALVER_FILE -C $OCPATH/apps
 cd $OCPATH/apps
-rm $CALVER_FILE.zip
-mv $CALVER_FOLDER/ calendar/
+rm $CALVER_FILE
 fi
 
 # Enable Calendar
 if [ -d $OCPATH/apps/calendar ]; then
 sudo -u www-data php $OCPATH/occ app:enable calendar
 fi
-
 
 # Set secure permissions final (./data/.htaccess has wrong permissions otherwise)
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
