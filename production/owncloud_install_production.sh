@@ -3,12 +3,12 @@
 # Tech and Me, ©2016 - www.techandme.se
 # 
 # This install from ownCloud repos with PHP 7
-CONVER_FILE=v1.0
-CONVER_FOLDER=contacts-1.0
-CONVER_REPO=https://github.com/owncloud/contacts/archive
-CALVER_FILE=v1.0
-CALVER_FOLDER=calendar-1.0
-CALVER_REPO=https://github.com/owncloud/calendar/archive
+CONVER=v1.0
+CONVER_FILE=contacts.tar.gz
+CONVER_REPO=https://github.com/owncloud/contacts/releases/download
+CALVER=v1.0
+CALVER_FILE=calendar.tar.gz
+CALVER_REPO=https://github.com/owncloud/calendar/releases/download
 SHUF=$(shuf -i 13-15 -n 1)
 MYSQL_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9@#*=" | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
@@ -135,13 +135,13 @@ apt-get install -y \
         libsmbclient
 
 # Download and install ownCloud
-wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
+wget -nvq https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
 apt-key add - < Release.key && rm Release.key
 sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /' >> /etc/apt/sources.list.d/owncloud.list"
 apt-get update && apt-get install owncloud -y
 
 # Secure permissions
-wget $GITHUB_REPO/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+wget -q $GITHUB_REPO/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
@@ -256,7 +256,7 @@ apt-get install unzip -y
 if [ -d $OCPATH/apps/documents ]; then
 sleep 1
 else
-wget https://github.com/owncloud/documents/archive/master.zip -P $OCPATH/apps
+wget -q https://github.com/owncloud/documents/archive/master.zip -P $OCPATH/apps
 cd $OCPATH/apps
 unzip -q master.zip
 rm master.zip
@@ -273,11 +273,10 @@ fi
 if [ -d $OCPATH/apps/contacts ]; then
 sleep 1
 else
-wget $CONVER_REPO/$CONVER_FILE.zip -P $OCPATH/apps
-unzip -q $OCPATH/apps/$CONVER_FILE.zip -d $OCPATH/apps
+wget -q $CONVER_REPO/$CONVER/$CONVER_FILE -P $OCPATH/apps
+tar -jxf $OCPATH/apps/$CONVER_FILE -C $OCPATH/apps
 cd $OCPATH/apps
-rm $CONVER_FILE.zip
-mv $CONVER_FOLDER/ calendar/
+rm $CONVER_FILE
 fi
 
 # Enable Contacts
@@ -289,11 +288,10 @@ fi
 if [ -d $OCPATH/apps/calendar ]; then
 sleep 1
 else
-wget $CALVER_REPO/$CALVER_FILE.zip -P $OCPATH/apps
-unzip -q $OCPATH/apps/$CALVER_FILE.zip -d $OCPATH/apps
+wget -q $CALVER_REPO/$CALVER/$CALVER_FILE -P $OCPATH/apps
+tar -jxf $OCPATH/apps/$CALVER_FILE -C $OCPATH/apps
 cd $OCPATH/apps
-rm $CALVER_FILE.zip
-mv $CALVER_FOLDER/ calendar/
+rm $CALVER_FILE
 fi
 
 # Enable Calendar
