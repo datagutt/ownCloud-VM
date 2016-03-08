@@ -3,7 +3,7 @@
 # Tech and Me, ©2016 - www.techandme.se
 # 
 # This install from ownCloud repos with PHP 7
-CONVER=v1.0
+CONVER=v1.0.0.0
 CONVER_FILE=contacts.tar.gz
 CONVER_REPO=https://github.com/owncloud/contacts/releases/download
 CALVER=v1.0
@@ -25,7 +25,7 @@ GITHUB_REPO=https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/product
 # Check if root
         if [ "$(whoami)" != "root" ]; then
         echo
-        echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msudo \e[0mbash $SCRIPTS/owncloud_install.sh"
+        echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msudo \e[0mbash $SCRIPTS/owncloud_install_production.sh"
         echo
         exit 1
 fi
@@ -135,10 +135,10 @@ apt-get install -y \
         libsmbclient
 
 # Download and install ownCloud
-wget -nvq https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
+wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
 apt-key add - < Release.key && rm Release.key
 sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /' >> /etc/apt/sources.list.d/owncloud.list"
-apt-get update && apt-get install owncloud -y
+apt-get update && apt-get install owncloud-files -y
 
 # Secure permissions
 wget -q $GITHUB_REPO/setup_secure_permissions_owncloud.sh -P $SCRIPTS
