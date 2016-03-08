@@ -2,8 +2,13 @@
 
 # Tech and Me, ©2016 - www.techandme.se
 # 
-# This install from ownCloud repos with PHP 5.6
-
+# This install from ownCloud repos with PHP 7
+CONVER=v1.0
+CONVER_FILE=contacts.tar.gz
+CONVER_REPO=https://github.com/owncloud/contacts/releases/download
+CALVER=v1.0
+CALVER_FILE=calendar.tar.gz
+CALVER_REPO=https://github.com/owncloud/calendar/releases/download
 SHUF=$(shuf -i 13-15 -n 1)
 MYSQL_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9@#*=" | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
@@ -106,33 +111,37 @@ sudo sh -c "echo 'ServerName owncloud' >> /etc/apache2/apache2.conf"
 sudo hostnamectl set-hostname owncloud
 service apache2 restart
 
-# Install PHP 5.6
-apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php5-5.6
+# Install PHP 7.0
+apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php
 apt-get update
 apt-get install -y \
-        php5 \
-        php5-common \
-        php5-mysql \
-        php5-intl \
-        php5-mcrypt \
-        php5-ldap \
-        php5-imap \
-        php5-cli \
-        php5-gd \
-        php5-pgsql \
-        php5-json \
-        php5-sqlite \
-        php5-curl \
+        libapache2-mod-php7.0 \
+        php7.0-common \
+        php7.0-mysql \
+        php7.0-intl \
+        php7.0-mcrypt \
+        php7.0-ldap \
+        php7.0-imap \
+        php7.0-cli \
+        php7.0-gd \
+        php7.0-pgsql \
+        php7.0-json \
+        php7.0-sqlite3 \
+        php7.0-curl \
+	php7.0-xml \
+	php7.0-zip \
+        php-smbclient \
         libsm6 \
+        libsmbclient
 
 # Download and install ownCloud
-wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
+wget -nvq https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
 apt-key add - < Release.key && rm Release.key
 sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /' >> /etc/apt/sources.list.d/owncloud.list"
 apt-get update && apt-get install owncloud -y
 
 # Secure permissions
-wget $GITHUB_REPO/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+wget -q $GITHUB_REPO/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
@@ -144,31 +153,20 @@ sudo -u www-data php $OCPATH/occ status
 echo
 sleep 3
 
-# Install SMBclient
-apt-get install smbclient -y
-
-# Install phpMyadmin
-echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections
-echo "phpmyadmin phpmyadmin/app-password-confirm password $MYSQL_PASS" | debconf-set-selections
-echo "phpmyadmin phpmyadmin/mysql/admin-pass password $MYSQL_PASS" | debconf-set-selections
-echo "phpmyadmin phpmyadmin/mysql/app-pass password $MYSQL_PASS" | debconf-set-selections
-echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections
-apt-get install phpmyadmin -y
-
 # Prepare cron.php to be run every 15 minutes
 crontab -u www-data -l | { cat; echo "*/15  *  *  *  * php -f $OCPATH/cron.php > /dev/null 2>&1"; } | crontab -u www-data -
 
 # Change values in php.ini (increase max file size)
 # max_execution_time
-sed -i "s|max_execution_time = 30|max_execution_time = 3500|g" /etc/php5/apache2/php.ini
+sed -i "s|max_execution_time = 30|max_execution_time = 3500|g" /etc/php/7.0/apache2/php.ini
 # max_input_time
-sed -i "s|max_input_time = 60|max_input_time = 3600|g" /etc/php5/apache2/php.ini
+sed -i "s|max_input_time = 60|max_input_time = 3600|g" /etc/php/7.0/apache2/php.ini
 # memory_limit
-sed -i "s|memory_limit = 128M|memory_limit = 512M|g" /etc/php5/apache2/php.ini
+sed -i "s|memory_limit = 128M|memory_limit = 512M|g" /etc/php/7.0/apache2/php.ini
 # post_max
-sed -i "s|post_max_size = 8M|post_max_size = 1100M|g" /etc/php5/apache2/php.ini
+sed -i "s|post_max_size = 8M|post_max_size = 1100M|g" /etc/php/7.0/apache2/php.ini
 # upload_max
-sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php5/apache2/php.ini
+sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php/7.0/apache2/php.ini
 
 # Generate $SSL_CONF
 if [ -f $SSL_CONF ];
@@ -180,10 +178,12 @@ else
 <VirtualHost *:443>
     Header add Strict-Transport-Security: "max-age=15768000;includeSubdomains"
     SSLEngine on
+
 ### YOUR SERVER ADDRESS ###
 #    ServerAdmin admin@example.com
 #    ServerName example.com
 #    ServerAlias subdomain.example.com
+
 ### SETTINGS ###
     DocumentRoot $OCPATH
 
@@ -191,7 +191,7 @@ else
     Options Indexes FollowSymLinks
     AllowOverride All
     Require all granted
-    Satisfy Any 
+    Satisfy Any
     </Directory>
 
     Alias /owncloud "$OCPATH/"
@@ -202,6 +202,7 @@ else
 
     SetEnv HOME $OCPATH
     SetEnv HTTP_HOME $OCPATH
+
 ### LOCATION OF CERT FILES ###
     SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
     SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
@@ -217,16 +218,16 @@ a2dissite default-ssl
 service apache2 restart
 
 # Get script for Redis
-        if [ -f $SCRIPTS/instruction.sh ];
+        if [ -f $SCRIPTS/install-redis-php-7.sh ];
                 then
-                echo "redis_latest_php5.sh exists"
+                echo "install-redis-php-7.sh exists"
                 else
-        wget -q $GITHUB_REPO/redis_latest_php5.sh -P $SCRIPTS
+        wget -q $GITHUB_REPO/install-redis-php-7.sh -P $SCRIPTS
 fi
 
 # Install Redis
-bash $SCRIPTS/redis_latest_php5.sh
-rm $SCRIPTS/redis_latest_php5.sh
+bash $SCRIPTS/install-redis-php-7.sh
+rm $SCRIPTS/install-redis-php-7.sh
 
 ## Set config values
 # Experimental apps
@@ -255,7 +256,7 @@ apt-get install unzip -y
 if [ -d $OCPATH/apps/documents ]; then
 sleep 1
 else
-wget https://github.com/owncloud/documents/archive/master.zip -P $OCPATH/apps
+wget -q https://github.com/owncloud/documents/archive/master.zip -P $OCPATH/apps
 cd $OCPATH/apps
 unzip -q master.zip
 rm master.zip
@@ -272,11 +273,10 @@ fi
 if [ -d $OCPATH/apps/contacts ]; then
 sleep 1
 else
-wget https://github.com/owncloud/contacts/archive/master.zip -P $OCPATH/apps
-unzip -q $OCPATH/apps/master.zip -d $OCPATH/apps
+wget -q $CONVER_REPO/$CONVER/$CONVER_FILE -P $OCPATH/apps
+tar -zxf $OCPATH/apps/$CONVER_FILE -C $OCPATH/apps
 cd $OCPATH/apps
-rm master.zip
-mv contacts-master/ contacts/
+rm $CONVER_FILE
 fi
 
 # Enable Contacts
@@ -288,11 +288,10 @@ fi
 if [ -d $OCPATH/apps/calendar ]; then
 sleep 1
 else
-wget https://github.com/owncloud/calendar/archive/master.zip -P $OCPATH/apps
-unzip -q $OCPATH/apps/master.zip -d $OCPATH/apps
+wget -q $CALVER_REPO/$CALVER/$CALVER_FILE -P $OCPATH/apps
+tar -zxf $OCPATH/apps/$CALVER_FILE -C $OCPATH/apps
 cd $OCPATH/apps
-rm master.zip
-mv calendar-master/ calendar/
+rm $CALVER_FILE
 fi
 
 # Enable Calendar
