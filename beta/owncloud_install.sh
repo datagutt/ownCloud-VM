@@ -2,9 +2,9 @@
 
 # Tech and Me, ©2016 - www.techandme.se
 
-OCVERSION=9.0.0RC3
+OCVERSION=9.0.0
 OCREPO=https://download.owncloud.org/community/testing/owncloud
-CONVER=v0.0.0.4
+CONVER=v1.0.0.0
 CONVER_FILE=contacts.tar.gz
 CONVER_REPO=https://github.com/owncloud/contacts/releases/download
 CALVER=v1.0
