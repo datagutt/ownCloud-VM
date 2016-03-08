@@ -102,7 +102,7 @@ fi
         chmod 750 $WWW_ROOT/index.php && chown www-data:www-data $WWW_ROOT/index.php
         
         # Change 000-default to $WEB_ROOT
-        sed -i "s|DocumentRoot /var/www/html|DocumentRoot $WEB_ROOT|g" /etc/apache2/sites-available/000-default.conf
+        sed -i "s|DocumentRoot /var/www/html|DocumentRoot $WWW_ROOT|g" /etc/apache2/sites-available/000-default.conf
 
 # Make $SCRIPTS excutable 
 chmod +x -R $SCRIPTS
