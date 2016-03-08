@@ -145,6 +145,10 @@ sleep 4
 echo
 service apache2 reload
 
+# Cleanup 1
+apt-get autoremove -y
+apt-get autoclean
+
 # Install phpMyadmin
 bash $SCRIPTS/phpmyadmin_install.sh
 rm $SCRIPTS/phpmyadmin_install.sh
@@ -277,7 +281,7 @@ then
 	bash $SCRIPTS/activate-ssl.sh
 else
 echo
-    echo "OK, but if you want to run it later, just type: bash $SCRIPTS/activate-ssl.sh"
+    echo "OK, but if you want to run it later, just type: sudo bash $SCRIPTS/activate-ssl.sh"
     echo -e "\e[32m"
     read -p "Press any key to continue... " -n1 -s
     echo -e "\e[0m"
@@ -291,7 +295,7 @@ echo
 echo
 bash $SCRIPTS/owncloud_update.sh
 
-# Cleanup 1
+# Cleanup 2
 apt-get autoremove -y
 apt-get autoclean
 echo "$CLEARBOOT"
