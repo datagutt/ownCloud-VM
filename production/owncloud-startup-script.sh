@@ -98,8 +98,11 @@ fi
                 else
         wget -q $GITHUB_REPO/index.php -P $SCRIPTS
 fi
-        mv $SCRIPTS/index.php $WWW_ROOT/html/index.php && rm -f $WWW_ROOT/html/index.html
-        chmod 750 $WWW_ROOT/html/index.php && chown www-data:www-data $WWW_ROOT/html/index.php
+        mv $SCRIPTS/index.php $WWW_ROOT/index.php && rm -f $WWW_ROOT/html/index.html
+        chmod 750 $WWW_ROOT/index.php && chown www-data:www-data $WWW_ROOT/index.php
+        
+        # Change 000-default to $WEB_ROOT
+        sed -i "s|DocumentRoot /var/www/html|DocumentRoot $WEB_ROOT|g" /etc/apache2/sites-available/000-default.conf
 
 # Make $SCRIPTS excutable 
 chmod +x -R $SCRIPTS
@@ -271,7 +274,7 @@ function ask_yes_or_no() {
 }
 if [[ "yes" == $(ask_yes_or_no "Last but not least, do you want to install a real SSL cert (from Let's Encrypt) on this machine? The script is still Alpha, feel free to contribute!") ]]
 then
-	sudo bash $SCRIPTS/activate-ssl.sh
+	bash $SCRIPTS/activate-ssl.sh
 else
 echo
     echo "OK, but if you want to run it later, just type: bash $SCRIPTS/activate-ssl.sh"
