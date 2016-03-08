@@ -145,10 +145,6 @@ sleep 4
 echo
 service apache2 reload
 
-# Cleanup 1
-apt-get autoremove -y
-apt-get autoclean
-
 # Install phpMyadmin
 bash $SCRIPTS/phpmyadmin_install.sh
 rm $SCRIPTS/phpmyadmin_install.sh
@@ -295,7 +291,7 @@ echo
 echo
 bash $SCRIPTS/owncloud_update.sh
 
-# Cleanup 2
+# Cleanup 1
 apt-get autoremove -y
 apt-get autoclean
 echo "$CLEARBOOT"
