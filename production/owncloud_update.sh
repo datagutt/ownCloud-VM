@@ -21,14 +21,6 @@ sudo -u www-data php /var/www/owncloud/occ app:enable contacts
 sudo -u www-data php /var/www/owncloud/occ app:enable documents
 sudo -u www-data php /var/www/owncloud/occ app:enable external
 
-# Second run (to make sure everything is updated, somtimes apps needs a second run)
-sudo -u www-data php /var/www/owncloud/occ upgrade
-# Enable Apps
-sudo -u www-data php /var/www/owncloud/occ app:enable calendar
-sudo -u www-data php /var/www/owncloud/occ app:enable contacts
-sudo -u www-data php /var/www/owncloud/occ app:enable documents
-sudo -u www-data php /var/www/owncloud/occ app:enable external
-
 # Disable maintenance mode
 sudo -u www-data php /var/www/owncloud/occ maintenance:mode --off
 
