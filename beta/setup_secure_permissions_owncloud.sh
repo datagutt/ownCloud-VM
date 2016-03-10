@@ -1,5 +1,5 @@
 #!/bin/bash
-ocpath='/var/www/html/owncloud'
+ocpath='/var/www/owncloud'
 htuser='www-data'
 htgroup='www-data'
 rootuser='root'
