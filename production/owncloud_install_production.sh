@@ -130,9 +130,7 @@ apt-get install -y \
         php7.0-curl \
 	php7.0-xml \
 	php7.0-zip \
-        php-smbclient \
-        libsm6 \
-        libsmbclient
+        php-smbclient 
 
 # Download and install ownCloud
 wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
