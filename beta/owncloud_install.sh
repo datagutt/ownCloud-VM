@@ -2,8 +2,10 @@
 
 # Tech and Me, ©2016 - www.techandme.se
 
-OCVERSION=9.0.0
-OCREPO=https://download.owncloud.org/community/owncloud
+## THIS IS FOR TESTING ##
+
+OCVERSION=9.0
+OCDEB=https://download.owncloud.org/download/repositories/$OCVERSION:/testing/Ubuntu_14.04
 CONVER=v1.0.0.0
 CONVER_FILE=contacts.tar.gz
 CONVER_REPO=https://github.com/owncloud/contacts/releases/download
@@ -14,7 +16,7 @@ SHUF=$(shuf -i 10-15 -n 1)
 MYSQL_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9@#*=" | fold -w $SHUF | head -n 1)
 PW_FILE=/var/mysql_password.txt
 SCRIPTS=/var/scripts
-HTML=/var/www/html
+HTML=/var/www
 OCPATH=$HTML/owncloud
 SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
 IFACE="eth0"
@@ -107,30 +109,17 @@ service apache2 restart
 apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php
 apt-get update
 apt-get install -y \
-        libapache2-mod-php7.0 \
-        php7.0-common \
-        php7.0-mysql \
-        php7.0-intl \
-        php7.0-mcrypt \
-        php7.0-ldap \
-        php7.0-imap \
-        php7.0-cli \
-        php7.0-gd \
-        php7.0-pgsql \
-        php7.0-json \
-        php7.0-sqlite3 \
-        php7.0-curl \
-	php7.0-xml \
-	php7.0-zip \
+	php7.0 \
         php-smbclient \
         libsm6 \
         libsmbclient
 
-# Download $OCVERSION
-wget $OCREPO-$OCVERSION.zip -P $HTML
-apt-get install unzip -y
-unzip -q $OCPATH-$OCVERSION.zip -d $HTML
-rm $OCPATH-$OCVERSION.zip
+wget -nv $OCDEB/Release.key -O Release.key
+apt-key add - < Release.key
+rm Release.key
+sh -c "echo 'deb $OCDEB/ /' >> /etc/apt/sources.list.d/owncloud.list"
+apt-get update
+apt-get install owncloud -y
 
 # Create data folder, occ complains otherwise
 mkdir $OCPATH/data
