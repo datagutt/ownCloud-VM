@@ -181,6 +181,13 @@ if 		[ -f $SCRIPTS/instruction.sh ];
         else
         	wget -q $GITHUB_REPO/instruction.sh -P $SCRIPTS
 fi
+# Tech and Me figlet
+if              [ -f $SCRIPTS/techandme.sh ];
+        then
+                echo "techandme.sh exists"
+        else
+                wget -q $GITHUB_REPO/techandme.sh -P $SCRIPTS
+fi
 if [[ $? > 0 ]]
 then
 	echo "Download of scripts failed. System will reboot in 10 seconds..."
@@ -261,6 +268,7 @@ fi
 # Allow ocadmin to run theese scripts
         	chown ocadmin:ocadmin $SCRIPTS/instruction.sh
         	chown ocadmin:ocadmin $SCRIPTS/history.sh
+		chown ocadmin:ocadmin $SCRIPTS/techandme.sh
 
 # Get the Welcome Screen when http://$ADDRESS
 if 		[ -f $HTML/index.php ];
@@ -268,7 +276,7 @@ if 		[ -f $HTML/index.php ];
  		rm $HTML/index.php
  		wget -q $GITHUB_REPO/index.php -P $HTML
  		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
- 	else	
+ 	else
 		wget -q $GITHUB_REPO/index.php -P $HTML
 		chmod 750 $HTML/index.php && chown www-data:www-data $HTML/index.php
 fi

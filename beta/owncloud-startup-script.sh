@@ -235,6 +235,8 @@ rm $SCRIPTS/install-redis-php-7*
 rm $SCRIPTS/update-config*
 rm $SCRIPTS/owncloud_install*
 rm $SCRIPTS/trusted*
+rm $SCRIPTS/instruction.sh
+sed -i "s|instruction.sh|techandme.sh|g" /home/ocadmin/.bash_profile
 rm /var/www/html/index.html*
 rm $OCPATH/owncloud/data/owncloud.log*
 cat /dev/null > ~/.bash_history
