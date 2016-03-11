@@ -166,6 +166,9 @@ sed -i "s|post_max_size = 8M|post_max_size = 1100M|g" /etc/php/7.0/apache2/php.i
 # upload_max
 sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php/7.0/apache2/php.ini
 
+# Install Figlet
+apt-get install figlet -y
+
 # Generate $SSL_CONF
 if [ -f $SSL_CONF ];
         then
@@ -176,9 +179,6 @@ else
 <VirtualHost *:443>
     Header add Strict-Transport-Security: "max-age=15768000;includeSubdomains"
     SSLEngine on
-
-# Install Figlet
-apt-get install figlet -y
 
 ### YOUR SERVER ADDRESS ###
 #    ServerAdmin admin@example.com
