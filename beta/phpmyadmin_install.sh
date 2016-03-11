@@ -21,8 +21,13 @@ SAVEPATH=""
         exit 1
 fi
 
+if ! [ -x "$(command -v unzip)" ]; then
+  apt-get install php7.0-mbstring -y -q
+else echo 'unzip are installed.' >&2
+fi
+
 # Install mbstring for PHP
-apt-get install php7.0-mbstring -y
+apt-get install php7.0-mbstring -y -q
 
 # Download phpMyadmin
 if [ -d $PHPMYADMINDIR ];

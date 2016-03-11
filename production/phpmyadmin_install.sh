@@ -21,8 +21,14 @@ SAVEPATH=""
         exit 1
 fi
 
+# Check if unzip is installed
+if ! [ -x "$(command -v unzip)" ]; then
+  apt-get install php7.0-mbstring -y -q
+else echo 'unzip are installed.' >&2
+fi
+
 # Install mbstring for PHP
-apt-get install php7.0-mbstring -y
+apt-get install php7.0-mbstring -y -q
 
 # Download phpMyadmin
 if [ -d $PHPMYADMINDIR ];
@@ -46,7 +52,7 @@ fi
         cat << CONF_CREATE > "$PHPMYADMIN_CONF"
 # phpMyAdmin default Apache configuration
 
-Alias /phpmyadmin $PHPMYADMINDIR 
+Alias /phpmyadmin $PHPMYADMINDIR
 
 <Directory $PHPMYADMINDIR>
         Options FollowSymLinks
