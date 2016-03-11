@@ -109,11 +109,11 @@ fi
 fi
         mv $SCRIPTS/index.php $WWW_ROOT/index.php && rm -f $WWW_ROOT/html/index.html
         chmod 750 $WWW_ROOT/index.php && chown www-data:www-data $WWW_ROOT/index.php
-        
+
         # Change 000-default to $WEB_ROOT
         sed -i "s|DocumentRoot /var/www/html|DocumentRoot $WWW_ROOT|g" /etc/apache2/sites-available/000-default.conf
 
-# Make $SCRIPTS excutable 
+# Make $SCRIPTS excutable
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
 
@@ -161,18 +161,12 @@ service apache2 reload
 bash $SCRIPTS/phpmyadmin_install.sh
 rm $SCRIPTS/phpmyadmin_install.sh
 
-# Install Figlet
-# move this to install script later
-apt-get install figlet -y 
-sed -i "s|instruction.sh|techandme.sh|g" /home/ocadmin/.bash_profile
-
 # Install packages for Webmin
 apt-get install --force-yes -y zip perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 
 # Install Webmin
 sed -i '$a deb http://download.webmin.com/download/repository sarge contrib' /etc/apt/sources.list
 wget -q http://www.webmin.com/jcameron-key.asc -O- | sudo apt-key add -
-apt-get update
 apt-get install --force-yes -y webmin
 echo
 echo "Webmin is installed, access it from your browser: https://$ADDRESS:10000"
@@ -341,6 +335,7 @@ rm $SCRIPTS/test_connection.sh
 rm $SCRIPTS/update-config.php
 rm $SCRIPTS/instruction.sh
 rm $OCPATH/data/owncloud.log
+sed -i "s|instruction.sh|techandme.sh|g" /home/ocadmin/.bash_profile
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root
 cat /dev/null > /var/spool/mail/ocadmin

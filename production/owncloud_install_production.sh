@@ -177,6 +177,9 @@ else
     Header add Strict-Transport-Security: "max-age=15768000;includeSubdomains"
     SSLEngine on
 
+# Install Figlet
+apt-get install figlet -y
+
 ### YOUR SERVER ADDRESS ###
 #    ServerAdmin admin@example.com
 #    ServerName example.com
