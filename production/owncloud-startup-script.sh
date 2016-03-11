@@ -167,7 +167,8 @@ apt-get install --force-yes -y zip perl libnet-ssleay-perl openssl libauthen-pam
 # Install Webmin
 sed -i '$a deb http://download.webmin.com/download/repository sarge contrib' /etc/apt/sources.list
 wget -q http://www.webmin.com/jcameron-key.asc -O- | sudo apt-key add -
-apt-get install --force-yes -y webmin
+apt-get update
+apt-get install webmin -y
 echo
 echo "Webmin is installed, access it from your browser: https://$ADDRESS:10000"
 sleep 4
