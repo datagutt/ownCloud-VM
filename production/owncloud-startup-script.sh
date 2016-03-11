@@ -90,6 +90,15 @@ fi
                 else
         wget -q $GITHUB_REPO/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 fi
+                # Get figlet Tech and Me
+        if [ -f $SCRIPTS/techandme.sh ];
+                then
+                rm $SCRIPTS/techandme.sh
+                wget -q $GITHUB_REPO/techandme.sh
+                else
+        wget -q $GITHUB_REPO/techandme.sh -P $SCRIPTS
+fi
+
         # Get the Welcome Screen when http://$address
         if [ -f $SCRIPTS/index.php ];
                 then
@@ -107,6 +116,9 @@ fi
 # Make $SCRIPTS excutable 
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
+
+# Allow ocadmin to run figlet script
+chown ocadmin:ocadmin $SCRIPTS/techandme.sh
 
 clear
 echo "+--------------------------------------------------------------------+"
@@ -283,6 +295,9 @@ echo
     echo -e "\e[0m"
 fi
 
+# Install Figlet
+apt-get install figlet # move this to install script later
+
 # Upgrade system
 clear
 echo System will now upgrade...
@@ -322,6 +337,8 @@ rm $SCRIPTS/ip.sh
 rm $SCRIPTS/trusted.sh
 rm $SCRIPTS/test_connection.sh
 rm $SCRIPTS/update-config.php
+rm $SCRIPTS/instruction.sh
+sed -i "s|instruction.sh|techandme.sh|g" /home/ocadmin/.bash_profile
 rm $OCPATH/data/owncloud.log
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root

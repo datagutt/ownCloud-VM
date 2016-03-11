@@ -192,6 +192,8 @@ redis-cli ping
 echo
 sleep 3
 
+apt-get install figlet
+
 # Upgrade system
 clear
 echo System will now upgrade...
