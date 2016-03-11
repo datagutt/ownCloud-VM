@@ -22,7 +22,7 @@ SAVEPATH=""
 fi
 
 if ! [ -x "$(command -v unzip)" ]; then
-  apt-get install php7.0-mbstring -y -q
+  apt-get install unzip -y -q
 else echo 'unzip are installed.' >&2
 fi
 
