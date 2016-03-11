@@ -296,7 +296,7 @@ echo
 fi
 
 # Install Figlet
-apt-get install figlet # move this to install script later
+apt-get install figlet -y # move this to install script later
 
 # Upgrade system
 clear
