@@ -161,6 +161,11 @@ service apache2 reload
 bash $SCRIPTS/phpmyadmin_install.sh
 rm $SCRIPTS/phpmyadmin_install.sh
 
+# Install Figlet
+# move this to install script later
+apt-get install figlet -y 
+sed -i "s|instruction.sh|techandme.sh|g" /home/ocadmin/.bash_profile
+
 # Install packages for Webmin
 apt-get install --force-yes -y zip perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 
@@ -295,9 +300,6 @@ echo
     echo -e "\e[0m"
 fi
 
-# Install Figlet
-apt-get install figlet -y # move this to install script later
-
 # Upgrade system
 clear
 echo System will now upgrade...
@@ -338,7 +340,6 @@ rm $SCRIPTS/trusted.sh
 rm $SCRIPTS/test_connection.sh
 rm $SCRIPTS/update-config.php
 rm $SCRIPTS/instruction.sh
-sed -i "s|instruction.sh|techandme.sh|g" /home/ocadmin/.bash_profile
 rm $OCPATH/data/owncloud.log
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root
