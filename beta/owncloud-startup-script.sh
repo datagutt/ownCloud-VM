@@ -249,6 +249,7 @@ cat /dev/null > /var/log/apache2/access.log
 cat /dev/null > /var/log/apache2/error.log
 cat /dev/null > /var/log/cronjobs_success.log
 sed -i 's/sudo -i//g' /home/ocadmin/.bash_profile
+sed -i "s|mod_php5|mod_php7|g" /var/www/owncloud/.htaccess
 cat << RCLOCAL > "/etc/rc.local"
 #!/bin/sh -e
 #
