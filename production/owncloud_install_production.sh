@@ -214,7 +214,7 @@ sleep 3
 fi
 
 # Enable new config
-a2ensite owncloud_ssl_domain_self_signed.conf
+a2ensite $SSL_CONF
 a2dissite default-ssl
 service apache2 restart
 

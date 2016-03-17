@@ -70,7 +70,7 @@ fi
         if [ -f $SCRIPTS/ip.sh ];
                 then
                 rm $SCRIPTS/ip.sh
-                wget -q $GITHUB_REPO/production/ip.sh -P $SCRIPTS
+                wget -q $GITHUB_REPO/ip.sh -P $SCRIPTS
                 else
       	wget -q $GITHUB_REPO/ip.sh -P $SCRIPTS
 fi
