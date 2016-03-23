@@ -16,9 +16,9 @@ SCRIPTS=/var/scripts
 HTML=/var/www
 OCPATH=$HTML/owncloud
 SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
-IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
-ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
+IFACE=$($IFCONFIG | grep HWaddr | cut -d " " -f 1)
+ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
 GITHUB_REPO=https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/
 
@@ -214,7 +214,7 @@ sleep 3
 fi
 
 # Enable new config
-a2ensite $SSL_CONF
+a2ensite owncloud_ssl_domain_self_signed.conf
 a2dissite default-ssl
 service apache2 restart
 
