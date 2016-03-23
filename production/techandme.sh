@@ -4,7 +4,7 @@ ADDRESS=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0
 clear
 figlet -f small Tech and Me
 echo "           https://www.techandme.se"
-echo 
+echo
 echo
 echo
 echo "WAN IP: $WANIP"

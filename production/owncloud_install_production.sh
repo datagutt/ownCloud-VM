@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Tech and Me, ©2016 - www.techandme.se
-# 
+#
 # This install from ownCloud repos with PHP 7
 CONVER=v1.0.0.0
 CONVER_FILE=contacts.tar.gz

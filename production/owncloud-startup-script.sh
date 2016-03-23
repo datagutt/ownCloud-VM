@@ -209,14 +209,14 @@ echo -e "\e[32m"
 read -p "Press any key to set static IP..." -n1 -s
 clear
 echo -e "\e[0m"
-ifdown eth0
+ifdown $IFACE
 sleep 2
-ifup eth0
+ifup $IFACE
 sleep 2
 bash $SCRIPTS/ip.sh
-ifdown eth0
+ifdown $IFACE
 sleep 2
-ifup eth0
+ifup $IFACE
 sleep 2
 echo
 echo "Testing if network is OK..."
@@ -233,9 +233,9 @@ echo -e "\e[0m"
 nano /etc/network/interfaces
 clear
 echo "Testing if network is OK..."
-ifdown eth0
+ifdown $IFACE
 sleep 2
-ifup eth0
+ifup $IFACE
 sleep 2
 echo
 bash $SCRIPTS/test_connection.sh
