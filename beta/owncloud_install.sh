@@ -109,8 +109,21 @@ service apache2 restart
 apt-get install python-software-properties -y && echo -ne '\n' | sudo add-apt-repository ppa:ondrej/php
 apt-get update
 apt-get install -y \
-	php7.0 \
-        php-smbclient \
+	libapache2-mod-php7.0 \
+        php7.0-common \
+        php7.0-mysql \
+        php7.0-intl \
+        php7.0-mcrypt \
+        php7.0-ldap \
+        php7.0-imap \
+        php7.0-cli \
+        php7.0-gd \
+        php7.0-pgsql \
+        php7.0-json \
+        php7.0-sqlite3 \
+        php7.0-curl \
+        php7.0-xml \
+        php7.0-zip \
         libsm6 \
         libsmbclient
 

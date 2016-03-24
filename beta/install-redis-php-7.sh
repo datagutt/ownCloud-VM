@@ -100,6 +100,43 @@ cat <<ADD_TO_CONFIG>> $OCPATH/config/config.php
 ADD_TO_CONFIG
 
 # Cleanup
-apt-get purge git -y
+apt-get purge -y \
+	git \
+	binutils \
+	build-essential \
+	cpp \
+	cpp-4.8 \
+	dpkg-dev \
+	fakeroot \
+	g++ \
+	g++-4.8 \
+	gcc \
+	gcc-4.8 \
+	libalgorithm-diff-perl \
+	libalgorithm-diff-xs-perl \
+	libalgorithm-merge-perl \
+	libasan0 \
+	libatomic1 \
+	libc-dev-bin \
+	libc6-dev \
+	libcloog-isl4 \
+	libdpkg-perl \
+	libfakeroot \
+	libfile-fcntllock-perl \
+	libgcc-4.8-dev \
+	libgmp10 libgomp1 \
+	libisl10 \
+	libitm1 \
+	libmpc3 \
+	libmpfr4 \
+	libquadmath0 \
+	libstdc++-4.8-dev \
+	libtsan0 \
+	linux-libc-dev \
+	make \
+	manpages-dev
+
+apt-get autoremove -y
+apt-get autoclean
 
 exit 0

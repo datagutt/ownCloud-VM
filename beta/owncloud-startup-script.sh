@@ -1,28 +1,135 @@
 #!/bin/bash
-#
-## Tech and Me ## - ©2016, https://www.techandme.se/
-#
 
+# Tech and Me - ©2016, https://www.techandme.se/
+
+WWW_ROOT=/var/www
+OCPATH=$WWW_ROOT/owncloud
 SCRIPTS=/var/scripts
-OCPATH=/var/www
-PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install.sh
+PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install_production.sh
+IFCONFIG="/sbin/ifconfig"
+IFACE=$($IFCONFIG | grep HWaddr | cut -d " " -f 1)
+ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
+WANIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+PHPMYADMIN_CONF="/etc/apache2/conf-available/phpmyadmin.conf"
+GITHUB_REPO="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production"
+LETS_ENC="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt"
 
-# Check if root
-if [ "$(whoami)" != "root" ]; then
+	# Check if root
+	if [ "$(whoami)" != "root" ]; then
         echo
         echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msudo \e[0mbash $SCRIPTS/owncloud-startup-script.sh"
         echo
         exit 1
 fi
+
+echo "Getting scripts from GitHub to be able to run the first setup..."
+
+        # phpMyadmin
+        if [ -f $SCRIPTS/phpmyadmin_install.sh ];
+                then
+                rm $SCRIPTS/phpmyadmin_install.sh
+                wget -q $GITHUB_REPO/phpmyadmin_install.sh -P $SCRIPTS
+                else
+        wget -q $GITHUB_REPO/phpmyadmin_install.sh -P $SCRIPTS
+fi
+	# Update Config
+        if [ -f $SCRIPTS/update-config.php ];
+                then
+                rm $SCRIPTS/update-config.php
+                wget -q $GITHUB_REPO/update-config.php -P $SCRIPTS
+                else
+       	wget -q $GITHUB_REPO/update-config.php -P $SCRIPTS
+fi
+
+        # Activate SSL
+        if [ -f $SCRIPTS/activate-ssl.sh ];
+                then
+                rm $SCRIPTS/activate-ssl.sh
+                wget -q $LETS_ENC/activate-ssl.sh -P $SCRIPTS
+                else
+        wget -q $LETS_ENC/activate-ssl.sh -P $SCRIPTS
+fi
+        # The update script
+        if [ -f $SCRIPTS/owncloud_update.sh ];
+                then
+                rm $SCRIPTS/owncloud_update.sh
+                wget -q $GITHUB_REPO/owncloud_update.sh -P $SCRIPTS
+                else
+        wget -q $GITHUB_REPO/owncloud_update.sh -P $SCRIPTS
+fi
+        # Sets trusted domain in when owncloud-startup-script.sh is finished
+        if [ -f $SCRIPTS/trusted.sh ];
+                then
+                rm $SCRIPTS/trusted.sh
+                wget -q $GITHUB_REPO/trusted.sh -P $SCRIPTS
+                else
+        wget -q $GITHUB_REPO/trusted.sh -P $SCRIPTS
+fi
+                # Sets static IP to UNIX
+        if [ -f $SCRIPTS/ip.sh ];
+                then
+                rm $SCRIPTS/ip.sh
+                wget -q $GITHUB_REPO/ip.sh -P $SCRIPTS
+                else
+      	wget -q $GITHUB_REPO/ip.sh -P $SCRIPTS
+fi
+                # Tests connection after static IP is set
+        if [ -f $SCRIPTS/test_connection.sh ];
+                then
+                rm $SCRIPTS/test_connection.sh
+                wget -q $GITHUB_REPO/test_connection.sh -P $SCRIPTS
+                else
+        wget -q $GITHUB_REPO/test_connection.sh -P $SCRIPTS
+fi
+                # Sets secure permissions after upgrade
+        if [ -f $SCRIPTS/setup_secure_permissions_owncloud.sh ];
+                then
+                rm $SCRIPTS/setup_secure_permissions_owncloud.sh
+                wget -q $GITHUB_REPO/setup_secure_permissions_owncloud.sh
+                else
+        wget -q $GITHUB_REPO/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+fi
+                # Get figlet Tech and Me
+        if [ -f $SCRIPTS/techandme.sh ];
+                then
+                rm $SCRIPTS/techandme.sh
+                wget -q $GITHUB_REPO/techandme.sh
+                else
+        wget -q $GITHUB_REPO/techandme.sh -P $SCRIPTS
+fi
+
+        # Get the Welcome Screen when http://$address
+        if [ -f $SCRIPTS/index.php ];
+                then
+                rm $SCRIPTS/index.php
+                wget -q $GITHUB_REPO/index.php -P $SCRIPTS
+                else
+        wget -q $GITHUB_REPO/index.php -P $SCRIPTS
+fi
+        mv $SCRIPTS/index.php $WWW_ROOT/index.php && rm -f $WWW_ROOT/html/index.html
+        chmod 750 $WWW_ROOT/index.php && chown www-data:www-data $WWW_ROOT/index.php
+
+        # Change 000-default to $WEB_ROOT
+        sed -i "s|DocumentRoot /var/www/html|DocumentRoot $WWW_ROOT|g" /etc/apache2/sites-available/000-default.conf
+
+# Make $SCRIPTS excutable
+chmod +x -R $SCRIPTS
+chown root:root -R $SCRIPTS
+
+# Allow ocadmin to run figlet script
+chown ocadmin:ocadmin $SCRIPTS/techandme.sh
+
 clear
 echo "+--------------------------------------------------------------------+"
 echo "| This script will configure your ownCloud and activate SSL.         |"
 echo "| It will also do the following:                                     |"
 echo "|                                                                    |"
+echo "| - Activate a Virtual Host for your ownCloud install                |"
+echo "| - Install phpMyadmin and make it secure                            |"
 echo "| - Install Webmin                                                   |"
-echo "| - Install Redis Cache                                              |"
 echo "| - Upgrade your system to latest version                            |"
+echo "| - Set secure permissions to ownCloud                               |"
 echo "| - Set new passwords to Ubuntu Server and ownCloud                  |"
 echo "| - Set new keyboard layout                                          |"
 echo "| - Change timezone                                                  |"
@@ -39,6 +146,21 @@ read -p "Press any key to start the script..." -n1 -s
 clear
 echo -e "\e[0m"
 
+# Activate self-signed SSL
+a2enmod ssl
+a2enmod headers
+a2dissite default-ssl.conf
+a2ensite owncloud_ssl_domain_self_signed.conf 
+clear
+echo "owncloud_ssl_domain_self_signed.conf is enabled, this is your pre-configured virtual host"
+sleep 4
+echo
+service apache2 reload
+
+# Install phpMyadmin
+bash $SCRIPTS/phpmyadmin_install.sh
+rm $SCRIPTS/phpmyadmin_install.sh
+
 # Install packages for Webmin
 apt-get install --force-yes -y zip perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 
@@ -46,13 +168,10 @@ apt-get install --force-yes -y zip perl libnet-ssleay-perl openssl libauthen-pam
 sed -i '$a deb http://download.webmin.com/download/repository sarge contrib' /etc/apt/sources.list
 wget -q http://www.webmin.com/jcameron-key.asc -O- | sudo apt-key add -
 apt-get update
-apt-get install --force-yes -y webmin
-IFACE="eth0"
-IFCONFIG="/sbin/ifconfig"
-ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
+apt-get install webmin -y
 echo
 echo "Webmin is installed, access it from your browser: https://$ADDRESS:10000"
-sleep 2
+sleep 4
 clear
 
 # Set keyboard layout
@@ -66,7 +185,7 @@ echo
 clear
 
 # Change Timezone
-echo "Current Timezone is Europe/Stockholm"
+echo "Current Timezone is Swedish"
 echo "You must change timezone to your timezone"
 echo -e "\e[32m"
 read -p "Press any key to change timezone... " -n1 -s
@@ -77,9 +196,6 @@ sleep 3
 clear
 
 # Change IP
-IFACE="eth0"
-IFCONFIG="/sbin/ifconfig"
-ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 echo -e "\e[0m"
 echo "The script will now configure your IP to be static."
 echo -e "\e[36m"
@@ -93,14 +209,14 @@ echo -e "\e[32m"
 read -p "Press any key to set static IP..." -n1 -s
 clear
 echo -e "\e[0m"
-ifdown eth0
+ifdown $IFACE
 sleep 2
-ifup eth0
+ifup $IFACE
 sleep 2
 bash $SCRIPTS/ip.sh
-ifdown eth0
+ifdown $IFACE
 sleep 2
-ifup eth0
+ifup $IFACE
 sleep 2
 echo
 echo "Testing if network is OK..."
@@ -115,11 +231,11 @@ echo -e "\e[32m"
 read -p "Press any key to open /etc/network/interfaces..." -n1 -s
 echo -e "\e[0m"
 nano /etc/network/interfaces
-clear &&
+clear
 echo "Testing if network is OK..."
-ifdown eth0
+ifdown $IFACE
 sleep 2
-ifup eth0
+ifup $IFACE
 sleep 2
 echo
 bash $SCRIPTS/test_connection.sh
@@ -151,20 +267,15 @@ echo "The current password is [owncloud]"
 echo -e "\e[32m"
 read -p "Press any key to change password for ownCloud... " -n1 -s
 echo -e "\e[0m"
-sudo -u www-data php $OCPATH/owncloud/occ user:resetpassword ocadmin
+sudo -u www-data php $OCPATH/occ user:resetpassword ocadmin
 if [[ $? > 0 ]]
 then
-    sudo -u www-data php $OCPATH/owncloud/occ user:resetpassword ocadmin
+    sudo -u www-data php $OCPATH/occ user:resetpassword ocadmin
 else
     sleep 2
 fi
-
-# Get the latest active-ssl script
-        cd $SCRIPTS
-        rm $SCRIPTS/activate-ssl.sh
-        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt/activate-ssl.sh
-        chmod 755 $SCRIPTS/activate-ssl.sh
 clear
+
 # Let's Encrypt
 function ask_yes_or_no() {
     read -p "$1 ([y]es or [N]o): "
@@ -173,27 +284,16 @@ function ask_yes_or_no() {
         *)     echo "no" ;;
     esac
 }
-if [[ "yes" == $(ask_yes_or_no "Last but not least, do you want to install a real SSL cert (from Let's Encrypt) on this machine?") ]]
+if [[ "yes" == $(ask_yes_or_no "Last but not least, do you want to install a real SSL cert (from Let's Encrypt) on this machine? The script is still Alpha, feel free to contribute!") ]]
 then
-	sudo bash $SCRIPTS/activate-ssl.sh
+	bash $SCRIPTS/activate-ssl.sh
 else
 echo
-    echo "OK, but if you want to run it later, just type: bash $SCRIPTS/activate-ssl.sh"
+    echo "OK, but if you want to run it later, just type: sudo bash $SCRIPTS/activate-ssl.sh"
     echo -e "\e[32m"
     read -p "Press any key to continue... " -n1 -s
     echo -e "\e[0m"
 fi
-
-# Install Redis
-bash $SCRIPTS/install-redis-php-7.sh
-echo
-echo Testing Redis: PING
-redis-cli ping
-echo
-sleep 3
-
-# Install figlet
-apt-get install figlet -y
 
 # Upgrade system
 clear
@@ -201,11 +301,11 @@ echo System will now upgrade...
 sleep 2
 echo
 echo
-apt-get update
-aptitude full-upgrade -y
+bash $SCRIPTS/owncloud_update.sh
 
 # Cleanup 1
 apt-get autoremove -y
+apt-get autoclean
 echo "$CLEARBOOT"
 clear
 
@@ -228,28 +328,24 @@ echo -e "\e[0m"
 echo
 
 # Cleanup 2
-sudo -u www-data php $OCPATH/owncloud/occ maintenance:repair
-rm $SCRIPTS/owncloud-startup-script*
-rm $SCRIPTS/ip*
-rm $SCRIPTS/test_connection*
-rm $SCRIPTS/change-ocadmin-profile*
-rm $SCRIPTS/change-root-profile*
-rm $SCRIPTS/install-redis-php-7*
-rm $SCRIPTS/update-config*
-rm $SCRIPTS/owncloud_install*
-rm $SCRIPTS/trusted*
+sudo -u www-data php $OCPATH/occ maintenance:repair
+rm $SCRIPTS/owncloud-startup-script.sh
+rm $SCRIPTS/ip.sh
+rm $SCRIPTS/trusted.sh
+rm $SCRIPTS/test_connection.sh
+rm $SCRIPTS/update-config.php
 rm $SCRIPTS/instruction.sh
+rm $OCPATH/data/owncloud.log
 sed -i "s|instruction.sh|techandme.sh|g" /home/ocadmin/.bash_profile
-rm /var/www/html/index.html*
-rm $OCPATH/owncloud/data/owncloud.log*
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root
 cat /dev/null > /var/spool/mail/ocadmin
 cat /dev/null > /var/log/apache2/access.log
 cat /dev/null > /var/log/apache2/error.log
 cat /dev/null > /var/log/cronjobs_success.log
-sed -i 's|sudo -i||g' /home/ocadmin/.bash_profile
+sed -i "s|sudo -i||g" /home/ocadmin/.bash_profile
 sed -i "s|mod_php5|mod_php7|g" $OCPATH/.htaccess
+cat /dev/null > /etc/rc.local
 cat << RCLOCAL > "/etc/rc.local"
 #!/bin/sh -e
 #
@@ -270,4 +366,5 @@ RCLOCAL
 
 ## Reboot
 reboot
+
 exit 0
