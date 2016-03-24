@@ -5,7 +5,7 @@
 ## THIS IS FOR TESTING ##
 
 OCVERSION=9.0.1beta
-OCPATH=https://download.owncloud.org/community/testing/owncloud-$OCVERSION
+DOWNLOADREPO=https://download.owncloud.org/community/testing/owncloud-$OCVERSION
 CONVER=v1.1.0.0
 CONVER_FILE=contacts.tar.gz
 CONVER_REPO=https://github.com/owncloud/contacts/releases/download
@@ -115,10 +115,10 @@ apt-get install -y \
         libsmbclient
 
 # Download $OCVERSION
-wget $OCREPO-$OCVERSION.zip -P $HTML
+wget $DOWNLOADREPO.zip -P $HTML
 apt-get install unzip -y
-unzip -q $OCPATH-$OCVERSION.zip -d $HTML
-rm $OCPATH-$OCVERSION.zip
+unzip -q $HTML/owncloud-$OCVERSION.zip -d $HTML
+rm $HTML/owncloud-$OCVERSION.zip
 
 # Download from DEB
 #wget -nv $OCDEB/Release.key -O Release.key
