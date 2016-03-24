@@ -4,7 +4,7 @@
 
 ## THIS IS FOR TESTING ##
 
-OCVERSION=9.0
+OCVERSION=9.0.1beta
 OCDEB=https://download.owncloud.org/download/repositories/$OCVERSION:/testing/Ubuntu_14.04
 CONVER=v1.0.0.0
 CONVER_FILE=contacts.tar.gz
