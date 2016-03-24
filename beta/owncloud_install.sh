@@ -5,7 +5,7 @@
 ## THIS IS FOR TESTING ##
 
 OCVERSION=9.0.1beta
-OCDEB=https://download.owncloud.org/community/testing/$OCVERSION
+OCVER=https://download.owncloud.org/community/testing/$OCVERSION
 CONVER=v1.1.0.0
 CONVER_FILE=contacts.tar.gz
 CONVER_REPO=https://github.com/owncloud/contacts/releases/download
@@ -114,12 +114,19 @@ apt-get install -y \
         libsm6 \
         libsmbclient
 
-wget -nv $OCDEB/Release.key -O Release.key
-apt-key add - < Release.key
-rm Release.key
-sh -c "echo 'deb $OCDEB/ /' >> /etc/apt/sources.list.d/owncloud.list"
-apt-get update
-apt-get install owncloud -y
+# Download $OCVERSION
+wget $OCREPO-$OCVERSION.zip -P $HTML
+apt-get install unzip -y
+unzip -q $OCPATH-$OCVERSION.zip -d $HTML
+rm $OCPATH-$OCVERSION.zip
+
+# Download from DEB
+#wget -nv $OCDEB/Release.key -O Release.key
+#apt-key add - < Release.key
+#rm Release.key
+#sh -c "echo 'deb $OCDEB/ /' >> /etc/apt/sources.list.d/owncloud.list"
+#apt-get update
+#apt-get install owncloud -y
 
 # Create data folder, occ complains otherwise
 mkdir $OCPATH/data
