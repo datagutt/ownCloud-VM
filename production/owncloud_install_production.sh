@@ -3,7 +3,7 @@
 # Tech and Me, ©2016 - www.techandme.se
 #
 # This install from ownCloud repos with PHP 7
-CONVER=v1.0.0.0
+CONVER=v1.1.0.0
 CONVER_FILE=contacts.tar.gz
 CONVER_REPO=https://github.com/owncloud/contacts/releases/download
 CALVER=v1.0

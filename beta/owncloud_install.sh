@@ -6,7 +6,7 @@
 
 OCVERSION=9.0
 OCDEB=https://download.owncloud.org/download/repositories/$OCVERSION:/testing/Ubuntu_14.04
-CONVER=v1.0.0.0
+CONVER=v1.1.0.0
 CONVER_FILE=contacts.tar.gz
 CONVER_REPO=https://github.com/owncloud/contacts/releases/download
 CALVER=v1.0
