@@ -225,10 +225,6 @@ a2ensite owncloud_ssl_domain_self_signed.conf
 a2dissite default-ssl
 service apache2 restart
 
-# Install phpMyadmin
-bash $SCRIPTS/phpmyadmin_install.sh
-rm $SCRIPTS/phpmyadmin_install.sh
-
 ## Set config values
 # Experimental apps
 sudo -u www-data php $OCPATH/occ config:system:set appstore.experimental.enabled --value="true"

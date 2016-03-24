@@ -12,7 +12,7 @@ ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([
 CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
 WANIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 PHPMYADMIN_CONF="/etc/apache2/conf-available/phpmyadmin.conf"
-GITHUB_REPO="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production"
+GITHUB_REPO="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta"
 LETS_ENC="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt"
 
 	# Check if root
@@ -41,7 +41,6 @@ fi
                 else
        	wget -q $GITHUB_REPO/update-config.php -P $SCRIPTS
 fi
-
         # Activate SSL
         if [ -f $SCRIPTS/activate-ssl.sh ];
                 then
@@ -301,7 +300,8 @@ echo System will now upgrade...
 sleep 2
 echo
 echo
-bash $SCRIPTS/owncloud_update.sh
+apt-get update
+apt-get upgrade
 
 # Cleanup 1
 apt-get autoremove -y
