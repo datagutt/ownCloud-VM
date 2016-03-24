@@ -4,8 +4,6 @@
 
 ## THIS IS FOR TESTING ##
 
-https://download.owncloud.org/community/testing/owncloud-9.0.1beta.zip
-
 OCVERSION=9.0.1beta
 OCPATH=https://download.owncloud.org/community/testing/owncloud-$OCVERSION
 CONVER=v1.1.0.0
