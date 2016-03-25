@@ -6,6 +6,7 @@
 
 OCVERSION=9.0.1beta
 DOWNLOADREPO=https://download.owncloud.org/community/testing/owncloud-$OCVERSION
+# DOWNLOADREPODEB=https://download.owncloud.org/
 CONVER=v1.1.0.0
 CONVER_FILE=contacts.tar.gz
 CONVER_REPO=https://github.com/owncloud/contacts/releases/download
@@ -19,9 +20,9 @@ SCRIPTS=/var/scripts
 HTML=/var/www
 OCPATH=$HTML/owncloud
 SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
-IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
-ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
+IFACE=$($IFCONFIG | grep HWaddr | cut -d " " -f 1)
+ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
@@ -134,10 +135,10 @@ unzip -q $HTML/owncloud-$OCVERSION.zip -d $HTML
 rm $HTML/owncloud-$OCVERSION.zip
 
 # Download from DEB
-#wget -nv $OCDEB/Release.key -O Release.key
+#wget -nv $DOWNLOADREPODEB/Release.key -O Release.key
 #apt-key add - < Release.key
 #rm Release.key
-#sh -c "echo 'deb $OCDEB/ /' >> /etc/apt/sources.list.d/owncloud.list"
+#sh -c "echo 'deb $DOWNLOADREPODEB/ /' >> /etc/apt/sources.list.d/owncloud.list"
 #apt-get update
 #apt-get install owncloud -y
 
@@ -156,12 +157,6 @@ echo ownCloud version:
 sudo -u www-data php $OCPATH/occ status
 echo
 sleep 3
-
-# Set trusted domain
-wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/update-config.php -P $SCRIPTS
-chmod a+x $SCRIPTS/update-config.php
-php $SCRIPTS/update-config.php $OCPATH/config/config.php 'trusted_domains[]' localhost ${ADDRESS[@]} $(hostname) $(hostname --fqdn) 2>&1 >/dev/null
-php $SCRIPTS/update-config.php $OCPATH/config/config.php overwrite.cli.url https://$ADDRESS/owncloud 2>&1 >/dev/null
 
 # Prepare cron.php to be run every 15 minutes
 # The user still has to activate it in the settings GUI
@@ -220,10 +215,8 @@ echo "$SSL_CONF was successfully created"
 sleep 3
 fi
 
-# Enable new config
-a2ensite owncloud_ssl_domain_self_signed.conf
-a2dissite default-ssl
-service apache2 restart
+# Install Redis
+bash $SCRIPTS/install-redis-php-7.sh
 
 ## Set config values
 # Experimental apps
@@ -297,4 +290,5 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Start startup-script
 bash $SCRIPTS/owncloud-startup-script.sh
+
 exit 0

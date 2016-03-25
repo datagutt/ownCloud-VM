@@ -97,7 +97,6 @@ fi
                 else
         wget -q $GITHUB_REPO/techandme.sh -P $SCRIPTS
 fi
-
         # Get the Welcome Screen when http://$address
         if [ -f $SCRIPTS/index.php ];
                 then
@@ -174,7 +173,7 @@ sleep 4
 clear
 
 # Set keyboard layout
-echo "Current keyboard layout is Swedish"
+echo "Current keyboard layout is Europe/Stockholm"
 echo "You must change keyboard layout to your language"
 echo -e "\e[32m"
 read -p "Press any key to change keyboard layout... " -n1 -s
@@ -301,7 +300,7 @@ sleep 2
 echo
 echo
 apt-get update
-apt-get upgrade
+apt-get upgrade -y
 
 # Cleanup 1
 apt-get autoremove -y
@@ -333,8 +332,12 @@ rm $SCRIPTS/owncloud-startup-script.sh
 rm $SCRIPTS/ip.sh
 rm $SCRIPTS/trusted.sh
 rm $SCRIPTS/test_connection.sh
-rm $SCRIPTS/update-config.php
+rm $SCRIPTS/update-config.php*
 rm $SCRIPTS/instruction.sh
+rm $SCRIPTS/owncloud_install.sh
+rm $SCRIPTS/change-root-profile.sh
+rm $SCRIPTS/change-ocadmin-profile.sh
+rm $SCRIPTS/install-redis-php-7.sh
 rm $OCPATH/data/owncloud.log
 sed -i "s|instruction.sh|techandme.sh|g" /home/ocadmin/.bash_profile
 cat /dev/null > ~/.bash_history
