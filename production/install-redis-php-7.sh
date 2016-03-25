@@ -24,7 +24,6 @@ apt-get install git -y -q
 git clone -b php7 https://github.com/phpredis/phpredis.git
 
 # Build Redis PHP module
-apt-get install php7.0-dev -y
 sudo mv phpredis/ /etc/ && cd /etc/phpredis
 phpize
 ./configure
