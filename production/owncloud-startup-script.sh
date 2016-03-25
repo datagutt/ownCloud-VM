@@ -94,7 +94,7 @@ fi
         if [ -f $SCRIPTS/techandme.sh ];
                 then
                 rm $SCRIPTS/techandme.sh
-                wget -q $GITHUB_REPO/techandme.sh
+                wget -q $GITHUB_REPO/techandme.sh -P $SCRIPTS
                 else
         wget -q $GITHUB_REPO/techandme.sh -P $SCRIPTS
 fi
