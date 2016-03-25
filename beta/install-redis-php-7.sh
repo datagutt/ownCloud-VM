@@ -136,6 +136,7 @@ apt-get purge -y \
 	make \
 	manpages-dev
 
+apt-get update
 apt-get autoremove -y
 apt-get autoclean
 

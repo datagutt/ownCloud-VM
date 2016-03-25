@@ -50,6 +50,9 @@ fi
 # Update system
 apt-get update
 
+# Install figlet
+apt-get install figlet -y
+
 # Set locales
 sudo locale-gen "sv_SE.UTF-8" && sudo dpkg-reconfigure locales
 
