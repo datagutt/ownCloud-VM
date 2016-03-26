@@ -54,6 +54,9 @@ apt-get update
 # Install figlet
 apt-get install figlet -y
 
+# Install aptitude
+apt-get install aptitude -y
+
 # Set locales
 sudo locale-gen "sv_SE.UTF-8" && sudo dpkg-reconfigure locales
 
@@ -150,7 +153,7 @@ rm $HTML/owncloud-$OCVERSION.zip
 mkdir $OCPATH/data
 
 # Secure permissions
-wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+wget https://raw.githubusercontent.com/datagutt/ownCloud-VM/master/beta/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
