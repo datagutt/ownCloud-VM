@@ -13,8 +13,8 @@ ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([
 CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
 WANIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 PHPMYADMIN_CONF="/etc/apache2/conf-available/phpmyadmin.conf"
-GITHUB_REPO="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta"
-LETS_ENC="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt"
+GITHUB_REPO="https://raw.githubusercontent.com/datagutt/ownCloud-VM/master/beta"
+LETS_ENC="https://raw.githubusercontent.com/datagutt/ownCloud-VM/master/lets-encrypt"
 
 	# Check if root
 	if [ "$(whoami)" != "root" ]; then
