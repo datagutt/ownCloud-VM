@@ -16,7 +16,7 @@ SCRIPTS=/var/scripts
 HTML=/var/www/html
 OCPATH=$HTML/owncloud
 SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
-IFACE="eth0"
+IFACE="ens160"
 IFCONFIG="/sbin/ifconfig"
 ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 
