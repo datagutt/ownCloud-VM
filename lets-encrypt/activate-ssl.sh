@@ -2,8 +2,8 @@
 
 # Tech and Me ©2016 - www.techandme.se
 
-dir_before_letsencrypt=/opt
-letsencryptpath=/opt/letsencrypt
+dir_before_letsencrypt=/etc
+letsencryptpath=/etc/letsencrypt
 certfiles=$letsencryptpath/live
 ssl_conf="/etc/apache2/sites-available/owncloud_ssl_domain.conf"
 scripts_dir=/var/scripts
@@ -114,7 +114,7 @@ cat << ENTERDOMAIN
 ENTERDOMAIN
 	echo
 	read domain
-	
+
 	function ask_yes_or_no() {
     	read -p "$1 ([y]es or [N]o): "
     	case $(echo $REPLY | tr '[A-Z]' '[a-z]') in
@@ -248,7 +248,7 @@ fi
 	cd $dir_before_letsencrypt
 	git clone https://github.com/letsencrypt/letsencrypt
 	cd $letsencryptpath
-	./letsencrypt-auto --agree-tos --webroot -w /var/www/html/owncloud -d $domain
+	./letsencrypt-auto certonly --agree-tos --webroot -w /var/www/html/owncloud -d $domain
 # Check if $certfiles exists
 if [ -d "$certfiles" ]; then
 # Activate new config
