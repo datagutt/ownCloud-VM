@@ -29,8 +29,8 @@ ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
 fi
 
 # Change DNS
-echo "nameserver 8.26.56.26" > /etc/resolvconf/resolv.conf.d/base
-echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
+echo "nameserver 8.8.8.8" > /etc/resolvconf/resolv.conf.d/base
+echo "nameserver 8.8.4.4" >> /etc/resolvconf/resolv.conf.d/base
 
 # Check network
 sudo ifdown $IFACE && sudo ifup $IFACE
