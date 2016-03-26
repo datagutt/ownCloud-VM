@@ -167,8 +167,8 @@ else
 
 ### SETTINGS ###
 
-    DocumentRoot /var/www/html/owncloud
-    <Directory /var/www/html/owncloud>
+    DocumentRoot $webroot
+    <Directory $webroot>
 
     Options Indexes FollowSymLinks
     AllowOverride All
