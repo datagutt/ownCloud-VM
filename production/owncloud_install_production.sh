@@ -364,13 +364,13 @@ else
 	sleep 2
 fi
 
+# Make $SCRIPTS excutable
+chmod +x -R $SCRIPTS
+chown root:root -R $SCRIPTS
+
 # Allow ocadmin to run theese scripts
 chown ocadmin:ocadmin $SCRIPTS/instruction.sh
 chown ocadmin:ocadmin $SCRIPTS/history.sh
-
-# Make $SCRIPTS excutable 
-chmod +x -R $SCRIPTS
-chown root:root -R $SCRIPTS
 
 # Upgrade
 aptitude full-upgrade -y
