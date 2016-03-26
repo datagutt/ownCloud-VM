@@ -70,11 +70,11 @@ echo -e "\e[32m"
 read -p "Press any key to continue..." -n1 -s
 echo -e "\e[0m"
 
-# Install MYSQL 5.6
+# Install MariaDB 10.0
 apt-get install software-properties-common -y
-echo "mysql-server-5.6 mysql-server/root_password password $MYSQL_PASS" | debconf-set-selections
-echo "mysql-server-5.6 mysql-server/root_password_again password $MYSQL_PASS" | debconf-set-selections
-apt-get install mysql-server-5.6 -y
+echo "mariadb-server-10.0 mysql-server/root_password password $MYSQL_PASS" | debconf-set-selections
+echo "mariadb-server-10.0 mysql-server/root_password_again password $MYSQL_PASS" | debconf-set-selections
+apt-get install mariadb-server-10.0 -y
 
 # mysql_secure_installation
 aptitude -y install expect
