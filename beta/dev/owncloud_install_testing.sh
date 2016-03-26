@@ -18,7 +18,9 @@ OCPATH=$HTML/owncloud
 SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
 IFACE="eth0"
 IFCONFIG="/sbin/ifconfig"
-ADDRESS=$($IFCONFIG $IFACE | awk -F'[: ]+' '/\<inet\>/ {print $4; exit}')
+IP="/sbin/ip"
+IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
+ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
