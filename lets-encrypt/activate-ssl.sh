@@ -2,6 +2,7 @@
 
 # Tech and Me ©2016 - www.techandme.se
 
+webroot=/var/www/owncloud
 dir_before_letsencrypt=/etc
 letsencryptpath=/etc/letsencrypt
 certfiles=$letsencryptpath/live
@@ -248,7 +249,7 @@ fi
 	cd $dir_before_letsencrypt
 	git clone https://github.com/letsencrypt/letsencrypt
 	cd $letsencryptpath
-	./letsencrypt-auto certonly --agree-tos --webroot -w /var/www/html/owncloud -d $domain
+	./letsencrypt-auto certonly --agree-tos --webroot -w $webroot -d $domain
 # Check if $certfiles exists
 if [ -d "$certfiles" ]; then
 # Activate new config
