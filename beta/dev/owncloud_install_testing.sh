@@ -46,6 +46,9 @@ fi
 # Update system
 apt-get update
 
+# Install aptitude
+apt-get install aptitude -y
+
 # Set locales
 sudo locale-gen "sv_SE.UTF-8" && sudo dpkg-reconfigure locales
 
@@ -134,7 +137,7 @@ rm $HTML/$OCVERSION.tar.bz2
 mkdir $OCPATH/data
 
 # Secure permissions
-wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/setup_secure_permissions_owncloud.sh -P $SCRIPTS
+wget https://raw.githubusercontent.com/datagutt/ownCloud-VM/master/beta/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
@@ -147,7 +150,7 @@ echo
 sleep 3
 
 # Set trusted domain
-wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/update-config.php -P $SCRIPTS
+wget https://raw.githubusercontent.com/datagutt/ownCloud-VM/master/beta/update-config.php -P $SCRIPTS
 chmod a+x $SCRIPTS/update-config.php
 php $SCRIPTS/update-config.php $OCPATH/config/config.php 'trusted_domains[]' localhost ${ADDRESS[@]} $(hostname) $(hostname --fqdn)
 php $SCRIPTS/update-config.php $OCPATH/config/config.php overwrite.cli.url https://$ADDRESS/owncloud
