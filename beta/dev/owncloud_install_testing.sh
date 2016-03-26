@@ -225,16 +225,16 @@ rm $SCRIPTS/phpmyadmin_install.sh
 # Experimental apps
 sudo -u www-data php $OCPATH/occ config:system:set appstore.experimental.enabled --value="true"
 # Default mail server (make this user configurable?)
-sudo -u www-data php $OCPATH/occ config:system:set mail_smtpmode --value="smtp"
-sudo -u www-data php $OCPATH/occ config:system:set mail_smtpauth --value="1"
-sudo -u www-data php $OCPATH/occ config:system:set mail_smtpport --value="465"
-sudo -u www-data php $OCPATH/occ config:system:set mail_smtphost --value="smtp.gmail.com"
-sudo -u www-data php $OCPATH/occ config:system:set mail_smtpauthtype --value="LOGIN"
-sudo -u www-data php $OCPATH/occ config:system:set mail_from_address --value="www.en0ch.se"
-sudo -u www-data php $OCPATH/occ config:system:set mail_domain --value="gmail.com"
-sudo -u www-data php $OCPATH/occ config:system:set mail_smtpsecure --value="ssl"
-sudo -u www-data php $OCPATH/occ config:system:set mail_smtpname --value="www.en0ch.se@gmail.com"
-sudo -u www-data php $OCPATH/occ config:system:set mail_smtppassword --value="techandme_se"
+#sudo -u www-data php $OCPATH/occ config:system:set mail_smtpmode --value="smtp"
+#sudo -u www-data php $OCPATH/occ config:system:set mail_smtpauth --value="1"
+#sudo -u www-data php $OCPATH/occ config:system:set mail_smtpport --value="465"
+#sudo -u www-data php $OCPATH/occ config:system:set mail_smtphost --value="smtp.gmail.com"
+#sudo -u www-data php $OCPATH/occ config:system:set mail_smtpauthtype --value="LOGIN"
+#sudo -u www-data php $OCPATH/occ config:system:set mail_from_address --value="www.en0ch.se"
+#sudo -u www-data php $OCPATH/occ config:system:set mail_domain --value="gmail.com"
+#sudo -u www-data php $OCPATH/occ config:system:set mail_smtpsecure --value="ssl"
+#sudo -u www-data php $OCPATH/occ config:system:set mail_smtpname --value="www.en0ch.se@gmail.com"
+#sudo -u www-data php $OCPATH/occ config:system:set mail_smtppassword --value="techandme_se"
 
 # Install Libreoffice Writer to be able to read MS documents.
 echo -ne '\n' | sudo apt-add-repository ppa:libreoffice/libreoffice-4-4
