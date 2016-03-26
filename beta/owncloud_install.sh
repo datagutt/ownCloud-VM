@@ -24,6 +24,8 @@ IFCONFIG="/sbin/ifconfig"
 IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
 ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+UNIXUSER=ocadmin
+UNIXPASS=owncloud
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
@@ -31,6 +33,17 @@ ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([
         echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msudo \e[0mbash $SCRIPTS/owncloud_install.sh"
         echo
         exit 1
+fi
+
+# Create ocadmin if not existing
+getent passwd $UNIXUSER  > /dev/null
+if [ $? -eq 0 ]
+then
+        echo "$UNIXUSER already exists!"
+else
+        useradd -d /home/$UNIXUSER -m $UNIXUSER
+        echo -e "$UNIXUSER:$UNIXPASS" | chpasswd
+        echo "$UNIXUSER created!"
 fi
 
 # Change DNS
