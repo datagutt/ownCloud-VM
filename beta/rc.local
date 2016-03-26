@@ -13,8 +13,8 @@
 
 SCRIPTS="/var/scripts"
 HTML="/var/www/html"
-GITHUB_REPO="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta"
-LETS_ENC="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt"
+GITHUB_REPO="https://raw.githubusercontent.com/datagutt/ownCloud-VM/master/beta"
+LETS_ENC="https://raw.githubusercontent.com/datagutt/ownCloud-VM/master/lets-encrypt"
 
       	# Create dir
 if 		[ -d $SCRIPTS ];
