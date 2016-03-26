@@ -3,7 +3,8 @@
 HTML=/var/www
 OCPATH=$HTML/owncloud
 IFCONFIG="/sbin/ifconfig"
-IFACE=$($IFCONFIG | grep HWaddr | cut -d " " -f 1)
+IP="/sbin/ip"
+IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
 ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 SCRIPTS=/var/scripts
 
