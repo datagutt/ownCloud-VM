@@ -411,16 +411,14 @@ cat << RCLOCAL > "/etc/rc.local"
 # Get startup-script for root
         if [ -f $SCRIPTS/owncloud-startup-script.sh ];
         then
-                rm $SCRIPTS/owncloud-startup-script.sh"
+                rm $SCRIPTS/owncloud-startup-script.sh
                 echo "Downloading owncloud-startup-script.sh...."
 		wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
 	else
 		echo "Downloading owncloud-startup-script.sh...."
 		wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
+		sleep 1
 	fi
-
-# Add some latency
-sleep 1
 
 # Check if script exists again, otherwise reboot (possible loop)
 	if [ -f $SCRIPTS/owncloud-startup-script.sh ];
