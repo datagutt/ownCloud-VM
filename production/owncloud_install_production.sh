@@ -412,15 +412,14 @@ cat << RCLOCAL > "/etc/rc.local"
 		echo "Downloading owncloud-startup-script.sh...."
 		rm $SCRIPTS/owncloud-startup-script.sh
 		wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
-		sleep 3
 
 # Check if script exists, otherwise reboot (possible loop)
 	if [ -f $SCRIPTS/owncloud-startup-script.sh ];
         then
-                echo -e "\e[42mDownload successful!" 
+                echo "Download successful!" 
                 sleep 3
         else
-		echo -e "\e[41mDownload failed, rebooting in 15 seconds until success. Please check you network connection"
+		echo "Download failed, rebooting in 15 seconds until success. Please check you network connection"
 		sleep 15
 		reboot
 	fi
