@@ -21,7 +21,7 @@ IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
 ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
-GITHUB_REPO=https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/
+GITHUB_REPO=https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production
 UNIXUSER=ocadmin
 UNIXPASS=owncloud
 
@@ -408,27 +408,25 @@ cat << RCLOCAL > "/etc/rc.local"
 #
 # By default this script does nothing.
 
-# Get startup-script for root
-        if [ -f $SCRIPTS/owncloud-startup-script.sh ];
-        then
-                rm $SCRIPTS/owncloud-startup-script.sh
-                echo "Downloading owncloud-startup-script.sh...."
-		wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
-	else
+# Download owncloud-startup-script.sh
 		echo "Downloading owncloud-startup-script.sh...."
+		rm $SCRIPTS/owncloud-startup-script.sh
 		wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
-		sleep 1
-	fi
+		sleep 3
 
-# Check if script exists again, otherwise reboot (possible loop)
+# Check if script exists, otherwise reboot (possible loop)
 	if [ -f $SCRIPTS/owncloud-startup-script.sh ];
         then
-                echo "Download succesful!"
+                echo "\e[42mDownload successful!" 
+                sleep 3
         else
-		echo "Download failed, rebooting in 15 seconds until success. Please check you network connection"
+		echo -e "\e[41mDownload failed, rebooting in 15 seconds until success. Please check you network connection"
 		sleep 15
 		reboot
 	fi
+	
+# Restore colors
+echo -e "\e[0"
 
 # Make $SCRIPTS excutable
 chmod +x -R $SCRIPTS
