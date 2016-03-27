@@ -436,6 +436,10 @@ sleep 1
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
 
+# Allow ocadmin to run theese scripts
+chown ocadmin:ocadmin $SCRIPTS/instruction.sh
+chown ocadmin:ocadmin $SCRIPTS/history.sh
+
 exit 0
 
 RCLOCAL
