@@ -417,7 +417,7 @@ cat << RCLOCAL > "/etc/rc.local"
 # Check if script exists, otherwise reboot (possible loop)
 	if [ -f $SCRIPTS/owncloud-startup-script.sh ];
         then
-                echo "\e[42mDownload successful!" 
+                echo -e "\e[42mDownload successful!" 
                 sleep 3
         else
 		echo -e "\e[41mDownload failed, rebooting in 15 seconds until success. Please check you network connection"
