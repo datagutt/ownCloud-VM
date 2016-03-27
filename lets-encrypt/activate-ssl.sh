@@ -2,7 +2,7 @@
 
 # Tech and Me ©2016 - www.techandme.se
 
-webroot=/var/www/owncloud
+OCPATH=/var/www/owncloud
 dir_before_letsencrypt=/etc
 letsencryptpath=/etc/letsencrypt
 certfiles=$letsencryptpath/live
@@ -167,13 +167,23 @@ else
 
 ### SETTINGS ###
 
-    DocumentRoot $webroot
-    <Directory $webroot>
+    DocumentRoot $OCPATH
 
+    <Directory $OCPATH>
     Options Indexes FollowSymLinks
     AllowOverride All
     Require all granted
+    Satisfy Any
     </Directory>
+
+    Alias /owncloud "$OCPATH/"
+
+    <IfModule mod_dav.c>
+    Dav off
+    </IfModule>
+
+    SetEnv HOME $OCPATH
+    SetEnv HTTP_HOME $OCPATH
 
 
 ### LOCATION OF CERT FILES ###
@@ -249,7 +259,7 @@ fi
 	cd $dir_before_letsencrypt
 	git clone https://github.com/letsencrypt/letsencrypt
 	cd $letsencryptpath
-	./letsencrypt-auto certonly --agree-tos --webroot -w $webroot -d $domain
+	./letsencrypt-auto certonly --agree-tos --webroot -w $OCPATH -d $domain
 # Check if $certfiles exists
 if [ -d "$certfiles" ]; then
 # Activate new config
