@@ -391,6 +391,55 @@ aptitude full-upgrade -y
 #Cleanup
 echo "$CLEARBOOT"
 
+# Get the latest owncloud-startup-script.sh
+echo "Writes to rc.local..."
+
+cat << RCLOCAL > "/etc/rc.local"
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+# Get startup-script for root
+        if [ -f $SCRIPTS/owncloud-startup-script.sh ];
+        then
+                rm $SCRIPTS/owncloud-startup-script.sh"
+                echo "Downloading owncloud-startup-script.sh...."
+		wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
+	else
+		echo "Downloading owncloud-startup-script.sh...."
+		wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
+	fi
+
+# Add some latency
+sleep 1
+
+# Check if script exists again, otherwise reboot (possible loop)
+	if [ -f $SCRIPTS/owncloud-startup-script.sh ];
+        then
+                echo "Download succesful!"
+        else
+		echo "Download failed, rebooting in 15 seconds until success. Please check you network connection"
+		sleep 15
+		reboot
+	fi
+
+# Make $SCRIPTS excutable
+chmod +x -R $SCRIPTS
+chown root:root -R $SCRIPTS
+
+exit 0
+
+RCLOCAL
+
 # Reboot
 reboot
 
