@@ -39,9 +39,17 @@ if [ $? -eq 0 ]
 then
         echo "$UNIXUSER already exists!"
 else
-        useradd -d /home/$UNIXUSER -m $UNIXUSER
+        sudo yes "" | adduser $UNIXUSER
         echo -e "$UNIXUSER:$UNIXPASS" | chpasswd
-        echo "$UNIXUSER created!"
+        usermod -aG sudo $UNIXUSER
+fi
+
+if [ -d /home/$UNIXUSER ];
+then
+	echo "$UNIXUSER OK!"
+else
+	echo "Something went wrong when creating the user... Script will exit."
+	exit 1
 fi
 
 # Create $SCRIPTS dir
