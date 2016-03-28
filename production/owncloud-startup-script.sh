@@ -285,7 +285,8 @@ function ask_yes_or_no() {
         *)     echo "no" ;;
     esac
 }
-if [[ "yes" == $(ask_yes_or_no "Last but not least, do you want to install a real SSL cert (from Let's Encrypt) on this machine? The script is still Alpha, feel free to contribute!") ]]
+if [[ "yes" == $(ask_yes_or_no "Do you want to install a real SSL cert (from Let's Encrypt) on this machine?
+The script are still Beta, feel free to contribute!") ]]
 then
 	bash $SCRIPTS/activate-ssl.sh
 else

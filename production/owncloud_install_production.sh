@@ -21,7 +21,9 @@ IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
 ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 CLEARBOOT=$(dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y purge)
-GITHUB_REPO=https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/
+GITHUB_REPO=https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production
+UNIXUSER=ocadmin
+UNIXPASS=owncloud
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
@@ -29,6 +31,17 @@ GITHUB_REPO=https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/product
         echo -e "\e[31mSorry, you are not root.\n\e[0mYou must type: \e[36msudo \e[0mbash $SCRIPTS/owncloud_install_production.sh"
         echo
         exit 1
+fi
+
+# Create ocadmin if not existing
+getent passwd $UNIXUSER  > /dev/null
+if [ $? -eq 0 ]
+then
+        echo "$UNIXUSER already exists!"
+else
+        useradd -d /home/$UNIXUSER -m $UNIXUSER
+        echo -e "$UNIXUSER:$UNIXPASS" | chpasswd
+        echo "$UNIXUSER created!"
 fi
 
 # Create $SCRIPTS dir
@@ -377,6 +390,54 @@ aptitude full-upgrade -y
 
 #Cleanup
 echo "$CLEARBOOT"
+
+# Get the latest owncloud-startup-script.sh
+echo "Writes to rc.local..."
+
+cat << RCLOCAL > "/etc/rc.local"
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+# Download owncloud-startup-script.sh
+		echo "Downloading owncloud-startup-script.sh...."
+		rm $SCRIPTS/owncloud-startup-script.sh
+		wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
+
+# Check if script exists, otherwise reboot (possible loop)
+	if [ -f $SCRIPTS/owncloud-startup-script.sh ];
+        then
+                echo "Download successful!" 
+                sleep 3
+        else
+		echo "Download failed, rebooting in 15 seconds until success. Please check you network connection"
+		sleep 15
+		reboot
+	fi
+	
+# Restore colors
+echo -e "\e[0"
+
+# Make $SCRIPTS excutable
+chmod +x -R $SCRIPTS
+chown root:root -R $SCRIPTS
+
+# Allow ocadmin to run theese scripts
+chown ocadmin:ocadmin $SCRIPTS/instruction.sh
+chown ocadmin:ocadmin $SCRIPTS/history.sh
+
+exit 0
+
+RCLOCAL
 
 # Reboot
 reboot

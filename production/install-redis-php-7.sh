@@ -101,6 +101,7 @@ ADD_TO_CONFIG
 # Cleanup
 apt-get purge -y \
 	git \
+	php7.0-dev \
 	binutils \
 	build-essential \
 	cpp \
