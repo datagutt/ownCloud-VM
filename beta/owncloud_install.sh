@@ -24,8 +24,8 @@ IFCONFIG="/sbin/ifconfig"
 IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
 ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-UNIXUSER=ocadmin
-UNIXPASS=owncloud
+export UNIXUSER=ocadmin
+export UNIXPASS=owncloud
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
@@ -35,7 +35,7 @@ UNIXPASS=owncloud
         exit 1
 fi
 
-# Create ocadmin if not existing
+# Create $UNIXUSER if not existing
 getent passwd $UNIXUSER  > /dev/null
 if [ $? -eq 0 ]
 then
@@ -176,7 +176,7 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
 cd $OCPATH
-sudo -u www-data php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "ocadmin" --admin-pass "owncloud"
+sudo -u www-data php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "$UNIXUSER" --admin-pass "$UNIXPASS"
 echo
 echo ownCloud version:
 sudo -u www-data php $OCPATH/occ status

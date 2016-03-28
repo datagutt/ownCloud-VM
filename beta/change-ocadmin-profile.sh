@@ -1,8 +1,8 @@
 #!/bin/bash
 
-OCADMIN_PROFILE="/home/ocadmin/.bash_profile"
+OCADMIN_PROFILE="/home/$UNIXUSER/.bash_profile"
 
-rm /home/ocadmin/.profile
+rm /home/$UNIXUSER/.profile
 
 cat <<-OCADMIN-PROFILE > "$OCADMIN_PROFILE"
 # ~/.profile: executed by the command interpreter for login shells.

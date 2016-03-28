@@ -33,7 +33,7 @@ UNIXPASS=owncloud
         exit 1
 fi
 
-# Create ocadmin if not existing
+# Create $UNIXUSER if not existing
 getent passwd $UNIXUSER  > /dev/null
 if [ $? -eq 0 ]
 then
@@ -166,7 +166,7 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
 cd $OCPATH
-sudo -u www-data php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "ocadmin" --admin-pass "owncloud"
+sudo -u www-data php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "$UNIXUSER" --admin-pass "$UNIXPASS"
 echo
 echo ownCloud version:
 sudo -u www-data php $OCPATH/occ status
@@ -332,7 +332,7 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
                 else
         wget -q $GITHUB_REPO/change-root-profile.sh -P $SCRIPTS
 fi
-# Change ocadmin .bash_profile
+# Change $UNIXUSER .bash_profile
         if [ -f $SCRIPTS/change-ocadmin-profile.sh ];
                 then
                 echo "change-ocadmin-profile.sh  exists"
@@ -347,7 +347,7 @@ fi
         wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
 fi
 
-# Welcome message after login (change in /home/ocadmin/.profile
+# Welcome message after login (change in /home/$UNIXUSER/.profile
         if [ -f $SCRIPTS/instruction.sh ];
                 then
                 echo "instruction.sh exists"
@@ -373,7 +373,7 @@ else
 	rm $SCRIPTS/change-root-profile.sh
 	sleep 2
 fi
-# Change ocadmin profile
+# Change $UNIXUSER profile
         	bash $SCRIPTS/change-ocadmin-profile.sh
 if [[ $? > 0 ]]
 then
@@ -389,9 +389,9 @@ fi
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
 
-# Allow ocadmin to run theese scripts
-chown ocadmin:ocadmin $SCRIPTS/instruction.sh
-chown ocadmin:ocadmin $SCRIPTS/history.sh
+# Allow $UNIXUSER to run theese scripts
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/instruction.sh
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/history.sh
 
 # Upgrade
 aptitude full-upgrade -y
@@ -431,7 +431,7 @@ cat << RCLOCAL > "/etc/rc.local"
 		sleep 15
 		reboot
 	fi
-	
+
 # Restore colors
 echo -e "\e[0"
 
@@ -439,9 +439,9 @@ echo -e "\e[0"
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
 
-# Allow ocadmin to run theese scripts
-chown ocadmin:ocadmin $SCRIPTS/instruction.sh
-chown ocadmin:ocadmin $SCRIPTS/history.sh
+# Allow $UNIXUSER to run theese scripts
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/instruction.sh
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/history.sh
 
 exit 0
 
