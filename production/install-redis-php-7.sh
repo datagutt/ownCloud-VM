@@ -4,6 +4,9 @@
 
 SCRIPTS=/var/scripts
 OCPATH=/var/www/owncloud
+REDIS_CONF=/etc/redis/6379.conf
+REDIS_INIT=/etc/init.d/redis_6379
+REDIS_SOCK=/var/run/redis.sock
 
 # Must be root
 [[ `id -u` -eq 0 ]] || { echo "Must be root to run script, in Ubuntu type: sudo -i"; exit 1; }
@@ -90,13 +93,32 @@ cat <<ADD_TO_CONFIG>> $OCPATH/config/config.php
   'memcache.locking' => '\\OC\\Memcache\\Redis',
   'redis' =>
   array (
-  'host' => 'localhost',
-  'port' => 6379,
+  'host' => '$REDIS_SOCK',
+  'port' => 0,
   'timeout' => 0,
   'dbindex' => 0,
   ),
 );
 ADD_TO_CONFIG
+
+# Redis performance tweaks
+if	grep -Fxq "vm.overcommit_memory = 1" /etc/sysctl.conf
+then
+	echo "vm.overcommit_memory correct"
+else
+	echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
+fi
+sed -i "s|# unixsocket /tmp/redis.sock|unixsocket $REDIS_SOCK|g" $REDIS_CONF
+sed -i "s|# unixsocketperm 700|unixsocketperm 777|g" $REDIS_CONF
+sed -i "s|port 6379|port 0|g" $REDIS_CONF
+sed -i "s|###############|SOCKET='$REDIS_SOCK'|g" $REDIS_INIT
+sed -i "s|REDISPORT shutdown|SOCKET shutdown|g" $REDIS_INIT
+sed -i "s|CLIEXEC -p|CLIEXEC -s|g" $REDIS_INIT
+echo
+echo "Output should be PONG:"
+redis-cli -s $REDIS_SOCK ping
+echo
+sleep 3
 
 # Cleanup
 apt-get purge -y \
