@@ -279,7 +279,7 @@ else
 fi
 clear
 else
-echo "Not changing password as you already changed $user and $pass in the script"
+echo "Not changing password as you already changed <user> and <pass> in the script"
 fi
 
 # Let's Encrypt
