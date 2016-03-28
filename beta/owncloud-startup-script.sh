@@ -246,6 +246,8 @@ clear
 # Change Trusted Domain and CLI
 bash $SCRIPTS/trusted.sh
 
+if [ "$UNIXUSER" = "ocadmin" ]
+then
 # Change password
 echo -e "\e[0m"
 echo "For better security, change the Linux password for [$UNIXUSER]"
@@ -276,6 +278,9 @@ else
     sleep 2
 fi
 clear
+else
+echo "Not changing password as you already changed $user and $pass in the script"
+fi
 
 # Let's Encrypt
 function ask_yes_or_no() {
