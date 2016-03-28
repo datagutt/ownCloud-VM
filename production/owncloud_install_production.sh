@@ -39,7 +39,7 @@ if [ $? -eq 0 ]
 then
         echo "$UNIXUSER already exists!"
 else
-        sudo yes "" | adduser $UNIXUSER
+	adduser --disabled-password --gecos "" $UNIXUSER
         echo -e "$UNIXUSER:$UNIXPASS" | chpasswd
         usermod -aG sudo $UNIXUSER
 fi
@@ -240,18 +240,6 @@ a2ensite owncloud_ssl_domain_self_signed.conf
 a2dissite default-ssl
 service apache2 restart
 
-# Get script for Redis
-        if [ -f $SCRIPTS/install-redis-php-7.sh ];
-                then
-                echo "install-redis-php-7.sh exists"
-                else
-        wget -q $GITHUB_REPO/install-redis-php-7.sh -P $SCRIPTS
-fi
-
-# Install Redis
-bash $SCRIPTS/install-redis-php-7.sh
-rm $SCRIPTS/install-redis-php-7.sh
-
 ## Set config values
 # Experimental apps
 sudo -u www-data php $OCPATH/occ config:system:set appstore.experimental.enabled --value="true"
@@ -392,6 +380,18 @@ chown root:root -R $SCRIPTS
 # Allow $UNIXUSER to run theese scripts
 chown $UNIXUSER:$UNIXUSER $SCRIPTS/instruction.sh
 chown $UNIXUSER:$UNIXUSER $SCRIPTS/history.sh
+
+# Get script for Redis
+        if [ -f $SCRIPTS/install-redis-php-7.sh ];
+                then
+                echo "install-redis-php-7.sh exists"
+                else
+        wget -q $GITHUB_REPO/install-redis-php-7.sh -P $SCRIPTS
+fi
+
+# Install Redis
+bash $SCRIPTS/install-redis-php-7.sh
+rm $SCRIPTS/install-redis-php-7.sh
 
 # Upgrade
 aptitude full-upgrade -y

@@ -114,11 +114,6 @@ sed -i "s|port 6379|port 0|g" $REDIS_CONF
 sed -i "s|###############|SOCKET='$REDIS_SOCK'|g" $REDIS_INIT
 sed -i "s|REDISPORT shutdown|SOCKET shutdown|g" $REDIS_INIT
 sed -i "s|CLIEXEC -p|CLIEXEC -s|g" $REDIS_INIT
-echo
-echo "Output should be PONG:"
-redis-cli -s $REDIS_SOCK ping
-echo
-sleep 3
 
 # Cleanup
 apt-get purge -y \

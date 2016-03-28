@@ -11,6 +11,15 @@ Feel free to contribute!
 
 ----------------------------------------------------------------------------------------------------------------------------
 
+#### CHANING DEFAULT USER ($UNIXUSER)
+
+If you want to change the default user to your own, you have to change $UNIXUSER in four places:
+
+- owncloud_install(_production).sh
+- change-ocadmin-profile.sh
+- owncloud-startup-script.sh
+- rc.local (for the beta VM)
+
 #### HOW TO SETUP THE BETA VM (PRE-PRODUCTION)
 
 - Create a clean Ubuntu Server 14.04 VM with VMware Workstation or VirtualBox

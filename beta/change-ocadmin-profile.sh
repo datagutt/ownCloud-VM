@@ -1,5 +1,6 @@
 #!/bin/bash
 
+UNIXUSER=ocadmin
 OCADMIN_PROFILE="/home/$UNIXUSER/.bash_profile"
 
 rm /home/$UNIXUSER/.profile

@@ -24,8 +24,8 @@ IFCONFIG="/sbin/ifconfig"
 IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
 ADDRESS=$($IFCONFIG | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-export UNIXUSER=ocadmin
-export UNIXPASS=owncloud
+UNIXUSER=ocadmin
+UNIXPASS=owncloud
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
@@ -41,7 +41,7 @@ if [ $? -eq 0 ]
 then
         echo "$UNIXUSER already exists!"
 else
-        sudo yes "" | adduser $UNIXUSER
+        adduser --disabled-password --gecos "" $UNIXUSER
         echo -e "$UNIXUSER:$UNIXPASS" | chpasswd
         usermod -aG sudo $UNIXUSER
 fi
@@ -240,9 +240,6 @@ echo "$SSL_CONF was successfully created"
 sleep 3
 fi
 
-# Install Redis
-bash $SCRIPTS/install-redis-php-7.sh
-
 ## Set config values
 # Experimental apps
 sudo -u www-data php $OCPATH/occ config:system:set appstore.experimental.enabled --value="true"
@@ -312,6 +309,9 @@ fi
 
 # Set secure permissions final (./data/.htaccess has wrong permissions otherwise)
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
+
+# Install Redis
+bash $SCRIPTS/install-redis-php-7.sh
 
 # Start startup-script
 bash $SCRIPTS/owncloud-startup-script.sh

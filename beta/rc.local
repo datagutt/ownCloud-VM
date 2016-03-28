@@ -15,6 +15,7 @@ SCRIPTS="/var/scripts"
 HTML="/var/www/html"
 GITHUB_REPO="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta"
 LETS_ENC="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt"
+UNIXUSER=ocadmin
 
       	# Create dir
 if 		[ -d $SCRIPTS ];
@@ -174,7 +175,7 @@ else
 	echo "Downloaded test_connection.sh."
 	sleep 1
 fi
-# Welcome message after login (change in /home/ocadmin/.profile
+# Welcome message after login (change in /home/$UNIXUSER/.profile
 if 		[ -f $SCRIPTS/instruction.sh ];
         then
                 echo "instruction.sh exists"
@@ -229,7 +230,7 @@ else
 	echo "Downloaded change-root-profile.sh."
 	sleep 1
 fi
-# Change ocadmin .bash_profile
+# Change $UNIXUSER .bash_profile
 if 		[ -f $SCRIPTS/change-ocadmin-profile.sh ];
         then
         	echo "change-ocadmin-profile.sh  exists"
@@ -265,10 +266,10 @@ fi
         	chmod +x -R $SCRIPTS
         	chown root:root -R $SCRIPTS
 
-# Allow ocadmin to run theese scripts
-        	chown ocadmin:ocadmin $SCRIPTS/instruction.sh
-        	chown ocadmin:ocadmin $SCRIPTS/history.sh
-		chown ocadmin:ocadmin $SCRIPTS/techandme.sh
+# Allow $UNIXUSER to run theese scripts
+        	chown $UNIXUSER:$UNIXUSER $SCRIPTS/instruction.sh
+        	chown $UNIXUSER:$UNIXUSER $SCRIPTS/history.sh
+		chown $UNIXUSER:$UNIXUSER $SCRIPTS/techandme.sh
 
 # Get the Welcome Screen when http://$ADDRESS
 if 		[ -f $HTML/index.php ];
@@ -306,7 +307,7 @@ else
 	echo "change-root-profile.sh script executed OK."
 	sleep 1
 fi
-# Change ocadmin profile
+# Change $UNIXUSER profile
         	bash $SCRIPTS/change-ocadmin-profile.sh
 if [[ $? > 0 ]]
 then

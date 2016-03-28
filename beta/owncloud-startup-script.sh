@@ -15,6 +15,8 @@ WANIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 PHPMYADMIN_CONF="/etc/apache2/conf-available/phpmyadmin.conf"
 GITHUB_REPO="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta"
 LETS_ENC="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt"
+UNIXUSER=ocadmin
+UNIXPASS=owncloud
 
 	# Check if root
 	if [ "$(whoami)" != "root" ]; then
