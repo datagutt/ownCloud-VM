@@ -20,6 +20,7 @@ SCRIPTS=/var/scripts
 HTML=/var/www
 OCPATH=$HTML/owncloud
 SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
+HTTP_CONF="/etc/apache2/sites-available/owncloud_http_domain_self_signed.conf"
 IFCONFIG="/sbin/ifconfig"
 IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
@@ -59,7 +60,7 @@ echo "nameserver 8.26.56.26" > /etc/resolvconf/resolv.conf.d/base
 echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
 
 # Check network
-sudo ifdown $IFACE && sudo ifup $IFACE
+ifdown $IFACE && sudo ifup $IFACE
 nslookup google.com
 if [[ $? > 0 ]]
 then
@@ -198,6 +199,45 @@ sed -i "s|memory_limit = 128M|memory_limit = 512M|g" /etc/php/7.0/apache2/php.in
 sed -i "s|post_max_size = 8M|post_max_size = 1100M|g" /etc/php/7.0/apache2/php.ini
 # upload_max
 sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php/7.0/apache2/php.ini
+
+# Generate $HTTP_CONF
+if [ -f $HTTP_CONF ];
+        then
+        echo "Virtual Host exists"
+else
+        touch "$HTTP_CONF"
+        cat << HTTP_CREATE > "$HTTP_CONF"
+<VirtualHost *:80>
+
+### YOUR SERVER ADDRESS ###
+#    ServerAdmin admin@example.com
+#    ServerName example.com
+#    ServerAlias subdomain.example.com
+
+### SETTINGS ###
+    DocumentRoot $OCPATH
+
+    <Directory $OCPATH>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+    Satisfy Any
+    </Directory>
+
+    Alias /owncloud "$OCPATH/"
+
+    <IfModule mod_dav.c>
+    Dav off
+    </IfModule>
+
+    SetEnv HOME $OCPATH
+    SetEnv HTTP_HOME $OCPATH
+
+</VirtualHost>
+HTTP_CREATE
+echo "$HTTP_CONF was successfully created"
+sleep 3
+fi
 
 # Generate $SSL_CONF
 if [ -f $SSL_CONF ];

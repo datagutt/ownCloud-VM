@@ -16,6 +16,7 @@ SCRIPTS=/var/scripts
 HTML=/var/www
 OCPATH=$HTML/owncloud
 SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
+HTTP_CONF="/etc/apache2/sites-available/owncloud_http_domain_self_signed.conf"
 IFCONFIG="/sbin/ifconfig"
 IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
@@ -152,7 +153,7 @@ apt-get install -y \
         php7.0-curl \
 	php7.0-xml \
 	php7.0-zip \
-        php-smbclient 
+        php-smbclient
 
 # Download and install ownCloud
 wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
@@ -190,6 +191,45 @@ sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php/7.0/a
 
 # Install Figlet
 apt-get install figlet -y
+
+# Generate $HTTP_CONF
+if [ -f $HTTP_CONF ];
+        then
+        echo "Virtual Host exists"
+else
+        touch "$HTTP_CONF"
+        cat << HTTP_CREATE > "$HTTP_CONF"
+<VirtualHost *:80>
+
+### YOUR SERVER ADDRESS ###
+#    ServerAdmin admin@example.com
+#    ServerName example.com
+#    ServerAlias subdomain.example.com
+
+### SETTINGS ###
+    DocumentRoot $OCPATH
+
+    <Directory $OCPATH>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+    Satisfy Any
+    </Directory>
+
+    Alias /owncloud "$OCPATH/"
+
+    <IfModule mod_dav.c>
+    Dav off
+    </IfModule>
+
+    SetEnv HOME $OCPATH
+    SetEnv HTTP_HOME $OCPATH
+
+</VirtualHost>
+HTTP_CREATE
+echo "$HTTP_CONF was successfully created"
+sleep 3
+fi
 
 # Generate $SSL_CONF
 if [ -f $SSL_CONF ];
@@ -237,6 +277,7 @@ fi
 
 # Enable new config
 a2ensite owncloud_ssl_domain_self_signed.conf
+a2ensite owncloud_http_domain_self_signed.conf
 a2dissite default-ssl
 service apache2 restart
 

@@ -151,10 +151,11 @@ echo -e "\e[0m"
 a2enmod ssl
 a2enmod headers
 a2dissite default-ssl.conf
-a2ensite owncloud_ssl_domain_self_signed.conf 
+a2ensite owncloud_ssl_domain_self_signed.conf
+a2ensite owncloud_http_domain_self_signed.conf
 clear
-echo "owncloud_ssl_domain_self_signed.conf is enabled, this is your pre-configured virtual host"
-sleep 4
+echo "owncloud_ssl/http_domain_self_signed.conf is enabled, this is your pre-configured virtual hosts"
+sleep 3
 echo
 service apache2 reload
 
