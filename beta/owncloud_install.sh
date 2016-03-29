@@ -19,6 +19,7 @@ PW_FILE=/var/mysql_password.txt
 SCRIPTS=/var/scripts
 HTML=/var/www
 OCPATH=$HTML/owncloud
+OCDATA=/var/data
 SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
 HTTP_CONF="/etc/apache2/sites-available/owncloud_http_domain_self_signed.conf"
 IFCONFIG="/sbin/ifconfig"
@@ -230,7 +231,7 @@ else
     Dav off
     </IfModule>
 
-    <Directory "$OCPATH/data/">
+    <Directory "$OCDATA">
     # just in case if .htaccess gets disabled
     Require all denied
     </Directory>
@@ -274,7 +275,7 @@ else
     Dav off
     </IfModule>
 
-    <Directory "$OCPATH/data/">
+    <Directory "$OCDATA">
     # just in case if .htaccess gets disabled
     Require all denied
     </Directory>

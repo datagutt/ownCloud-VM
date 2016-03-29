@@ -4,6 +4,7 @@
 
 WWW_ROOT=/var/www
 OCPATH=$WWW_ROOT/owncloud
+export OCPATH=/var/data
 SCRIPTS=/var/scripts
 PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install_production.sh
 IFCONFIG="/sbin/ifconfig"
@@ -158,6 +159,11 @@ echo "owncloud_ssl/http_domain_self_signed.conf is enabled, this is your pre-con
 sleep 3
 echo
 service apache2 reload
+
++# Change data dir
++sudo -u www-data php $OCPATH/occ config:system:delete datadirectory
++sudo -u www-data php $OCPATH/occ config:system:set datadirectory --value="$OCDATA"
++mv $OCPATH/data $OCDATA
 
 # Install phpMyadmin
 bash $SCRIPTS/phpmyadmin_install.sh
