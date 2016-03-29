@@ -363,7 +363,41 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 # Install Redis
 bash $SCRIPTS/install-redis-php-7.sh
 
-# Start startup-script
-bash $SCRIPTS/owncloud-startup-script.sh
+# Prepare for startup-script after reboot
+sed -i "s|owncloud_install.sh|owncloud-startup-script.sh|g" $SCRIPTS/change-root-profile.sh
+sed -i "s|rm /root/.profile||g" $SCRIPTS/change-root-profile.sh
+bash $SCRIPTS/change-root-profile.sh
+
+# Get the latest owncloud-startup-script.sh
+echo "Writes to rc.local..."
+
+cat << RCLOCAL > "/etc/rc.local"
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+exit 0
+
+RCLOCAL
+
+# Make $SCRIPTS excutable
+chmod +x -R $SCRIPTS
+chown root:root -R $SCRIPTS
+
+# Allow $UNIXUSER to run theese scripts
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/instruction.sh
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/history.sh
+
+# Reboot
+reboot
 
 exit 0
