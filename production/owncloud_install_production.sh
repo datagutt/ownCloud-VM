@@ -222,6 +222,11 @@ else
     Dav off
     </IfModule>
 
+    <Directory "$OCPATH/data/">
+    # just in case if .htaccess gets disabled
+    Require all denied
+    </Directory>
+
     SetEnv HOME $OCPATH
     SetEnv HTTP_HOME $OCPATH
 
@@ -262,6 +267,11 @@ else
     <IfModule mod_dav.c>
     Dav off
     </IfModule>
+
+    <Directory "$OCPATH/data/">
+    # just in case if .htaccess gets disabled
+    Require all denied
+    </Directory>
 
     SetEnv HOME $OCPATH
     SetEnv HTTP_HOME $OCPATH

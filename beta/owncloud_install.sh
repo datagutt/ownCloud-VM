@@ -4,7 +4,7 @@
 
 ## THIS IS FOR TESTING ##
 
-OCVERSION=9.0.1beta
+OCVERSION=9.0.1RC1
 DOWNLOADREPO=https://download.owncloud.org/community/testing/owncloud-$OCVERSION
 # DOWNLOADREPODEB=https://download.owncloud.org/
 CONVER=v1.1.0.0
@@ -230,6 +230,11 @@ else
     Dav off
     </IfModule>
 
+    <Directory "$OCPATH/data/">
+    # just in case if .htaccess gets disabled
+    Require all denied
+    </Directory>
+
     SetEnv HOME $OCPATH
     SetEnv HTTP_HOME $OCPATH
 
@@ -268,6 +273,11 @@ else
     <IfModule mod_dav.c>
     Dav off
     </IfModule>
+
+    <Directory "$OCPATH/data/">
+    # just in case if .htaccess gets disabled
+    Require all denied
+    </Directory>
 
     SetEnv HOME $OCPATH
     SetEnv HTTP_HOME $OCPATH

@@ -149,17 +149,6 @@ read -p "Press any key to start the script..." -n1 -s
 clear
 echo -e "\e[0m"
 
-# Activate self-signed SSL
-a2enmod ssl
-a2enmod headers
-a2dissite default-ssl.conf
-a2ensite owncloud_ssl_domain_self_signed.conf 
-clear
-echo "owncloud_ssl_domain_self_signed.conf is enabled, this is your pre-configured virtual host"
-sleep 4
-echo
-service apache2 reload
-
 # Install phpMyadmin
 bash $SCRIPTS/phpmyadmin_install.sh
 rm $SCRIPTS/phpmyadmin_install.sh
