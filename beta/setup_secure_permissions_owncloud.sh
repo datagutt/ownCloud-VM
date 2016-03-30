@@ -8,6 +8,7 @@ OCDATA='/var/data'
 printf "Creating possible missing Directories\n"
 mkdir -p $ocpath/data
 mkdir -p $ocpath/assets
+mkdir -p $OCDATA
 
 printf "chmod Files and Directories\n"
 find ${ocpath}/ -type f -print0 | xargs -0 chmod 0640
@@ -31,6 +32,6 @@ if [ -f ${ocpath}/.htaccess ]
 fi
 if [ -f ${OCDATA}/.htaccess ]
  then
-  chmod 0644 ${OCPATH}/.htaccess
+  chmod 0644 ${OCDATA}/.htaccess
   chown ${rootuser}:${htgroup} ${OCDATA}/.htaccess
 fi

@@ -170,7 +170,6 @@ rm $HTML/owncloud-$OCVERSION.zip
 #apt-get install owncloud -y
 
 # Create data folder, occ complains otherwise
-mkdir $OCPATH/data
 mkdir $OCDATA
 
 # Secure permissions
