@@ -171,6 +171,7 @@ rm $HTML/owncloud-$OCVERSION.zip
 
 # Create data folder, occ complains otherwise
 mkdir $OCPATH/data
+mkdir $OCDATA
 
 # Secure permissions
 wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/beta/setup_secure_permissions_owncloud.sh -P $SCRIPTS
@@ -178,7 +179,7 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
 cd $OCPATH
-sudo -u www-data php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "$UNIXUSER" --admin-pass "$UNIXPASS"
+sudo -u www-data php occ maintenance:install --data-dir "$OCDATA" --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "$UNIXUSER" --admin-pass "$UNIXPASS"
 echo
 echo ownCloud version:
 sudo -u www-data php $OCPATH/occ status

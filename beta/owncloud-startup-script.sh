@@ -160,11 +160,6 @@ sleep 3
 echo
 service apache2 reload
 
-+# Change data dir
-+sudo -u www-data php $OCPATH/occ config:system:delete datadirectory
-+sudo -u www-data php $OCPATH/occ config:system:set datadirectory --value="$OCDATA"
-+mv $OCPATH/data $OCDATA
-
 # Install phpMyadmin
 bash $SCRIPTS/phpmyadmin_install.sh
 rm $SCRIPTS/phpmyadmin_install.sh

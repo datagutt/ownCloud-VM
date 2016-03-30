@@ -162,13 +162,15 @@ apt-key add - < Release.key && rm Release.key
 sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /' >> /etc/apt/sources.list.d/owncloud.list"
 apt-get update && apt-get install owncloud-files -y
 
+mkdir $OCDATA
+
 # Secure permissions
 wget -q $GITHUB_REPO/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
 cd $OCPATH
-sudo -u www-data php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "$UNIXUSER" --admin-pass "$UNIXPASS"
+sudo -u www-data php occ maintenance:install --data-dir "$OCDATA" --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "$UNIXUSER" --admin-pass "$UNIXPASS"
 echo
 echo ownCloud version:
 sudo -u www-data php $OCPATH/occ status
