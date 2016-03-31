@@ -4,6 +4,7 @@
 
 WWW_ROOT=/var/www
 OCPATH=$WWW_ROOT/owncloud
+OCDATA=/var/data
 SCRIPTS=/var/scripts
 PW_FILE=/var/mysql_password.txt # Keep in sync with owncloud_install_production.sh
 IFCONFIG="/sbin/ifconfig"
@@ -15,6 +16,8 @@ WANIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 PHPMYADMIN_CONF="/etc/apache2/conf-available/phpmyadmin.conf"
 GITHUB_REPO="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production"
 LETS_ENC="https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/lets-encrypt"
+UNIXUSER=ocadmin
+UNIXPASS=owncloud
 
 	# Check if root
 	if [ "$(whoami)" != "root" ]; then
@@ -118,8 +121,8 @@ fi
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
 
-# Allow ocadmin to run figlet script
-chown ocadmin:ocadmin $SCRIPTS/techandme.sh
+# Allow $UNIXUSER to run figlet script
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/techandme.sh
 
 clear
 echo "+--------------------------------------------------------------------+"
@@ -146,17 +149,6 @@ echo -e "\e[32m"
 read -p "Press any key to start the script..." -n1 -s
 clear
 echo -e "\e[0m"
-
-# Activate self-signed SSL
-a2enmod ssl
-a2enmod headers
-a2dissite default-ssl.conf
-a2ensite owncloud_ssl_domain_self_signed.conf 
-clear
-echo "owncloud_ssl_domain_self_signed.conf is enabled, this is your pre-configured virtual host"
-sleep 4
-echo
-service apache2 reload
 
 # Install phpMyadmin
 bash $SCRIPTS/phpmyadmin_install.sh
@@ -246,36 +238,41 @@ clear
 # Change Trusted Domain and CLI
 bash $SCRIPTS/trusted.sh
 
+if [ "$UNIXUSER" = "ocadmin" ]
+then
 # Change password
 echo -e "\e[0m"
-echo "For better security, change the Linux password for [ocadmin]"
-echo "The current password is [owncloud]"
+echo "For better security, change the Linux password for [$UNIXUSER]"
+echo "The current password is [$UNIXPASS]"
 echo -e "\e[32m"
 read -p "Press any key to change password for Linux... " -n1 -s
 echo -e "\e[0m"
-sudo passwd ocadmin
+sudo passwd $UNIXUSER
 if [[ $? > 0 ]]
 then
-    sudo passwd ocadmin
+    sudo passwd $UNIXUSER
 else
     sleep 2
 fi
 echo
 clear &&
 echo -e "\e[0m"
-echo "For better security, change the ownCloud password for [ocadmin]"
-echo "The current password is [owncloud]"
+echo "For better security, change the ownCloud password for [$UNIXUSER]"
+echo "The current password is [$UNIXPASS]"
 echo -e "\e[32m"
 read -p "Press any key to change password for ownCloud... " -n1 -s
 echo -e "\e[0m"
-sudo -u www-data php $OCPATH/occ user:resetpassword ocadmin
+sudo -u www-data php $OCPATH/occ user:resetpassword $UNIXUSER
 if [[ $? > 0 ]]
 then
-    sudo -u www-data php $OCPATH/occ user:resetpassword ocadmin
+    sudo -u www-data php $OCPATH/occ user:resetpassword $UNIXUSER
 else
     sleep 2
 fi
 clear
+else
+echo "Not changing password as you already changed <user> and <pass> in the script"
+fi
 
 # Let's Encrypt
 function ask_yes_or_no() {
@@ -338,14 +335,14 @@ rm $SCRIPTS/test_connection.sh
 rm $SCRIPTS/update-config.php
 rm $SCRIPTS/instruction.sh
 rm $OCPATH/data/owncloud.log
-sed -i "s|instruction.sh|techandme.sh|g" /home/ocadmin/.bash_profile
+sed -i "s|instruction.sh|techandme.sh|g" /home/$UNIXUSER/.bash_profile
 cat /dev/null > ~/.bash_history
 cat /dev/null > /var/spool/mail/root
-cat /dev/null > /var/spool/mail/ocadmin
+cat /dev/null > /var/spool/mail/$UNIXUSER
 cat /dev/null > /var/log/apache2/access.log
 cat /dev/null > /var/log/apache2/error.log
 cat /dev/null > /var/log/cronjobs_success.log
-sed -i "s|sudo -i||g" /home/ocadmin/.bash_profile
+sed -i "s|sudo -i||g" /home/$UNIXUSER/.bash_profile
 sed -i "s|mod_php5|mod_php7|g" $OCPATH/.htaccess
 cat /dev/null > /etc/rc.local
 cat << RCLOCAL > "/etc/rc.local"

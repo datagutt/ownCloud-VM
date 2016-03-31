@@ -53,7 +53,8 @@ then
         echo "Script exists"
 else
         mkdir -p /var/scripts
-        wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P /var/scripts/
+        wget -q https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/production/setup_secure_permissions_owncloud.sh -P /var/scripts/
+	chmod +x /var/scripts/setup_secure_permissions_owncloud.sh
 fi
 sudo bash /var/scripts/setup_secure_permissions_owncloud.sh
 

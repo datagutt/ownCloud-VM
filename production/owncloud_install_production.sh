@@ -15,7 +15,9 @@ PW_FILE=/var/mysql_password.txt
 SCRIPTS=/var/scripts
 HTML=/var/www
 OCPATH=$HTML/owncloud
+OCDATA=/var/data
 SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
+HTTP_CONF="/etc/apache2/sites-available/owncloud_http_domain_self_signed.conf"
 IFCONFIG="/sbin/ifconfig"
 IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
@@ -33,15 +35,23 @@ UNIXPASS=owncloud
         exit 1
 fi
 
-# Create ocadmin if not existing
+# Create $UNIXUSER if not existing
 getent passwd $UNIXUSER  > /dev/null
 if [ $? -eq 0 ]
 then
         echo "$UNIXUSER already exists!"
 else
-        useradd -d /home/$UNIXUSER -m $UNIXUSER
+	adduser --disabled-password --gecos "" $UNIXUSER
         echo -e "$UNIXUSER:$UNIXPASS" | chpasswd
-        echo "$UNIXUSER created!"
+        usermod -aG sudo $UNIXUSER
+fi
+
+if [ -d /home/$UNIXUSER ];
+then
+	echo "$UNIXUSER OK!"
+else
+	echo "Something went wrong when creating the user... Script will exit."
+	exit 1
 fi
 
 # Create $SCRIPTS dir
@@ -144,7 +154,7 @@ apt-get install -y \
         php7.0-curl \
 	php7.0-xml \
 	php7.0-zip \
-        php-smbclient 
+        php-smbclient
 
 # Download and install ownCloud
 wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key -O Release.key
@@ -152,13 +162,15 @@ apt-key add - < Release.key && rm Release.key
 sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /' >> /etc/apt/sources.list.d/owncloud.list"
 apt-get update && apt-get install owncloud-files -y
 
+mkdir $OCDATA
+
 # Secure permissions
 wget -q $GITHUB_REPO/setup_secure_permissions_owncloud.sh -P $SCRIPTS
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
 cd $OCPATH
-sudo -u www-data php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "ocadmin" --admin-pass "owncloud"
+sudo -u www-data php occ maintenance:install --data-dir "$OCDATA" --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "$UNIXUSER" --admin-pass "$UNIXPASS"
 echo
 echo ownCloud version:
 sudo -u www-data php $OCPATH/occ status
@@ -182,6 +194,50 @@ sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php/7.0/a
 
 # Install Figlet
 apt-get install figlet -y
+
+# Generate $HTTP_CONF
+if [ -f $HTTP_CONF ];
+        then
+        echo "Virtual Host exists"
+else
+        touch "$HTTP_CONF"
+        cat << HTTP_CREATE > "$HTTP_CONF"
+<VirtualHost *:80>
+
+### YOUR SERVER ADDRESS ###
+#    ServerAdmin admin@example.com
+#    ServerName example.com
+#    ServerAlias subdomain.example.com
+
+### SETTINGS ###
+    DocumentRoot $OCPATH
+
+    <Directory $OCPATH>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+    Satisfy Any
+    </Directory>
+
+    Alias /owncloud "$OCPATH/"
+
+    <IfModule mod_dav.c>
+    Dav off
+    </IfModule>
+
+    <Directory "$OCDATA">
+    # just in case if .htaccess gets disabled
+    Require all denied
+    </Directory>
+
+    SetEnv HOME $OCPATH
+    SetEnv HTTP_HOME $OCPATH
+
+</VirtualHost>
+HTTP_CREATE
+echo "$HTTP_CONF was successfully created"
+sleep 3
+fi
 
 # Generate $SSL_CONF
 if [ -f $SSL_CONF ];
@@ -215,6 +271,11 @@ else
     Dav off
     </IfModule>
 
+    <Directory "$OCDATA">
+    # just in case if .htaccess gets disabled
+    Require all denied
+    </Directory>
+
     SetEnv HOME $OCPATH
     SetEnv HTTP_HOME $OCPATH
 
@@ -229,20 +290,9 @@ fi
 
 # Enable new config
 a2ensite owncloud_ssl_domain_self_signed.conf
+a2ensite owncloud_http_domain_self_signed.conf
 a2dissite default-ssl
 service apache2 restart
-
-# Get script for Redis
-        if [ -f $SCRIPTS/install-redis-php-7.sh ];
-                then
-                echo "install-redis-php-7.sh exists"
-                else
-        wget -q $GITHUB_REPO/install-redis-php-7.sh -P $SCRIPTS
-fi
-
-# Install Redis
-bash $SCRIPTS/install-redis-php-7.sh
-rm $SCRIPTS/install-redis-php-7.sh
 
 ## Set config values
 # Experimental apps
@@ -324,7 +374,7 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
                 else
         wget -q $GITHUB_REPO/change-root-profile.sh -P $SCRIPTS
 fi
-# Change ocadmin .bash_profile
+# Change $UNIXUSER .bash_profile
         if [ -f $SCRIPTS/change-ocadmin-profile.sh ];
                 then
                 echo "change-ocadmin-profile.sh  exists"
@@ -339,7 +389,7 @@ fi
         wget -q $GITHUB_REPO/owncloud-startup-script.sh -P $SCRIPTS
 fi
 
-# Welcome message after login (change in /home/ocadmin/.profile
+# Welcome message after login (change in /home/$UNIXUSER/.profile
         if [ -f $SCRIPTS/instruction.sh ];
                 then
                 echo "instruction.sh exists"
@@ -365,7 +415,7 @@ else
 	rm $SCRIPTS/change-root-profile.sh
 	sleep 2
 fi
-# Change ocadmin profile
+# Change $UNIXUSER profile
         	bash $SCRIPTS/change-ocadmin-profile.sh
 if [[ $? > 0 ]]
 then
@@ -381,9 +431,21 @@ fi
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
 
-# Allow ocadmin to run theese scripts
-chown ocadmin:ocadmin $SCRIPTS/instruction.sh
-chown ocadmin:ocadmin $SCRIPTS/history.sh
+# Allow $UNIXUSER to run theese scripts
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/instruction.sh
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/history.sh
+
+# Get script for Redis
+        if [ -f $SCRIPTS/install-redis-php-7.sh ];
+                then
+                echo "install-redis-php-7.sh exists"
+                else
+        wget -q $GITHUB_REPO/install-redis-php-7.sh -P $SCRIPTS
+fi
+
+# Install Redis
+bash $SCRIPTS/install-redis-php-7.sh
+rm $SCRIPTS/install-redis-php-7.sh
 
 # Upgrade
 aptitude full-upgrade -y
@@ -423,7 +485,7 @@ cat << RCLOCAL > "/etc/rc.local"
 		sleep 15
 		reboot
 	fi
-	
+
 # Restore colors
 echo -e "\e[0"
 
@@ -431,9 +493,9 @@ echo -e "\e[0"
 chmod +x -R $SCRIPTS
 chown root:root -R $SCRIPTS
 
-# Allow ocadmin to run theese scripts
-chown ocadmin:ocadmin $SCRIPTS/instruction.sh
-chown ocadmin:ocadmin $SCRIPTS/history.sh
+# Allow $UNIXUSER to run theese scripts
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/instruction.sh
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/history.sh
 
 exit 0
 

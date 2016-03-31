@@ -1,10 +1,11 @@
 #!/bin/bash
 
-OCADMIN_PROFILE="/home/ocadmin/.bash_profile"
+UNIXUSER=ocadmin
+UNIXUSER_PROFILE="/home/$UNIXUSER/.bash_profile"
 
-rm /home/ocadmin/.profile
+rm /home/$UNIXUSER/.profile
 
-cat <<-OCADMIN-PROFILE > "$OCADMIN_PROFILE"
+cat <<-UNIXUSER-PROFILE > "$UNIXUSER_PROFILE"
 # ~/.profile: executed by the command interpreter for login shells.
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
 # exists.
@@ -28,6 +29,6 @@ bash /var/scripts/instruction.sh
 bash /var/scripts/history.sh
 sudo -i
 
-OCADMIN-PROFILE
+UNIXUSER-PROFILE
 
 exit 0

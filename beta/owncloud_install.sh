@@ -4,7 +4,7 @@
 
 ## THIS IS FOR TESTING ##
 
-OCVERSION=9.0.1beta
+OCVERSION=9.0.1RC1
 DOWNLOADREPO=https://download.owncloud.org/community/testing/owncloud-$OCVERSION
 # DOWNLOADREPODEB=https://download.owncloud.org/
 CONVER=v1.1.0.0
@@ -19,7 +19,9 @@ PW_FILE=/var/mysql_password.txt
 SCRIPTS=/var/scripts
 HTML=/var/www
 OCPATH=$HTML/owncloud
+OCDATA=/var/data
 SSL_CONF="/etc/apache2/sites-available/owncloud_ssl_domain_self_signed.conf"
+HTTP_CONF="/etc/apache2/sites-available/owncloud_http_domain_self_signed.conf"
 IFCONFIG="/sbin/ifconfig"
 IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
@@ -35,15 +37,23 @@ UNIXPASS=owncloud
         exit 1
 fi
 
-# Create ocadmin if not existing
+# Create $UNIXUSER if not existing
 getent passwd $UNIXUSER  > /dev/null
 if [ $? -eq 0 ]
 then
         echo "$UNIXUSER already exists!"
 else
-        useradd -d /home/$UNIXUSER -m $UNIXUSER
+        adduser --disabled-password --gecos "" $UNIXUSER
         echo -e "$UNIXUSER:$UNIXPASS" | chpasswd
-        echo "$UNIXUSER created!"
+        usermod -aG sudo $UNIXUSER
+fi
+
+if [ -d /home/$UNIXUSER ];
+then
+        echo "$UNIXUSER OK!"
+else
+        echo "Something went wrong when creating the user... Script will exit."
+        exit 1
 fi
 
 # Change DNS
@@ -51,7 +61,7 @@ echo "nameserver 8.8.8.8" > /etc/resolvconf/resolv.conf.d/base
 echo "nameserver 8.8.4.4" >> /etc/resolvconf/resolv.conf.d/base
 
 # Check network
-sudo ifdown $IFACE && sudo ifup $IFACE
+ifdown $IFACE && sudo ifup $IFACE
 nslookup google.com
 if [[ $? > 0 ]]
 then
@@ -163,7 +173,7 @@ rm $HTML/owncloud-$OCVERSION.zip
 #apt-get install owncloud -y
 
 # Create data folder, occ complains otherwise
-mkdir $OCPATH/data
+mkdir $OCDATA
 
 # Secure permissions
 wget https://raw.githubusercontent.com/datagutt/ownCloud-VM/master/beta/setup_secure_permissions_owncloud.sh -P $SCRIPTS
@@ -171,7 +181,7 @@ bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
 # Install ownCloud
 cd $OCPATH
-sudo -u www-data php occ maintenance:install --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "ocadmin" --admin-pass "owncloud"
+sudo -u www-data php occ maintenance:install --data-dir "$OCDATA" --database "mysql" --database-name "owncloud_db" --database-user "root" --database-pass "$MYSQL_PASS" --admin-user "$UNIXUSER" --admin-pass "$UNIXPASS"
 echo
 echo ownCloud version:
 sudo -u www-data php $OCPATH/occ status
@@ -193,6 +203,50 @@ sed -i "s|memory_limit = 128M|memory_limit = 512M|g" /etc/php/7.0/apache2/php.in
 sed -i "s|post_max_size = 8M|post_max_size = 1100M|g" /etc/php/7.0/apache2/php.ini
 # upload_max
 sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 1000M|g" /etc/php/7.0/apache2/php.ini
+
+# Generate $HTTP_CONF
+if [ -f $HTTP_CONF ];
+        then
+        echo "Virtual Host exists"
+else
+        touch "$HTTP_CONF"
+        cat << HTTP_CREATE > "$HTTP_CONF"
+<VirtualHost *:80>
+
+### YOUR SERVER ADDRESS ###
+#    ServerAdmin admin@example.com
+#    ServerName example.com
+#    ServerAlias subdomain.example.com
+
+### SETTINGS ###
+    DocumentRoot $OCPATH
+
+    <Directory $OCPATH>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+    Satisfy Any
+    </Directory>
+
+    Alias /owncloud "$OCPATH/"
+
+    <IfModule mod_dav.c>
+    Dav off
+    </IfModule>
+
+    <Directory "$OCDATA">
+    # just in case if .htaccess gets disabled
+    Require all denied
+    </Directory>
+
+    SetEnv HOME $OCPATH
+    SetEnv HTTP_HOME $OCPATH
+
+</VirtualHost>
+HTTP_CREATE
+echo "$HTTP_CONF was successfully created"
+sleep 3
+fi
 
 # Generate $SSL_CONF
 if [ -f $SSL_CONF ];
@@ -224,6 +278,11 @@ else
     Dav off
     </IfModule>
 
+    <Directory "$OCDATA">
+    # just in case if .htaccess gets disabled
+    Require all denied
+    </Directory>
+
     SetEnv HOME $OCPATH
     SetEnv HTTP_HOME $OCPATH
 ### LOCATION OF CERT FILES ###
@@ -234,9 +293,6 @@ SSL_CREATE
 echo "$SSL_CONF was successfully created"
 sleep 3
 fi
-
-# Install Redis
-bash $SCRIPTS/install-redis-php-7.sh
 
 ## Set config values
 # Experimental apps
@@ -308,7 +364,44 @@ fi
 # Set secure permissions final (./data/.htaccess has wrong permissions otherwise)
 bash $SCRIPTS/setup_secure_permissions_owncloud.sh
 
-# Start startup-script
-bash $SCRIPTS/owncloud-startup-script.sh
+# Install Redis
+bash $SCRIPTS/install-redis-php-7.sh
+
+# Prepare for startup-script after reboot
+sed -i "s|owncloud_install.sh|owncloud-startup-script.sh|g" $SCRIPTS/change-root-profile.sh
+sed -i "s|rm /root/.profile||g" $SCRIPTS/change-root-profile.sh
+bash $SCRIPTS/change-root-profile.sh
+
+# Get the latest owncloud-startup-script.sh
+echo "Writes to rc.local..."
+
+cat << RCLOCAL > "/etc/rc.local"
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+exit 0
+
+RCLOCAL
+
+# Make $SCRIPTS excutable
+chmod +x -R $SCRIPTS
+chown root:root -R $SCRIPTS
+
+# Allow $UNIXUSER to run theese scripts
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/instruction.sh
+chown $UNIXUSER:$UNIXUSER $SCRIPTS/history.sh
+
+# Reboot
+reboot
 
 exit 0
